@@ -1,0 +1,147 @@
+{% extends 'base/base_template.html' %}
+
+{% block title %}
+Add Student
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <form action="{% url 'create_student' %}" method="POST" enctype="multipart/form-data" class="needs-validation row g-3" novalidate>
+        {% csrf_token %}
+
+        <div class="col-md-6">
+            <label class="form-label">Name</label>
+            <input name="name" type="text" class="form-control" required>
+            <div class="invalid-feedback">Please enter name.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Roll Number</label>
+            <input name="roll_no" type="text" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Mobile Number</label>
+            <input name="mob_no" type="text" class="form-control" required>
+            <div class="invalid-feedback">Please enter mobile number.</div>
+        </div>
+<div class="col-md-6">
+            <label class="form-label">School</label>
+            <select name="school" class="form-select" required>
+                <option value="">Choose...</option>
+                {% for s in schools %}
+                    <option value="{{ s.id }}">{{ s.name }}</option>
+                {% endfor %}
+            </select>
+            <div class="invalid-feedback">Please select a school.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Class</label>
+            <select name="student_class" class="form-select" required>
+                <option value="">Choose...</option>
+                {% for c in student_classes %}
+                    <option value="{{ c.id }}">{{ c.number }}</option>
+                {% endfor %}
+            </select>
+            <div class="invalid-feedback">Please select a class.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Location</label>
+            <select name="location" class="form-select">
+                <option value="">Choose...</option>
+                {% for l in locations %}
+                    <option value="{{ l.id }}">{{ l.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Father Name</label>
+            <input name="father_name" type="text" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Mother Name</label>
+            <input name="mother_name" type="text" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Father Mobile No</label>
+            <input name="father_mob_no" type="text" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Mother Mobile No</label>
+            <input name="mother_mob_no" type="text" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Date of Birth</label>
+            <input name="date_of_birth" type="date" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Picture</label>
+            <input name="picture" type="file" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Gender</label>
+            <select name="gender" class="form-select">
+                <option value="">Choose...</option>
+                {% for value, label in genders %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+            <div class="invalid-feedback">Please select gender.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Marital Status</label>
+            <select name="marital_status" class="form-select">
+                <option value="">Choose...</option>
+                {% for value, label in marital_statuses %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Blood Group</label>
+            <select name="blood" class="form-select">
+                <option value="">Choose...</option>
+                {% for value, label in bloods %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Religion</label>
+            <select name="religion" class="form-select">
+                <option value="">Choose...</option>
+                {% for value, label in religions %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+
+        <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input name="email" type="email" class="form-control">
+            <div class="invalid-feedback">Enter a valid email address.</div>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-primary" type="submit">Add Student</button>
+            <a href="{% url 'read_student' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+  </div>
+</div>
+
+
+{% endblock content %}

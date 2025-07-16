@@ -1,0 +1,66 @@
+<div class="demo-inline-spacing">
+  <nav aria-label="Page navigation">
+    <ul class="pagination d-flex flex-wrap justify-content-center ">
+      <!-- First Page -->
+      <li class="page-item first {% if not page_obj.has_previous %}disabled{% endif %}">
+        <a class="page-link" href="{% if page_obj.has_previous %}?page=1&{{query_string}}{% else %}javascript:void(0);{% endif %}">
+          <i class="icon-base bx bx-chevrons-left icon-sm"></i>
+        </a>
+      </li>
+      
+      <!-- Previous Page -->
+      <li class="page-item prev {% if not page_obj.has_previous %}disabled{% endif %}">
+        <a class="page-link" href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}&{{query_string}}{% else %}javascript:void(0);{% endif %}">
+          <i class="icon-base bx bx-chevron-left icon-sm"></i>
+        </a>
+      </li>
+
+      <!-- Always show first page -->
+      <li class="page-item {% if 1 == page_obj.number %}active{% endif %}">
+        <a class="page-link" href="?page=1&{{query_string}}">1</a>
+      </li>
+
+      <!-- First ellipsis if needed -->
+      {% if page_obj.number > 6 %}
+        <li class="page-item disabled"><span class="page-link">...</span></li>
+      {% endif %}
+
+      <!-- Middle pages: 5 before and 5 after current -->
+      {% for num in page_obj.paginator.page_range %}
+        {% if num > 1 and num < page_obj.paginator.num_pages %}
+          {% if num >= page_obj.number|add:-5 and num <= page_obj.number|add:5 %}
+            <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+              <a class="page-link" href="?page={{ num }}&{{query_string}}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+
+      <!-- Last ellipsis if needed -->
+      {% if page_obj.number < page_obj.paginator.num_pages|add:-5 %}
+        <li class="page-item disabled"><span class="page-link">...</span></li>
+      {% endif %}
+
+      <!-- Always show last page -->
+      {% if page_obj.paginator.num_pages > 1 %}
+        <li class="page-item {% if page_obj.paginator.num_pages == page_obj.number %}active{% endif %}">
+          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&{{query_string}}">{{ page_obj.paginator.num_pages }}</a>
+        </li>
+      {% endif %}
+
+      <!-- Next Page -->
+      <li class="page-item next {% if not page_obj.has_next %}disabled{% endif %}">
+        <a class="page-link" href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}&{{query_string}}{% else %}javascript:void(0);{% endif %}">
+          <i class="icon-base bx bx-chevron-right icon-sm"></i>
+        </a>
+      </li>
+      
+      <!-- Last Page -->
+      <li class="page-item last {% if not page_obj.has_next %}disabled{% endif %}">
+        <a class="page-link" href="{% if page_obj.has_next %}?page={{ page_obj.paginator.num_pages }}&{{query_string}}{% else %}javascript:void(0);{% endif %}">
+          <i class="icon-base bx bx-chevrons-right icon-sm"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

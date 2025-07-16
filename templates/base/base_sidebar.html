@@ -1,0 +1,120 @@
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+
+    <h2 class="oswald w-100 text-center pt-2 border-3  border-bottom">{{request.user.role.name}}</h2>
+
+<ul class="menu-inner pb-5">
+    <!-- Dashboards -->
+    <li class="menu-item">
+        <a
+        href="{% url "dashboard" %}"
+        class="menu-link active">
+        <i class="menu-icon tf-icons bx bx-file"></i>
+        <div class="text-truncate" data-i18n="Dashboard">Dashboard</div>
+        </a>
+    </li>
+    
+    <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">Modules</span>
+    </li>
+    <li class="menu-item">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon fa-brands fa-ubuntu"></i>
+        <div class="text-truncate" data-i18n="Vehicle">Students</div>
+        </a>
+
+        <ul class="menu-sub">
+            <li class="menu-item">
+                <a href="{% url "create_student" %}" class="menu-link">
+                <div class="text-truncate" data-i18n="create_student">Add Student</div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url "read_student" %}" class="menu-link">
+                <div class="text-truncate" data-i18n="read_student">Students</div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url "read_inactive_student" %}" class="menu-link">
+                <div class="text-truncate" data-i18n="read_student">Inactive Students</div>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="menu-item">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon fa-brands fa-ubuntu"></i>
+        <div class="text-truncate" data-i18n="Vehicle">Teachers</div>
+        </a>
+
+        <ul class="menu-sub">
+            <li class="menu-item">
+                <a href="{% url "create_teacher" %}" class="menu-link">
+                <div class="text-truncate" data-i18n="create_teacher">Add Teacher</div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url "read_teacher" %}" class="menu-link">
+                <div class="text-truncate" data-i18n="read_teacher">Teachers</div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url "read_inactive_teacher" %}" class="menu-link">
+                <div class="text-truncate" data-i18n="read_teacher">Inactive Teachers</div>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="menu-item">
+        <a
+            href="{% url "read_student_class" %}"
+            class="menu-link active">
+            <i class="menu-icon tf-icons bx bx-file"></i>
+            <div class="text-truncate" data-i18n="Class">Class</div>
+        </a>
+    </li>
+
+    <!-- Setting -->
+    <li class="menu-item">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon fa-solid fa-gears"></i>
+        <div class="text-truncate" data-i18n="Setting">Setting</div>
+        </a>
+
+        <ul class="menu-sub">
+            <li class="menu-item">
+                <a href="{% url "read_school" %}" class="menu-link">
+                    <div class="text-truncate" data-i18n="text">School</div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url "read_location" %}" class="menu-link">
+                    <div class="text-truncate" data-i18n="text">Location</div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url "database" %}" class="menu-link">
+                    <div class="text-truncate" data-i18n="text">Database</div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url "change_password" %}" class="menu-link">
+                    <div class="text-truncate" data-i18n="text">Change Password</div>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <!-- Documentation -->
+    <li class="menu-header small text-uppercase"><span class="menu-header-text">Documentation</span></li>
+    <li class="menu-item">
+        <a
+        href=""
+        target=""
+        class="menu-link">
+        <i class="menu-icon tf-icons bx bx-file"></i>
+        <div class="text-truncate" data-i18n="Documentation">Documentation</div>
+        </a>
+    </li>
+</ul>
+</aside>

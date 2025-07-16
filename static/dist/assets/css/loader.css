@@ -1,0 +1,7 @@
+#loader-animation {
+    width: 400px;
+    height: 400px;
+}
+#loader {
+    backdrop-filter: blur(3px);
+}   

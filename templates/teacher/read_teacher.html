@@ -1,0 +1,120 @@
+{% extends 'base/base_template.html' %}
+
+{% block title %}
+
+{% if inactive %}
+Inactive Teachers
+{% else %}
+Active Teachers
+{% endif %}
+
+{% endblock title %}
+
+{% block content %}
+
+
+{% if teachers %}
+<div class="card">
+    <div class="table-responsive text-nowrap">
+        <table class="table">
+            <thead class="table-dark">
+                <tr class="text-nowrap">
+                    <th>Action</th>
+                    <th>Sn</th>
+                    <th>Name</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                {% for item in teachers %}
+                <!-- Start Delete Modal -->
+                <div class="modal fade" id="modal-delete-{{i.id}}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h4 class="modal-title" id="modalCenterTitle">Delete {{item.name}}</h4>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        <p>Are you sure you want to delete?</p>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <a href="{% url 'delete_teacher' item.id %}" class="btn btn-danger">Delete</a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- End Delete Modal -->
+                <!-- Start Activation Modal -->
+                <div class="modal fade" id="modal-activation-{{i.id}}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h4 class="modal-title" id="modalCenterTitle">Activation {{item.name}}</h4>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        <p>Are you sure you want to activation?</p>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <a href="{% url 'activation_teacher' item.id %}" class="btn btn-warning">Activation</a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- End Activation Modal -->
+                <tr>
+                    <th>
+                        <a href="{% url "update_teacher" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
+                              <span class="icon-base fa fa-edit icon-sm text-white"></span>
+                        </a>
+                        <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{i.id}}">
+                           <span class="icon-base fa-regular fa-trash-can icon-sm text-white"></span>
+                        </button>
+                        {% if item.active %}
+                        <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{i.id}}">
+                           <span class="icon-base fa-solid fa-ban icon-sm text-white"></span>
+                        </button>
+                        {% else %}
+                        <button type="button" class="btn rounded-pill btn-icon btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{i.id}}">
+                           <span class="icon-base fa-solid fa-check icon-sm text-white"></span>
+                        </button>
+                        {% endif %}
+                        <a href="{% url "profile_teacher" item.id %}" class="btn rounded-pill btn-icon btn-primary btn-sm">
+                            <span class="icon-base fa-regular fa-user icon-sm text-white"></span>
+                        </a>
+                    </th>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{item.name|default:"N/A"}}</td>
+                    <td>{{item.location.name|default:"N/A"}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include "components/pagination.html" with page_obj=teachers %}
+
+{% else %}
+<div class="bg-black text-white fs-1 card oswald h-100 m-auto pt-5 text-center">
+  No Class entries found.
+</div>
+{% endif %}
+
+
+{% endblock content %}

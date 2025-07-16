@@ -1,0 +1,31 @@
+{% extends 'base/base_template.html' %}
+
+{% block title %}
+Update Location
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <form class="needs-validation" novalidate action="{% url "update_location" location.id %}" method="POST">
+      {% csrf_token %}
+      <!-- start row -->
+      <div class="row">
+        <!-- start col -->
+        <div class="mb-3 col-xl-4 col-md-6">
+          <label class="form-label fw-bold fs-6" for="name">Name</label>
+          <input type="text" class="form-control" id="name" name="name" placeholder="Godagari" value={{location.name}} required>
+          <div class="invalid-feedback">Name is required.</div>
+        </div>
+        <!-- end col -->
+      </div>
+      <!-- end row -->
+
+
+      <button type="submit" class="btn btn-primary mt-5">Update</button>
+    </form> 
+  </div>
+</div>
+
+
+{% endblock content %}

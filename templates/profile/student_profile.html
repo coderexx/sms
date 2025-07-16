@@ -1,0 +1,116 @@
+{% extends 'base/base_template.html' %}
+{% load static %}
+
+{% block title %}
+Student Profile
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header bg-primary text-white">
+    <h4 class="mb-0 text-white">{{ student.name|default:"Not Yet Done" }}'s Profile</h4>
+  </div>
+  <div class="card-body row g-4 mt-5">
+
+    <!-- Left: Picture -->
+    <div class="col-md-4 text-center">
+      {% if student.picture %}
+        <img src="{{ student.picture.url }}" class="img-fluid rounded" alt="Profile Picture" style="max-height: 300px;">
+      {% else %}
+        <img src="{% static "dist/assets/img/avatars/5.png" %}" class="img-fluid rounded" alt="Default" style="max-height: 300px;">
+      {% endif %}
+    </div>
+
+    <!-- Right: Details -->
+    <div class="col-md-8">
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th>Name</th>
+            <td>{{ student.name|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Roll Number</th>
+            <td>{{ student.roll_no|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Mobile</th>
+            <td>{{ student.mob_no|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td>{{ student.email|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>School</th>
+            <td>{{ student.school.name|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Class</th>
+            <td>{{ student.student_class.number|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Location</th>
+            <td>{{ student.location.nam|default:"Not Yet Done"}}</td>
+          </tr>
+          <tr>
+            <th>Date of Birth</th>
+            <td>{{ student.date_of_birth|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Age</th>
+            <td>{{ student.age|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Gender</th>
+            <td>{{ student.get_gender_display|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Marital Status</th>
+            <td>{{ student.get_marital_status_display|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Blood Group</th>
+            <td>{{ student.get_blood_display|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Religion</th>
+            <td>{{ student.get_religion_display|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Father Name</th>
+            <td>{{ student.father_name|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Father Mobile</th>
+            <td>{{ student.father_mob_no|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Mother Name</th>
+            <td>{{ student.mother_name|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Mother Mobile</th>
+            <td>{{ student.mother_mob_no|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
+            <th>Status</th>
+            <td>
+              {% if student.active %}
+                <span class="badge bg-success">Active</span>
+              {% else %}
+                <span class="badge bg-danger">Inactive</span>
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="mt-3">
+        <a href="{% url 'update_student' student.id %}" class="btn btn-warning">Edit Profile</a>
+        <a href="{% url 'read_student' %}" class="btn btn-secondary">Back to List</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

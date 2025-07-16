@@ -1,0 +1,52 @@
+{% extends "base/base_template.html" %}
+
+{% block title %}
+Database Settings
+{% endblock title %}
+
+{% block content %}
+
+<div class="card">
+  <div class="card-body">
+    <p class="card-text">You can backup and restore your database from here.</p>
+    <form class="needs-validation" method="post" enctype="multipart/form-data" action="{% url 'restore_database' %}">
+    {% csrf_token %}
+    <div class="mb-3 col-6">
+        <label class="form-label fw-bold fs-6" for="name">SQL</label>
+        <input class="form-control" type="file" name="file" accept=".sql" required>
+        <div class="invalid-feedback">Database SQL is required.</div>
+    </div>
+
+    <button class="btn btn-danger">Restore Database</button>
+    </form>
+
+    <br><br>
+    <form id="backup-form" method="get" action="{% url 'backup_database' %}">
+    <button type="submit" class="btn btn-primary">Backup Database</button>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+<script>
+  document.getElementById("backup-form").addEventListener("submit", function (e) {
+    e.preventDefault(); // Stop normal form behavior
+
+    // Trigger download via hidden iframe
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = this.action;
+    document.body.appendChild(iframe);
+
+    // Refresh page after 5 seconds
+    setTimeout(function () {
+      window.location.reload();
+    }, 1000); // You can adjust timing
+  });
+</script>
+
+
+{% endblock content %}
