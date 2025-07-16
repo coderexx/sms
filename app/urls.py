@@ -15,6 +15,8 @@ urlpatterns = [
     #TODO:Student
     path('create_student', create_student, name='create_student'),
     path('read_student', read_student, name='read_student'),
+    path('read_inactive_student', read_inactive_student, name='read_inactive_student'),
+    path('read_student_pdf', read_student_pdf, name='read_student_pdf'),
     path('update_student/<int:id>', update_student, name='update_student'),
     path('delete_student/<int:id>', delete_student, name='delete_student'),
     path('activation_student/<int:id>', activation_student, name='activation_student'),
@@ -22,19 +24,19 @@ urlpatterns = [
     path('create_teacher', create_teacher, name='create_teacher'),
     path('read_teacher', read_teacher, name='read_teacher'),
     path('read_inactive_teacher', read_inactive_teacher, name='read_inactive_teacher'), 
+    path('read_teacher_pdf', read_teacher_pdf, name='read_teacher_pdf'),
     path('update_teacher/<int:id>', update_teacher, name='update_teacher'),
     path('delete_teacher/<int:id>', delete_teacher, name='delete_teacher'),
     path('activation_teacher/<int:id>', activation_teacher, name='activation_teacher'),
     #TODO:Student Class
     path('create_student_class', create_student_class, name='create_student_class'),
     path('read_student_class', read_student_class, name='read_student_class'),
-    path('read_inactive_student', read_inactive_student, name='read_inactive_student'),
     path('shift_down_student_class', shift_down_student_class, name='shift_down_student_class'),
     path('shift_up_student_class', shift_up_student_class, name='shift_up_student_class'),
     path('update_student_class/<int:id>', update_student_class, name='update_student_class'),
     path('delete_student_class/<int:id>', delete_student_class, name='delete_student_class'),
     path('activation_student_class/<int:id>', activation_student_class, name='activation_student_class'),
-    #TODO:Student Class
+    #TODO:Location
     path('create_location', create_location, name='create_location'),
     path('read_location', read_location, name='read_location'),
     path('update_location/<int:id>', update_location, name='update_location'),

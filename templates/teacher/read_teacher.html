@@ -12,6 +12,15 @@ Active Teachers
 
 {% block content %}
 
+<form method="GET">
+    <div class="d-flex flex-wrap mb-3 input-group">
+        <input class="form-control w-50 bg-white" type="text" placeholder="name ..." id="" name="query" value="{{ query }}" >
+        <button type="submit" class="btn btn-primary w-25"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <a target="_blank" href="{% url 'read_teacher_pdf' %}?{{query_string}}" class="btn btn-secondary w-25">
+            <i class="fa-solid fa-file-pdf"></i>
+        </a>
+    </div>
+</form>
 
 {% if teachers %}
 <div class="card">
@@ -28,7 +37,7 @@ Active Teachers
             <tbody class="table-border-bottom-0">
                 {% for item in teachers %}
                 <!-- Start Delete Modal -->
-                <div class="modal fade" id="modal-delete-{{i.id}}" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="modal-delete-{{item.id}}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -53,7 +62,7 @@ Active Teachers
                 </div>
                 <!-- End Delete Modal -->
                 <!-- Start Activation Modal -->
-                <div class="modal fade" id="modal-activation-{{i.id}}" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="modal-activation-{{item.id}}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -82,15 +91,15 @@ Active Teachers
                         <a href="{% url "update_teacher" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
                               <span class="icon-base fa fa-edit icon-sm text-white"></span>
                         </a>
-                        <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{i.id}}">
+                        <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{item.id}}">
                            <span class="icon-base fa-regular fa-trash-can icon-sm text-white"></span>
                         </button>
                         {% if item.active %}
-                        <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{i.id}}">
+                        <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
                            <span class="icon-base fa-solid fa-ban icon-sm text-white"></span>
                         </button>
                         {% else %}
-                        <button type="button" class="btn rounded-pill btn-icon btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{i.id}}">
+                        <button type="button" class="btn rounded-pill btn-icon btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
                            <span class="icon-base fa-solid fa-check icon-sm text-white"></span>
                         </button>
                         {% endif %}

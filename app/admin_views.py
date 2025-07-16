@@ -13,14 +13,36 @@ from django.db import transaction
 from app.views import User
 from .utils.decorators import role_required
 from .models import *
+#for pdf
+from django.template.loader import get_template
+from django.http import HttpResponse
+from xhtml2pdf import pisa
 
 
 # global variables
 today = date.today()
 
 def dashboard(request):
+    total_active_students = Student.objects.filter(active=True, student_class__active=True).count()
+    total_active_teachers = Teacher.objects.filter(active=True).count()
 
-    return render(request, 'admin/dashboard.html')
+    active_classes = StudentClass.objects.filter(active=True).order_by('number')
+    class_data = []
+
+    for cls in active_classes:
+        student_count = Student.objects.filter(student_class=cls, active=True).count()
+        class_data.append({
+            'class': cls,
+            'student_count': student_count
+        })
+
+    context = {
+        'total_active_students': total_active_students,
+        'total_active_teachers': total_active_teachers,
+        'class_data': class_data
+    }
+
+    return render(request, 'admin/dashboard.html', context)
 
 
 
@@ -30,6 +52,38 @@ def read_student(request):
     students = Student.objects.filter(active=True,student_class__active=True).order_by('name')
     
     
+    #get query parameters
+    query = request.GET.get('query', '')
+    student_class_query = request.GET.get('student_class_query', '')
+    school_query = request.GET.get('school_query', '')
+    location_query = request.GET.get('location_query', '')
+    blood_query = request.GET.get('blood_query', '')
+    religion_query = request.GET.get('religion_query', '')
+    gender_query = request.GET.get('gender_query', '')
+    marital_status_query = request.GET.get('marital_status_query', '')
+    if query:
+        students = students.filter(
+            Q(name__icontains=query) |
+            Q(mob_no__icontains=query) |
+            Q(email__icontains=query) |
+            Q(roll_no__icontains=query)
+        )
+    if student_class_query:
+        students = students.filter(student_class__id=student_class_query)
+    if school_query:
+        students = students.filter(school__id=school_query)
+    if location_query:
+        students = students.filter(location__id=location_query)
+    if blood_query:
+        students = students.filter(blood=blood_query)
+    if religion_query:
+        students = students.filter(religion=religion_query)
+    if gender_query:
+        students = students.filter(gender=gender_query)
+    if marital_status_query:
+        students = students.filter(marital_status=marital_status_query)
+        
+        
     # pagination for main_leave
     paginator = Paginator(students, 50)  # 50 records per page
     page_number = request.GET.get('page')
@@ -42,6 +96,21 @@ def read_student(request):
     context = {
         "students": students,
         "query_string": query_string,
+        "student_classes": StudentClass.objects.all().order_by('number'),
+        "schools": School.objects.all().order_by('name'),
+        "locations": Location.objects.all().order_by('name'),
+        "bloods": Student.BLOOD_LIST,
+        "religions": Student.RELIGION_LIST,
+        "genders": Student.GENDER_LIST,
+        "marital_statuses": Student.MARITAL_STATUS_LIST,
+        "query": query,
+        "student_class_query": int(student_class_query) if student_class_query else None,
+        "school_query": int(school_query) if school_query else None,
+        "location_query": int(location_query) if location_query else None,
+        "blood_query": blood_query,
+        "religion_query": religion_query,
+        "gender_query": gender_query,
+        "marital_status_query": marital_status_query
     }
     return render(request,'student/read_student.html',context)
 
@@ -178,6 +247,16 @@ def activation_student(request,id):
 def read_teacher(request):
     teachers = Teacher.objects.filter(active=True).order_by('name')
     
+    
+    query = request.GET.get('query', '')
+    if query:
+        teachers = teachers.filter(
+            Q(name__icontains=query) |
+            Q(mob_no__icontains=query) |
+            Q(email__icontains=query)
+        )
+    
+    
     # pagination for main_leave
     paginator = Paginator(teachers, 50)  # 50 records per page
     page_number = request.GET.get('page')
@@ -189,7 +268,8 @@ def read_teacher(request):
     query_string = query_dict.urlencode()
     context = {
         "teachers":teachers,
-        "query_string": query_string
+        "query_string": query_string,
+        "query": query,
     }
     return render(request,'teacher/read_teacher.html',context)
 
@@ -441,3 +521,97 @@ def profile_teacher(request,id):
     }
     return render(request,'profile/teacher_profile.html',context)
     
+    
+    
+def to_int_or_none(val):
+    if not val or val.strip().lower() == 'none':
+        return None
+    try:
+        return int(val)
+    except (TypeError, ValueError):
+        return None
+def read_student_pdf(request):
+    students = Student.objects.filter(active=True,student_class__active=True).order_by('name')
+    
+    #get query parameters
+    query = request.GET.get('query', '')
+    student_class_query = to_int_or_none(request.GET.get('student_class_query'))
+    school_query = to_int_or_none(request.GET.get('school_query'))
+    location_query = to_int_or_none(request.GET.get('location_query'))
+    blood_query = request.GET.get('blood_query', '')
+    religion_query = request.GET.get('religion_query', '')
+    gender_query = request.GET.get('gender_query', '')
+    marital_status_query = request.GET.get('marital_status_query', '')
+    if query:
+        students = students.filter(
+            Q(name__icontains=query) |
+            Q(mob_no__icontains=query) |
+            Q(email__icontains=query) |
+            Q(roll_no__icontains=query)
+        )
+    if student_class_query is not None:
+        students = students.filter(student_class__id=student_class_query)
+    if school_query is not None:
+        students = students.filter(school__id=school_query)
+    if location_query is not None:
+        students = students.filter(location__id=location_query)
+    if blood_query:
+        students = students.filter(blood=blood_query)
+    if religion_query:
+        students = students.filter(religion=religion_query)
+    if gender_query:
+        students = students.filter(gender=gender_query)
+    if marital_status_query:
+        students = students.filter(marital_status=marital_status_query)
+        
+    context = {
+        "students": students
+    }
+    # Load the HTML template and render it with context data
+    template = get_template('pdf/read_student_pdf.html')
+    html = template.render(context)
+
+    # Create a response with PDF content type
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="students.pdf"'
+
+    # Convert HTML to PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse("Error generating PDF", status=500)
+    
+    return response
+
+
+
+def read_teacher_pdf(request):
+    teachers = Teacher.objects.filter(active=True).order_by('name')
+    
+    #get query parameters
+    query = request.GET.get('query', '')
+    if query:
+        teachers = teachers.filter(
+            Q(name__icontains=query) |
+            Q(mob_no__icontains=query) |
+            Q(email__icontains=query)
+        )
+        
+    context = {
+        "teachers": teachers
+    }
+    # Load the HTML template and render it with context data
+    template = get_template('pdf/read_teacher_pdf.html')
+    html = template.render(context)
+
+    # Create a response with PDF content type
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="teachers.pdf"'
+
+    # Convert HTML to PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse("Error generating PDF", status=500)
+    
+    return response

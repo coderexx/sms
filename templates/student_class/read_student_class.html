@@ -35,11 +35,11 @@ Class
             <tbody class="table-border-bottom-0">
                 {% for item in student_classes %}
                 <!-- Start Delete Modal -->
-                <div class="modal fade" id="modal-delete-{{i.id}}" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="modal-delete-{{item.id}}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h4 class="modal-title" id="modalCenterTitle">Delete {{item.name}}</h4>
+                        <h4 class="modal-title" id="modalCenterTitle">Delete {{item.number}}</h4>
                         <button
                             type="button"
                             class="btn-close"
@@ -47,7 +47,7 @@ Class
                             aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                        <p>Are you sure you want to delete?</p>
+                        <p>Are you sure you want to delete {{item.number}}?</p>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
@@ -60,11 +60,11 @@ Class
                 </div>
                 <!-- End Delete Modal -->
                 <!-- Start Activation Modal -->
-                <div class="modal fade" id="modal-activation-{{i.id}}" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="modal-activation-{{item.id}}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h4 class="modal-title" id="modalCenterTitle">Activation {{item.name}}</h4>
+                        <h4 class="modal-title" id="modalCenterTitle">Activation {{item.number}}</h4>
                         <button
                             type="button"
                             class="btn-close"
@@ -72,7 +72,7 @@ Class
                             aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                        <p>Are you sure you want to activation?</p>
+                        <p>Are you sure you want to activation {{item.number}}?</p>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
@@ -89,10 +89,10 @@ Class
                         <a href="{% url "update_student_class" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
                               <span class="icon-base fa fa-edit icon-sm text-white"></span>
                         </a>
-                        <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{i.id}}">
+                        <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{item.id}}">
                            <span class="icon-base fa-regular fa-trash-can icon-sm text-white"></span>
                         </button>
-                        <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{i.id}}">
+                        <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
                            <span class="icon-base fa-solid fa-ban icon-sm text-white"></span>
                         </button>
                     </th>

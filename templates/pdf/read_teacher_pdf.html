@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        th{
+            text-align: start;
+        }
+        tr{
+            border-bottom: 1px solid #000;
+            padding: 2px 0 0 0;
+        }
+    </style>
+</head>
+<body>
+    <h3 style="text-align: center;">Origin Academy Teachers</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Sn</th>
+                <th>Name</th>
+                <th>Mob No</th>
+                <th>Location</th>
+                <th>rmks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in teachers %}
+            <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{item.name}}</td>
+                    <td>{{item.mob_no}}</td>
+                    <td>{{item.location.name}}</td>
+                    <td></td>
+                <td></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

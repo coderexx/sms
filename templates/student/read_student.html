@@ -12,6 +12,58 @@ Active Students
 
 {% block content %}
 
+<!-- Search Query -->
+<form method="GET">
+    <div class="d-flex flex-wrap mb-3 input-group">
+        <input class="form-control w-50 bg-white" type="text" placeholder="name ..." id="" name="query" value="{{ query }}" >
+        <select name="student_class_query" id="" class="form-select w-25 bg-white">
+            <option value="">Select Class</option>
+            {% for student_class in student_classes %}
+            <option value="{{ student_class.id }}" {% if student_class.id == student_class_query %}selected{% endif %}>{{ student_class.number }}</option>
+            {% endfor %}
+        </select>
+        <select name="school_query" id="" class="form-select w-25 bg-white">
+            <option value="">Select School</option>
+            {% for school in schools %}
+            <option value="{{ school.id }}" {% if school.id == school_query %}selected{% endif %}>{{ school.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="location_query" id="" class="form-select w-25 bg-white">
+            <option value="">Select Location</option>
+            {% for location in locations %}
+            <option value="{{ location.id }}" {% if location.id == location_query %}selected{% endif %}>{{ location.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="blood_query" id="" class="form-select w-25 bg-white">
+            <option value="">Select Blood Group</option>
+            {% for key,value in bloods %}
+            <option value="{{ key }}" {% if key == blood_query %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+        <select name="marital_status_query" id="" class="form-select w-25 bg-white">
+            <option value="">Select Marital Status</option>
+            {% for key,value in marital_statuses %}
+            <option value="{{ key }}" {% if key == marital_status_query %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+        <select name="religion_query" id="" class="form-select w-25 bg-white">
+            <option value="">Select Religion</option>
+            {% for key,value in religions %}
+            <option value="{{ key }}" {% if key == religion_query %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+        <select name="gender_query" id="" class="form-select w-25 bg-white">
+            <option value="">Select Gender</option>
+            {% for key,value in genders %}
+            <option value="{{ key }}" {% if key == gender_query %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary w-25"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <a target="_blank" href="{% url 'read_student_pdf' %}?{{query_string}}" class="btn btn-secondary w-25">
+            <i class="fa-solid fa-file-pdf"></i>
+        </a>
+    </div>
+</form>
 
 {% if students %}
 <div class="card">
@@ -31,7 +83,7 @@ Active Students
             <tbody class="table-border-bottom-0">
                 {% for item in students %}
                 <!-- Start Delete Modal -->
-                <div class="modal fade" id="modal-delete-{{i.id}}" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="modal-delete-{{item.id}}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -43,7 +95,7 @@ Active Students
                             aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                        <p>Are you sure you want to delete?</p>
+                        <p>Are you sure you want to delete {{item.name}}-{{item.roll_no}}?</p>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
@@ -56,7 +108,7 @@ Active Students
                 </div>
                 <!-- End Delete Modal -->
                 <!-- Start Activation Modal -->
-                <div class="modal fade" id="modal-activation-{{i.id}}" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="modal-activation-{{item.id}}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -68,7 +120,7 @@ Active Students
                             aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                        <p>Are you sure you want to activation?</p>
+                        <p>Are you sure you want to activation {{item.name}}-{{item.roll_no}}?</p>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
@@ -85,15 +137,15 @@ Active Students
                         <a href="{% url "update_student" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
                               <span class="icon-base fa fa-edit icon-sm text-white"></span>
                         </a>
-                        <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{i.id}}">
+                        <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{item.id}}">
                            <span class="icon-base fa-regular fa-trash-can icon-sm text-white"></span>
                         </button>
                         {% if item.active %}
-                        <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{i.id}}">
+                        <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
                            <span class="icon-base fa-solid fa-ban icon-sm text-white"></span>
                         </button>
                         {% else %}
-                        <button type="button" class="btn rounded-pill btn-icon btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{i.id}}">
+                        <button type="button" class="btn rounded-pill btn-icon btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
                            <span class="icon-base fa-solid fa-check icon-sm text-white"></span>
                         </button>
                         {% endif %}
