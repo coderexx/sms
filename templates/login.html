@@ -63,86 +63,79 @@
     </div>
     <!-- Content -->
 
-    <div class="container-xxl vh-100 ">
-      <div class="authentication-wrapper authentication-basic container-p-y pt-12">
-        <div class="authentication-inner">
+    <div class="overflow-hidden vh-100 w-100">
           <!-- Register -->
-          <div class="card px-sm-6 px-0 pe-md-0">
-            <div class="row">
-
-            <div class="card-body col-md-6">
-              <!-- Logo -->
-                <div class="app-brand justify-content-center">
-                  <div class="app-brand-logo demo">
-                    <img src="{% static 'dist/assets/img/logo.jpeg' %}" width="100" alt="">
+            <div class="row vh-100">
+              <div class="col-md-6 col-lg-9 d-none d-md-block">
+                  <img class="img-fluid h-100 w-100" style="object-fit: cover;" src="{% static  "dist/assets/img/login.jpeg" %}" alt="">
+              </div>
+              <div class="card-body col-md-6 col-lg-3 d-flex flex-column justify-content-center align-items-center px-5">
+                <!-- Logo -->
+                  <div class="app-brand justify-content-center">
+                    <div class="app-brand-logo demo">
+                      <img src="{% static 'dist/assets/img/logo.jpeg' %}" width="100" alt="">
+                    </div>
                   </div>
-                </div>
-                <!-- /Logo -->
-                <h2 class="app-brand-text demo text-heading fw-bold">Login</h2>
+                  <!-- /Logo -->
+                  <h2 class="app-brand-text demo text-heading fw-bold">Login</h2>
 
-              <form id="formAuthentication" class="mb-6" action="{% url "login" %}" method="POST">
-                {% csrf_token %}
-                <div class="mb-6">
-                  <label for="username" class="form-label">Username</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    name="username"
-                    placeholder="Enter your Username"
-                    autofocus />
-                </div>
-                <div class="mb-6 form-password-toggle">
-                  <label class="form-label" for="password">Password</label>
-                  <div class="input-group input-group-merge">
+                <form id="formAuthentication" class="mb-6" action="{% url "login" %}" method="POST">
+                  {% csrf_token %}
+                  <div class="mb-6">
+                    <label for="username" class="form-label">Username</label>
                     <input
-                      type="password"
-                      id="password"
+                      type="text"
                       class="form-control"
-                      name="password"
-                      placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                      aria-describedby="password" />
-                    <span class="input-group-text cursor-pointer"><i class="icon-base bx bx-hide"></i></span>
+                      id="username"
+                      name="username"
+                      placeholder="Enter your Username"
+                      autofocus />
                   </div>
-                </div>
-                <div class="mb-8">
-                  <div class="d-flex justify-content-between">
-                    <div class="form-check mb-0">
-                      <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me" />
-                      <label class="form-check-label" for="remember_me"> Remember Me </label>
+                  <div class="mb-6 form-password-toggle">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="input-group input-group-merge">
+                      <input
+                        type="password"
+                        id="password"
+                        class="form-control"
+                        name="password"
+                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                        aria-describedby="password" />
+                      <span class="input-group-text cursor-pointer"><i class="icon-base bx bx-hide"></i></span>
                     </div>
                   </div>
-                </div>
-                <div class="mb-6">
-                  <button class="btn btn-primary d-grid w-100" type="submit">Login</button>
-                </div>
-              </form>
-                {% if messages %}
-                    {% for message in messages %}
-                    {% if message.tags == 'error' %}
-                    <div class="alert alert-danger alert-dismissible text-center" role="alert">
-                        {{message}}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  <div class="mb-8">
+                    <div class="d-flex justify-content-between">
+                      <div class="form-check mb-0">
+                        <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me" />
+                        <label class="form-check-label" for="remember_me"> Remember Me </label>
+                      </div>
                     </div>
-                    {% endif %}
-                    {% if message.tags == 'success' %}
-                    <div class="alert alert-success alert-dismissible text-center" role="alert">
-                        {{message}}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    {% endif %}
-                    {% endfor %}
-                {% endif %}
+                  </div>
+                  <div class="mb-6">
+                    <button class="btn btn-primary d-grid w-100" type="submit">Login</button>
+                  </div>
+                </form>
+                  {% if messages %}
+                      {% for message in messages %}
+                      {% if message.tags == 'error' %}
+                      <div class="alert alert-danger alert-dismissible text-center" role="alert">
+                          {{message}}
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                      {% endif %}
+                      {% if message.tags == 'success' %}
+                      <div class="alert alert-success alert-dismissible text-center" role="alert">
+                          {{message}}
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                  {% endif %}
+              </div>
             </div>
-            <div class="col-md-6 d-none d-md-block">
-                <img class="img-fluid h-100 w-100" style="object-fit: cover;" src="{% static  "dist/assets/img/login.jpeg" %}" alt="">
-            </div>
-            </div>
-          </div>
 
           <!-- /Register -->
-        </div>
-      </div>
     </div>
 
     <!-- / Content -->
