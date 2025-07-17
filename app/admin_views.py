@@ -12,16 +12,19 @@ from django.db import transaction
 
 from app.views import User
 from .utils.decorators import role_required
+from .utils.send_sms import send_sms
 from .models import *
 #for pdf
 from django.template.loader import get_template
 from django.http import HttpResponse
 from xhtml2pdf import pisa
+from django.contrib.auth.decorators import login_required
 
 
 # global variables
 today = date.today()
 
+@login_required
 def dashboard(request):
     total_active_students = Student.objects.filter(active=True, student_class__active=True).count()
     total_active_teachers = Teacher.objects.filter(active=True).count()
@@ -31,9 +34,13 @@ def dashboard(request):
 
     for cls in active_classes:
         student_count = Student.objects.filter(student_class=cls, active=True).count()
+        male_count = Student.objects.filter(student_class=cls, active=True, gender='male').count()
+        female_count = Student.objects.filter(student_class=cls, active=True, gender='female').count()
         class_data.append({
             'class': cls,
-            'student_count': student_count
+            'student_count': student_count,
+            'male_count': male_count,
+            'female_count': female_count
         })
 
     context = {
@@ -48,6 +55,7 @@ def dashboard(request):
 
 #TODO:Student
 #read_student
+@login_required
 def read_student(request):
     students = Student.objects.filter(active=True,student_class__active=True).order_by('name')
     
@@ -96,7 +104,7 @@ def read_student(request):
     context = {
         "students": students,
         "query_string": query_string,
-        "student_classes": StudentClass.objects.all().order_by('number'),
+        "student_classes": StudentClass.objects.filter(active=True).order_by('number'),
         "schools": School.objects.all().order_by('name'),
         "locations": Location.objects.all().order_by('name'),
         "bloods": Student.BLOOD_LIST,
@@ -114,6 +122,7 @@ def read_student(request):
     }
     return render(request,'student/read_student.html',context)
 
+@login_required
 def read_inactive_student(request):
     students = Student.objects.filter(
         Q(active=False) | Q(student_class__active=False)
@@ -136,6 +145,7 @@ def read_inactive_student(request):
     return render(request,'student/read_student.html',context)
 
 #create_student
+@login_required
 def create_student(request):
     if request.method == 'POST':
         # ✅ Extract Required Fields
@@ -175,7 +185,7 @@ def create_student(request):
     context = {
         'schools': School.objects.all().order_by('name'),
         'locations': Location.objects.all().order_by('name'),
-        'student_classes': StudentClass.objects.all().order_by('number'),
+        'student_classes': StudentClass.objects.filter(active=True).order_by('number'),
         'genders': Student.GENDER_LIST,
         'bloods': Student.BLOOD_LIST,
         'religions': Student.RELIGION_LIST,
@@ -184,6 +194,7 @@ def create_student(request):
     return render(request,'student/create_student.html',context)
 
 #update_student
+@login_required
 def update_student(request,id):
     student = get_object_or_404(Student, id=id)
     if request.method == 'POST':
@@ -213,7 +224,7 @@ def update_student(request,id):
         'student': student,
         'schools': School.objects.all().order_by('name'),
         'locations': Location.objects.all().order_by('name'),
-        'student_classes': StudentClass.objects.all().order_by('number'),
+        'student_classes': StudentClass.objects.filter(active=True).order_by('number'),
         'genders': Student.GENDER_LIST,
         'bloods': Student.BLOOD_LIST,
         'religions': Student.RELIGION_LIST,
@@ -222,12 +233,14 @@ def update_student(request,id):
     return render(request,'student/update_student.html',context)
 
 #delete_student
+@login_required
 def delete_student(request,id):
     student = Student.objects.get(id=id)
     messages.success(request,f"{student.name} was deleted successfully.")
     return redirect(read_student)
 
 #activation_student
+@login_required
 def activation_student(request,id):
     student = Student.objects.get(id=id)
     if student.active == True:
@@ -244,6 +257,7 @@ def activation_student(request,id):
 
 #TODO:Teacher
 #read_teacher
+@login_required
 def read_teacher(request):
     teachers = Teacher.objects.filter(active=True).order_by('name')
     
@@ -273,6 +287,7 @@ def read_teacher(request):
     }
     return render(request,'teacher/read_teacher.html',context)
 
+@login_required
 def read_inactive_teacher(request):
     teachers = Teacher.objects.filter(active=False).order_by('name')
     
@@ -292,6 +307,7 @@ def read_inactive_teacher(request):
     return render(request,'teacher/read_teacher.html',context)
 
 #create_teacher
+@login_required
 def create_teacher(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -328,6 +344,7 @@ def create_teacher(request):
     return render(request,'teacher/create_teacher.html',context)
 
 #update_teacher
+@login_required
 def update_teacher(request,id):
     teacher = get_object_or_404(Teacher, id=id)
 
@@ -377,12 +394,14 @@ def update_teacher(request,id):
     return render(request,'teacher/update_teacher.html',context)
 
 #delete_teacher
+@login_required
 def delete_teacher(request,id):
     teacher = Teacher.objects.get(id=id)
     messages.success(request,f"{teacher.name} was deleted successfully.")
     return redirect(read_teacher)
 
 #activation_teacher
+@login_required
 def activation_teacher(request,id):
     teacher = Teacher.objects.get(id=id)
     if teacher.active == True:
@@ -402,6 +421,7 @@ def activation_teacher(request,id):
 
 #TODO:StudentClass
 #read_student_class
+@login_required
 def read_student_class(request):
     student_classes = StudentClass.objects.all().order_by('number')
     
@@ -421,6 +441,7 @@ def read_student_class(request):
     return render(request,'student_class/read_student_class.html',context)
 
 #create_student_class
+@login_required
 def create_student_class(request):
     if request.method == 'POST':
         number = request.POST.get('number')
@@ -437,6 +458,7 @@ def create_student_class(request):
     return render(request,'student_class/create_student_class.html',context)
 
 #update_student_class
+@login_required
 def update_student_class(request,id):
     student_class = get_object_or_404(StudentClass, id=id)
     if request.method == 'POST':
@@ -451,6 +473,7 @@ def update_student_class(request,id):
     return render(request,'student_class/update_student_class.html',context)
 
 #delete_student_class
+@login_required
 def delete_student_class(request,id):
     student_class = StudentClass.objects.get(id=id)
     messages.success(request,f"{student_class.number} was deleted successfully.")
@@ -458,6 +481,7 @@ def delete_student_class(request,id):
 
 
 #activation_student_class
+@login_required
 def activation_student_class(request,id):
     student_class = StudentClass.objects.get(id=id)
     if student_class.active == True:
@@ -470,6 +494,7 @@ def activation_student_class(request,id):
     return redirect(read_student_class)
 
 #shift_down_student_class
+@login_required
 def shift_down_student_class(request):
     student_classes = StudentClass.objects.all().order_by('number')  # Important: reverse order!
 
@@ -488,6 +513,7 @@ def shift_down_student_class(request):
     return redirect(read_student_class)
 
 #student_class_shift_up
+@login_required
 def shift_up_student_class(request):
     student_classes = StudentClass.objects.all().order_by('-number')  # Important: reverse order!
 
@@ -506,6 +532,7 @@ def shift_up_student_class(request):
     return redirect(read_student_class)
 
 #student profile
+@login_required
 def profile_student(request,id):
     student = Student.objects.get(id=id)
     context = {
@@ -514,6 +541,7 @@ def profile_student(request,id):
     return render(request,'profile/student_profile.html',context)
 
 #teacher profile
+@login_required
 def profile_teacher(request,id):
     teacher = Teacher.objects.get(id=id)
     context = {
@@ -523,6 +551,7 @@ def profile_teacher(request,id):
     
     
     
+@login_required
 def to_int_or_none(val):
     if not val or val.strip().lower() == 'none':
         return None
@@ -530,6 +559,7 @@ def to_int_or_none(val):
         return int(val)
     except (TypeError, ValueError):
         return None
+@login_required
 def read_student_pdf(request):
     students = Student.objects.filter(active=True,student_class__active=True).order_by('name')
     
@@ -585,6 +615,7 @@ def read_student_pdf(request):
 
 
 
+@login_required
 def read_teacher_pdf(request):
     teachers = Teacher.objects.filter(active=True).order_by('name')
     
@@ -615,3 +646,57 @@ def read_teacher_pdf(request):
         return HttpResponse("Error generating PDF", status=500)
     
     return response
+
+
+#TODO:Message
+@login_required
+def read_message(request):
+    messages = Message.objects.all().order_by('-created_at')
+    
+    #get query parameters
+    student_class_query = request.GET.get('student_class_query', '')
+    if student_class_query:
+        messages = messages.filter(student_class__id=student_class_query)
+        
+    # pagination for main_leave
+    paginator = Paginator(messages, 50)  # 50 records per page
+    page_number = request.GET.get('page')
+    messages = paginator.get_page(page_number)
+    # Handle query parameters for pagination
+    query_dict = request.GET.copy()
+    if 'page' in query_dict:
+        query_dict.pop('page')
+    query_string = query_dict.urlencode()
+    context = {
+        "messages": messages,
+        "student_classes": StudentClass.objects.filter(active=True).order_by('number'),
+        "student_class_query": int(student_class_query) if student_class_query else None,
+        "query_string": query_string
+    }
+    return render(request,'messages/read_message.html',context)
+
+
+@login_required
+def create_message(request):
+    if request.method == 'POST':
+        student_class = request.POST.get('student_class')
+        text = request.POST.get('text')
+        # Send SMS to all students in the selected class
+        students = Student.objects.filter(student_class_id=student_class, active=True)
+        for student in students:
+            if student.mob_no:
+                success, response = send_sms(student.mob_no, student.name, text)
+                if not success:
+                    messages.error(request, f"Failed to send SMS to {student.name}: {response}")
+                    
+        message = Message(
+            student_class_id=student_class,
+            text=text,
+        )
+        message.save()
+        messages.success(request, f"Message was created successfully.")
+        return redirect(read_message)
+    context = { 
+        "student_classes": StudentClass.objects.filter(active=True).order_by('number'),
+    }
+    return render(request,'messages/create_message.html',context)

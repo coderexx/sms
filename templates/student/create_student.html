@@ -10,23 +10,23 @@ Add Student
     <form action="{% url 'create_student' %}" method="POST" enctype="multipart/form-data" class="needs-validation row g-3" novalidate>
         {% csrf_token %}
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Name</label>
             <input name="name" type="text" class="form-control" required>
             <div class="invalid-feedback">Please enter name.</div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Roll Number</label>
             <input name="roll_no" type="text" class="form-control">
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Mobile Number</label>
             <input name="mob_no" type="text" class="form-control" required>
             <div class="invalid-feedback">Please enter mobile number.</div>
         </div>
-<div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">School</label>
             <select name="school" class="form-select" required>
                 <option value="">Choose...</option>
@@ -37,7 +37,7 @@ Add Student
             <div class="invalid-feedback">Please select a school.</div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Class</label>
             <select name="student_class" class="form-select" required>
                 <option value="">Choose...</option>
@@ -48,7 +48,7 @@ Add Student
             <div class="invalid-feedback">Please select a class.</div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Location</label>
             <select name="location" class="form-select">
                 <option value="">Choose...</option>
@@ -58,37 +58,37 @@ Add Student
             </select>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Father Name</label>
             <input name="father_name" type="text" class="form-control">
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Mother Name</label>
             <input name="mother_name" type="text" class="form-control">
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Father Mobile No</label>
             <input name="father_mob_no" type="text" class="form-control">
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Mother Mobile No</label>
             <input name="mother_mob_no" type="text" class="form-control">
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Date of Birth</label>
             <input name="date_of_birth" type="date" class="form-control">
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Picture</label>
             <input name="picture" type="file" class="form-control">
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Gender</label>
             <select name="gender" class="form-select">
                 <option value="">Choose...</option>
@@ -99,7 +99,7 @@ Add Student
             <div class="invalid-feedback">Please select gender.</div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Marital Status</label>
             <select name="marital_status" class="form-select">
                 <option value="">Choose...</option>
@@ -109,7 +109,7 @@ Add Student
             </select>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Blood Group</label>
             <select name="blood" class="form-select">
                 <option value="">Choose...</option>
@@ -119,7 +119,7 @@ Add Student
             </select>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Religion</label>
             <select name="religion" class="form-select">
                 <option value="">Choose...</option>
@@ -130,7 +130,7 @@ Add Student
         </div>
 
 
-        <div class="col-md-6">
+        <div class="col-xl-4 col-md-6">
             <label class="form-label">Email</label>
             <input name="email" type="email" class="form-control">
             <div class="invalid-feedback">Enter a valid email address.</div>

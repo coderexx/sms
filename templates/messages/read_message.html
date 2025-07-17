@@ -1,0 +1,62 @@
+{% extends 'base/base_template.html' %}
+
+{% block title %}
+
+Messages
+
+{% endblock title %}
+
+{% block content %}
+
+<div class="py-3 d-flex justify-content-between">
+    <a type="button" class="btn btn-icon btn-primary" href="{% url "create_message" %}">
+        <i class="fa-solid fa-plus"></i>
+    </a>
+    <form method="GET">
+    <div class="d-flex flex-wrap mb-3 input-group">
+        <select name="student_class_query" id="" class="form-select w-25 bg-white">
+            <option value="">Select Class</option>
+            {% for student_class in student_classes %}
+            <option value="{{ student_class.id }}" {% if student_class.id == student_class_query %}selected{% endif %}>{{ student_class.number }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary w-25"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+</form>
+</div>
+
+
+{% if messages %}
+<div class="card">
+    <div class="table-responsive text-nowrap">
+        <table class="table">
+            <thead class="table-dark">
+                <tr class="text-nowrap">
+                    <th>Sn</th>
+                    <th>Date</th>
+                    <th>Class</th>
+                    <th>Text</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                {% for item in messages %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{item.created_at.date}}</td>
+                    <td>{{item.student_class.number}}</td>
+                    <td>{{item.text}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% include "components/pagination.html" with page_obj=messages %}
+{% else %}
+<div class="bg-black text-white fs-1 card oswald h-100 m-auto pt-5 text-center">
+  No Message entries found.
+</div>
+{% endif %}
+
+
+{% endblock content %}

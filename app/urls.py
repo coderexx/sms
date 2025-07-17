@@ -51,6 +51,11 @@ urlpatterns = [
     #TODO:Profile
     path('profile_student/<int:id>', profile_student, name='profile_student'),
     path('profile_teacher/<int:id>', profile_teacher, name='profile_teacher'),
+    
+    
+    #TODO:Message
+    path('create_message', create_message, name='create_message'),
+    path('read_message', read_message, name='read_message'),
 
 
 

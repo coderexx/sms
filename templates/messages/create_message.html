@@ -1,0 +1,43 @@
+{% extends 'base/base_template.html' %}
+
+{% block title %}
+Send Message
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <form class="needs-validation" novalidate action="{% url "create_message" %}" method="POST">
+      {% csrf_token %}
+      <!-- start row -->
+      <div class="row">
+        <!-- start col -->
+        <div class="mb-3 col-xl-4 col-md-6">
+          <label class="form-label fw-bold fs-6" for="student_class">Class</label>
+          <select name="student_class" id="student_class" class="form-select" required>
+            <option value="">Select Class</option>
+            {% for student_class in student_classes %}
+              <option value="{{ student_class.id }}">{{ student_class.number }}</option>
+            {% endfor %}
+          </select>
+          <div class="invalid-feedback">Class is required.</div>
+        </div>
+        <!-- end col -->
+        <!-- start col -->
+        <div class="mb-3 col-xl-8 col-md-6">
+          <label class="form-label fw-bold fs-6" for="text">Message</label>
+          <textarea name="text" id="text" class="form-control" rows="3" required></textarea>
+          <div class="invalid-feedback">Message is required.</div>
+        </div>
+        <!-- end col -->
+      </div>
+      <!-- end row -->
+
+
+      <button type="submit" class="btn btn-primary mt-5">Send</button>
+    </form> 
+  </div>
+</div>
+
+
+{% endblock content %}
