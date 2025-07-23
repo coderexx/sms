@@ -29,11 +29,11 @@
         <tbody>
             {% for item in teachers %}
             <tr>
-                    <th scope="row">{{forloop.counter}}</th>
-                    <td>{{item.name}}</td>
-                    <td>{{item.mob_no}}</td>
-                    <td>{{item.location.name}}</td>
-                    <td></td>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{item.name|default:"N/A"}}</td>
+                <td>{{item.mob_no|default:"N/A"}}</td>
+                <td>{{item.location.name|default:"N/A"}}</td>
+                <td></td>
                 <td></td>
             </tr>
             {% endfor %}

@@ -57,7 +57,7 @@ def dashboard(request):
 #read_student
 @login_required
 def read_student(request):
-    students = Student.objects.filter(active=True,student_class__active=True).order_by('name')
+    students = Student.objects.filter(active=True,student_class__active=True).order_by('student_class__number','name')
     
     
     #get query parameters
@@ -112,23 +112,54 @@ def read_student(request):
         "genders": Student.GENDER_LIST,
         "marital_statuses": Student.MARITAL_STATUS_LIST,
         "query": query,
-        "student_class_query": int(student_class_query) if student_class_query else None,
-        "school_query": int(school_query) if school_query else None,
-        "location_query": int(location_query) if location_query else None,
+        "student_class_query": int(student_class_query) if student_class_query else "",
+        "school_query": int(school_query) if school_query else "",
+        "location_query": int(location_query) if location_query else "",
         "blood_query": blood_query,
         "religion_query": religion_query,
         "gender_query": gender_query,
-        "marital_status_query": marital_status_query
+        "marital_status_query": marital_status_query,
+        "inactive": False
     }
     return render(request,'student/read_student.html',context)
 
 @login_required
 def read_inactive_student(request):
-    students = Student.objects.filter(
-        Q(active=False) | Q(student_class__active=False)
-    ).order_by('name')
+    students = Student.objects.filter(Q(active=False) | Q(student_class__active=False)).order_by('student_class__number','name')
     
-        # pagination for main_leave
+    #get query parameters
+    query = request.GET.get('query', '')
+    student_class_query = request.GET.get('student_class_query', '')
+    school_query = request.GET.get('school_query', '')
+    location_query = request.GET.get('location_query', '')
+    blood_query = request.GET.get('blood_query', '')
+    religion_query = request.GET.get('religion_query', '')
+    gender_query = request.GET.get('gender_query', '')
+    marital_status_query = request.GET.get('marital_status_query', '')
+    if query:
+        students = students.filter(
+            Q(name__icontains=query) |
+            Q(mob_no__icontains=query) |
+            Q(email__icontains=query) |
+            Q(roll_no__icontains=query)
+        )
+    if student_class_query:
+        students = students.filter(student_class__id=student_class_query)
+    if school_query:
+        students = students.filter(school__id=school_query)
+    if location_query:
+        students = students.filter(location__id=location_query)
+    if blood_query:
+        students = students.filter(blood=blood_query)
+    if religion_query:
+        students = students.filter(religion=religion_query)
+    if gender_query:
+        students = students.filter(gender=gender_query)
+    if marital_status_query:
+        students = students.filter(marital_status=marital_status_query)
+        
+        
+    # pagination for main_leave
     paginator = Paginator(students, 50)  # 50 records per page
     page_number = request.GET.get('page')
     students = paginator.get_page(page_number)
@@ -140,6 +171,21 @@ def read_inactive_student(request):
     context = {
         "students": students,
         "query_string": query_string,
+        "student_classes": StudentClass.objects.filter(active=True).order_by('number'),
+        "schools": School.objects.all().order_by('name'),
+        "locations": Location.objects.all().order_by('name'),
+        "bloods": Student.BLOOD_LIST,
+        "religions": Student.RELIGION_LIST,
+        "genders": Student.GENDER_LIST,
+        "marital_statuses": Student.MARITAL_STATUS_LIST,
+        "query": query,
+        "student_class_query": int(student_class_query) if student_class_query else "",
+        "school_query": int(school_query) if school_query else "",
+        "location_query": int(location_query) if location_query else "",
+        "blood_query": blood_query,
+        "religion_query": religion_query,
+        "gender_query": gender_query,
+        "marital_status_query": marital_status_query,
         "inactive": True
     }
     return render(request,'student/read_student.html',context)
@@ -245,9 +291,11 @@ def activation_student(request,id):
     student = Student.objects.get(id=id)
     if student.active == True:
         student.active = False
+        student.inactive_date = today
         messages.success(request,f"{student.name} was deactivation successfully.")
     else:
         student.active = True
+        student.inactive_date = None
         messages.success(request,f"{student.name} was activation successfully.")
     student.save()
     return redirect(read_student)
@@ -284,6 +332,7 @@ def read_teacher(request):
         "teachers":teachers,
         "query_string": query_string,
         "query": query,
+        "inactive": False
     }
     return render(request,'teacher/read_teacher.html',context)
 
@@ -291,6 +340,14 @@ def read_teacher(request):
 def read_inactive_teacher(request):
     teachers = Teacher.objects.filter(active=False).order_by('name')
     
+    #get query parameters
+    query = request.GET.get('query', '')
+    if query:
+        teachers = teachers.filter(
+            Q(name__icontains=query) |
+            Q(mob_no__icontains=query) |
+            Q(email__icontains=query)
+        )
     # pagination for main_leave
     paginator = Paginator(teachers, 50)  # 50 records per page
     page_number = request.GET.get('page')
@@ -302,7 +359,9 @@ def read_inactive_teacher(request):
     query_string = query_dict.urlencode()
     context = {
         "teachers":teachers,
-        "inactive": True
+        "query_string": query_string,
+        "query": query,
+        "inactive": True,
     }
     return render(request,'teacher/read_teacher.html',context)
 
@@ -406,9 +465,11 @@ def activation_teacher(request,id):
     teacher = Teacher.objects.get(id=id)
     if teacher.active == True:
         teacher.active = False
+        teacher.inactive_date = today
         messages.success(request,f"{teacher.name} was deactivation successfully.")
     else:
         teacher.active = True
+        teacher.inactive_date = None
         messages.success(request,f"{teacher.name} was activation successfully.")
     teacher.save()
     return redirect(read_teacher)
@@ -551,23 +612,19 @@ def profile_teacher(request,id):
     
     
     
+
 @login_required
-def to_int_or_none(val):
-    if not val or val.strip().lower() == 'none':
-        return None
-    try:
-        return int(val)
-    except (TypeError, ValueError):
-        return None
-@login_required
-def read_student_pdf(request):
-    students = Student.objects.filter(active=True,student_class__active=True).order_by('name')
+def read_student_pdf(request,inactive=False):
+    if inactive:
+        students = Student.objects.filter(Q(active=False) | Q(student_class__active=False)).order_by('student_class__number','name')
+    else:
+        students = Student.objects.filter(active=True,student_class__active=True).order_by('student_class__number','name')
     
     #get query parameters
     query = request.GET.get('query', '')
-    student_class_query = to_int_or_none(request.GET.get('student_class_query'))
-    school_query = to_int_or_none(request.GET.get('school_query'))
-    location_query = to_int_or_none(request.GET.get('location_query'))
+    student_class_query = request.GET.get('student_class_query')
+    school_query = request.GET.get('school_query')
+    location_query = request.GET.get('location_query')
     blood_query = request.GET.get('blood_query', '')
     religion_query = request.GET.get('religion_query', '')
     gender_query = request.GET.get('gender_query', '')
@@ -579,11 +636,11 @@ def read_student_pdf(request):
             Q(email__icontains=query) |
             Q(roll_no__icontains=query)
         )
-    if student_class_query is not None:
+    if student_class_query:
         students = students.filter(student_class__id=student_class_query)
-    if school_query is not None:
+    if school_query:
         students = students.filter(school__id=school_query)
-    if location_query is not None:
+    if location_query:
         students = students.filter(location__id=location_query)
     if blood_query:
         students = students.filter(blood=blood_query)
@@ -616,8 +673,11 @@ def read_student_pdf(request):
 
 
 @login_required
-def read_teacher_pdf(request):
-    teachers = Teacher.objects.filter(active=True).order_by('name')
+def read_teacher_pdf(request,inactive=False):
+    if inactive:
+        teachers = Teacher.objects.filter(active=False).order_by('name')
+    else:
+        teachers = Teacher.objects.filter(active=True).order_by('name')
     
     #get query parameters
     query = request.GET.get('query', '')

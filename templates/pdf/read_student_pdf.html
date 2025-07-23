@@ -33,12 +33,12 @@
             {% for item in students %}
             <tr>
                     <th scope="row">{{forloop.counter}}</th>
-                    <td>{{item.name}}</td>
-                    <td>{{item.roll_no}}</td>
-                    <td>{{item.student_class.number}}</td>
-                    <td>{{item.school.name}}</td>
-                    <td>{{item.location.name}}</td>
-                    <td>{{item.mob_no}}</td>
+                    <td>{{item.name|default:"N/A"}}</td>
+                    <td>{{item.roll_no|default:"N/A"}}</td>
+                    <td>{{item.student_class.number|default:"N/A"}}</td>
+                    <td>{{item.school.name|default:"N/A"}}</td>
+                    <td>{{item.location.name|default:"N/A"}}</td>
+                    <td>{{item.mob_no|default:"N/A"}}</td>
                     <td></td>
                 <td></td>
             </tr>

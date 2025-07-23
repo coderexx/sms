@@ -1,0 +1,149 @@
+{% extends "base/base_template.html" %}
+
+{% block title %}
+Due Table
+{% endblock title %}
+
+{% block content %}
+
+<!-- Filter Form -->
+<form method="get" class="mb-4">
+  <div class="row g-3 align-items-center">
+    <div class="col-auto">
+      <label for="class_id" class="col-form-label">Select Class:</label>
+    </div>
+    <div class="col-auto">
+      <select name="class_id" onchange="this.form.submit()" id="class_id" class="form-select">
+        <option value="">-- Select Class --</option>
+        {% for cls in student_classes %}
+          <option value="{{ cls.id }}" {% if cls.id|stringformat:"s" == class_id %}selected{% endif %}>
+            {{ cls.number }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-auto">
+      <input placeholder="Roll Number" type="text" name="roll_no" value="{{ roll_no }}" onchange="this.form.submit()" class="form-control">
+    </div>
+  </div>
+</form>
+
+<!-- Student Table -->
+ {% if students %}
+<div class="card shadow">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">Action</th>
+            <th scope="col">Name</th>
+            <th scope="col">Roll</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Due Months</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in students %}
+          <tr>
+            <td>
+              <a href="{% url "profile_student" s.id %}" class="btn rounded-pill btn-icon btn-primary btn-sm">
+                    <span class="icon-base fa-regular fa-user icon-sm text-white"></span>
+              </a>
+              {% if s.dues %}
+              <button type="button" class="btn btn-success btn-sm" onclick="openModal({{ s.id }}, '{{ s.name }}', {{ s.dues|safe }})" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                Pay
+              </button>
+              {% else %}
+              ✅ Paid
+              {% endif %}
+            </td>
+            <td>{{ s.name }}</td>
+            <td>{{ s.roll }}</td>
+            <td>{{ s.phone }}</td>
+            <td>
+              {% for d in s.dues %}
+                {{ d.month }}/{{ d.year }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% else %}
+<div class="h-50 bg-black text-white fs-1 card oswald h-100 m-auto pt-5 text-center">No student records found for the selected class.</div>
+
+ {% endif %}
+
+
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form id="payForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="paymentModalLabel">Pay for <span id="modalStudentName"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="student_id" id="modalStudentId">
+          <div class="mb-3">
+            <label for="amount" class="form-label">Amount per month:</label>
+            <input type="number" name="amount" id="amount" class="form-control" required>
+          </div>
+          <div id="monthCheckboxes" class="form-check">
+            <!-- checkboxes injected here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Pay Selected</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap 5 & Modal Script -->
+<script>
+  function openModal(id, name, dues) {
+    document.getElementById('modalStudentName').textContent = name;
+    document.getElementById('modalStudentId').value = id;
+
+    let checkboxes = '';
+    dues.forEach(d => {
+      let val = `${d.year}-${String(d.month).padStart(2, '0')}`;
+      checkboxes += `
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="months[]" value="${val}" id="month-${val}" checked>
+          <label class="form-check-label" for="month-${val}">${val}</label>
+        </div>
+      `;
+    });
+
+    document.getElementById('monthCheckboxes').innerHTML = checkboxes;
+  }
+
+  document.getElementById('payForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let formData = new FormData(this);
+
+    fetch("{% url 'pay_multiple' %}", {
+      method: "POST",
+      headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'success') {
+        location.reload();
+      }
+    });
+  });
+</script>
+
+{% endblock content %}

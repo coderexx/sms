@@ -2,6 +2,7 @@ from django.urls import path
 from .views import *
 from .setting import *
 from .admin_views import *
+from .payment import *
 urlpatterns = [
     
     path('', do_login, name='login'),
@@ -17,6 +18,7 @@ urlpatterns = [
     path('read_student', read_student, name='read_student'),
     path('read_inactive_student', read_inactive_student, name='read_inactive_student'),
     path('read_student_pdf', read_student_pdf, name='read_student_pdf'),
+    path('read_student_pdf/<str:inactive>', read_student_pdf, name='read_student_pdf'),
     path('update_student/<int:id>', update_student, name='update_student'),
     path('delete_student/<int:id>', delete_student, name='delete_student'),
     path('activation_student/<int:id>', activation_student, name='activation_student'),
@@ -25,6 +27,7 @@ urlpatterns = [
     path('read_teacher', read_teacher, name='read_teacher'),
     path('read_inactive_teacher', read_inactive_teacher, name='read_inactive_teacher'), 
     path('read_teacher_pdf', read_teacher_pdf, name='read_teacher_pdf'),
+    path('read_teacher_pdf/<str:inactive>', read_teacher_pdf, name='read_teacher_pdf'),
     path('update_teacher/<int:id>', update_teacher, name='update_teacher'),
     path('delete_teacher/<int:id>', delete_teacher, name='delete_teacher'),
     path('activation_teacher/<int:id>', activation_teacher, name='activation_teacher'),
@@ -56,6 +59,11 @@ urlpatterns = [
     #TODO:Message
     path('create_message', create_message, name='create_message'),
     path('read_message', read_message, name='read_message'),
+    
+    # TODO: Payment
+    path('due_table/',due_table, name='due_table'),
+    path('pay_multiple/',pay_multiple_months, name='pay_multiple'),
+    path('read_credit/',read_credit, name='read_credit'),
 
 
 

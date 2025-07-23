@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from datetime import date
+from django.utils import timezone
+import calendar
 
 # Create your models here.
 class BaseModel(models.Model):
@@ -140,6 +142,7 @@ class Teacher(BaseModel):
     blood = models.CharField(max_length=50, choices=BLOOD_LIST, null=True, blank=True)
     religion = models.CharField(max_length=50, choices=RELIGION_LIST, null=True, blank=True)
     active = models.BooleanField(default=True)
+    inactive_date = models.DateField(null=True, blank=True)
     @property
     def age(self):
         today = date.today()
@@ -203,6 +206,8 @@ class Student(BaseModel):
     blood = models.CharField(max_length=50, choices=BLOOD_LIST, null=True, blank=True)
     religion = models.CharField(max_length=50, choices=RELIGION_LIST, null=True, blank=True)
     active = models.BooleanField(default=True)
+    inactive_date = models.DateField(null=True, blank=True)
+    join_date = models.DateField(auto_now_add=True, null=True, blank=True)
     @property
     def age(self):
         today = date.today()
@@ -219,3 +224,17 @@ class Message(BaseModel):
     text = models.TextField(null=True,blank=True)
     student_class = models.ForeignKey(StudentClass,on_delete=models.CASCADE)
     
+    
+class MonthlyPayment(models.Model):
+    code = models.IntegerField(null=True, blank=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='monthly_payments')
+    year = models.IntegerField(null=True, blank=True)
+    month = models.IntegerField(null=True, blank=True)  # 1 = January, 12 = December
+    amount = models.IntegerField(null=True, blank=True)
+    payment_date = models.DateField(auto_now_add=True,null=True,blank=True)
+
+    class Meta:
+        unique_together = ('student', 'year', 'month')  # prevent duplicate payments
+
+    def __str__(self):
+        return f"{self.student.name} - {calendar.month_name[self.month]} {self.year}"

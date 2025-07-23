@@ -23,3 +23,7 @@ class StudentAdmin(admin.ModelAdmin):
 @admin.register(StudentClass)
 class StudentClassAdmin(admin.ModelAdmin):
     list_display = ('id', 'number')
+    
+@admin.register(MonthlyPayment)
+class MonthlyPaymentAdmin(admin.ModelAdmin):
+    pass

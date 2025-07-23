@@ -1,0 +1,57 @@
+{% extends "base/base_template.html" %}
+{% block title %}Credit Summary Table{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <form method="get" class="row g-3 mb-4" >
+    <div class="col-md-4">
+      <label for="year" class="form-label">Select Year:</label>
+      <select name="year" id="year" class="form-select" onchange="this.form.submit()">
+        <option value="">-- Select Year --</option>
+        {% for year in years %}
+          <option value="{{ year }}" {% if year|stringformat:"s" == selected_year|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <label for="class_id" class="form-label">Select Class:</label>
+      <select name="class_id" id="class_id" class="form-select" onchange="this.form.submit()">
+        <option value="">-- Select Class --</option>
+        {% for class in classes %}
+          <option value="{{ class.id }}" {% if class.id == selected_class %}selected{% endif %}>{{ class.number }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+
+  {% if table_data %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Month</th>
+            <th>Total Amount (৳)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in table_data %}
+            <tr>
+              <td>{{ row.month }}</td>
+              <td>{{ row.amount }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot class="table-light fw-bold">
+        <tr>
+            <td>Total</td>
+            <td>{{ total_amount }}</td>
+        </tr>
+        </tfoot>
+      </table>
+    </div>
+  {% elif selected_year and selected_class %}
+    <div class="alert alert-warning">No payment records found for the selected year and class.</div>
+  {% endif %}
+</div>
+{% endblock %}

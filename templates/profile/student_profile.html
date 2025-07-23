@@ -94,9 +94,23 @@ Student Profile
             <td>{{ student.mother_mob_no|default:"Not Yet Done" }}</td>
           </tr>
           <tr>
+             <th>Join Date</th>
+            <td>{{ student.created_at.date|default:"Not Yet Done" }}</td>
+          </tr>
+          <tr>
             <th>Status</th>
             <td>
               {% if student.active %}
+                <span class="badge bg-success">Active</span>
+              {% else %}
+                <span class="badge bg-danger">Inactive</span>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>Class Status</th>
+            <td>
+              {% if student.student_class.active %}
                 <span class="badge bg-success">Active</span>
               {% else %}
                 <span class="badge bg-danger">Inactive</span>

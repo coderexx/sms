@@ -14,7 +14,7 @@ Active Students
 
 <!-- Search Query -->
 <form method="GET">
-    <div class="d-flex flex-wrap mb-3 input-group">
+    <div class="d-flex flex-wrap mb-3 input-group-sm">
         <input class="form-control w-50 bg-white" type="text" placeholder="name ..." id="" name="query" value="{{ query }}" >
         <select name="student_class_query" id="" class="form-select w-25 bg-white">
             <option value="">Select Class</option>
@@ -59,7 +59,7 @@ Active Students
             {% endfor %}
         </select>
         <button type="submit" class="btn btn-primary w-25"><i class="fa-solid fa-magnifying-glass"></i></button>
-        <a target="_blank" href="{% url 'read_student_pdf' %}?{{query_string}}" class="btn btn-secondary w-25">
+        <a target="_blank" href="{% url 'read_student_pdf' inactive %}?{{query_string}}" class="btn btn-secondary w-25">
             <i class="fa-solid fa-file-pdf"></i>
         </a>
     </div>

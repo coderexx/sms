@@ -60,6 +60,10 @@
             <td>{{ teacher.location.name|default:"N/A"}}</td>
           </tr>
           <tr>
+            <th>Join Date</th>
+            <td>{{ teacher.created_at.date|default:"N/A" }}</td>
+          </tr>
+          <tr>
             <th>Active</th>
             <td>
               {% if teacher.active %}
