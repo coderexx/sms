@@ -9,9 +9,12 @@ Messages
 {% block content %}
 
 <div class="py-3 d-flex justify-content-between">
-    <a type="button" class="btn btn-icon btn-primary" href="{% url "create_message" %}">
-        <i class="fa-solid fa-plus"></i>
-    </a>
+    <div>
+        <a type="button" class="btn btn-icon btn-primary" href="{% url "create_message" %}">
+            <i class="fa-solid fa-plus"></i>
+        </a>
+    </div>
+
     <form method="GET">
     <div class="d-flex flex-wrap mb-3 input-group">
         <select name="student_class_query" id="" class="form-select w-25 bg-white">

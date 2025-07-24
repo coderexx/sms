@@ -1,6 +1,6 @@
 from unicodedata import name
-from twilio.rest import Client
 from django.conf import settings
+import requests
 
 def format_bangladesh_number(number):
     # Ensure starts with +880
@@ -13,23 +13,38 @@ def format_bangladesh_number(number):
     else:
         return None  # invalid format
 
-def send_sms(to, name, message):
-    account_sid = settings.TWILIO_ACCOUNT_SID
-    auth_token = settings.TWILIO_AUTH_TOKEN
-    client = Client(account_sid, auth_token)
 
-    formatted_to = format_bangladesh_number(to)
+
+def send_sms(number, name, message):
+    formatted_to = format_bangladesh_number(number)
     if not formatted_to:
         return False, "Invalid phone number format."
 
-    final_message = f"👋 Hello, {name}\n{message}"
+    final_message = f"Dear {name},\n{message}"
+    api_key = settings.SMS_API_KEY
+    senderid = settings.SMS_SENDER_ID
+    url = "http://bulksmsbd.net/api/smsapi"
+    payload = {
+        "api_key": api_key,       # Replace with your actual API key
+        "senderid": senderid,    # Replace with your actual sender ID
+        "number": formatted_to,
+        "message": final_message
+    }
+
     try:
-        client.messages.create(
-            body=final_message,
-            from_=settings.TWILIO_PHONE_NUMBER,
-            to=formatted_to
-        )
-        return True, "Message sent successfully."
+        response = requests.post(url, data=payload)
+        if response.status_code == 200 and "SMS Sent" in response.text:
+            return True, response.text
+        else:
+            return False, response.text
     except Exception as e:
         return False, str(e)
 
+
+# utils.py or inside views.py
+def calculate_sms_segments(text):
+    if len(text) <= 100:
+        return 1
+    else:
+        return 1 + ((len(text) - 100 + 144) // 145)
+    

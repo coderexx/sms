@@ -12,7 +12,7 @@ from django.db import transaction
 
 from app.views import User
 from .utils.decorators import role_required
-from .utils.send_sms import send_sms
+from .utils.send_sms import *
 from .models import *
 #for pdf
 from django.template.loader import get_template
@@ -766,22 +766,57 @@ def create_message(request):
     if request.method == 'POST':
         student_class = request.POST.get('student_class')
         text = request.POST.get('text')
-        # Send SMS to all students in the selected class
+        segment_count = calculate_sms_segments(text)
+        total_sms_sent = 0
         students = Student.objects.filter(student_class_id=student_class, active=True)
+
         for student in students:
             if student.mob_no:
-                success, response = send_sms(student.mob_no, student.name, text)
-                if not success:
-                    messages.error(request, f"Failed to send SMS to {student.name}: {response}")
-                    
-        message = Message(
+                total_sms_sent += segment_count
+                
+                # success, response = send_sms(student.mob_no, student.name, text)
+                # if success:
+                #     total_sms_sent += segment_count
+                # if not success:
+                #     messages.error(request, f"❌ Failed to send SMS to {student.name}: {response}")
+
+        # Save message
+        Message.objects.create(
             student_class_id=student_class,
             text=text,
+            total_sms_count=total_sms_sent
         )
-        message.save()
-        messages.success(request, f"Message was created successfully.")
-        return redirect(read_message)
-    context = { 
+        
+        # Always update the latest counter
+        latest_counter = SMSCounter.objects.order_by('-created_at').first()
+        if not latest_counter:
+            # If no counter exists, create the first one
+            latest_counter = SMSCounter.objects.create(total_sms_sent=0)
+        latest_counter.total_sms_sent += total_sms_sent
+        latest_counter.save()
+
+        messages.success(request, "✅ Message was created and sent successfully.")
+        return redirect('read_message')  # or your view name
+
+    all_counters = SMSCounter.objects.all().order_by('-created_at')
+    latest_counter = all_counters.first()
+    # pagination for all_counters
+    paginator = Paginator(all_counters, 50)  # 50 records per page
+    page_number = request.GET.get('page')
+    all_counters = paginator.get_page(page_number)
+    context = {
         "student_classes": StudentClass.objects.filter(active=True).order_by('number'),
+        "latest_counter": latest_counter,
+        "all_counters": all_counters
     }
-    return render(request,'messages/create_message.html',context)
+    return render(request, 'messages/create_message.html', context)
+
+
+@login_required
+def reset_sms_counter(request):
+    # Create a new counter instance (old one stays in DB)
+    SMSCounter.objects.get_or_create(total_sms_sent=0)
+
+    messages.success(request, "✅ SMS counter reset — new counter started.")
+    return redirect('create_message')
+

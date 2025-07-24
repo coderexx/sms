@@ -26,8 +26,9 @@ Send Message
         <!-- start col -->
         <div class="mb-3 col-xl-8 col-md-6">
           <label class="form-label fw-bold fs-6" for="text">Message</label>
-          <textarea name="text" id="text" class="form-control" rows="3" required></textarea>
+          <textarea id="smsText" oninput="countCustomSegments()" name="text" class="form-control" rows="3" required></textarea>
           <div class="invalid-feedback">Message is required.</div>
+          <p id="charCount">Characters: 0</p>
         </div>
         <!-- end col -->
       </div>
@@ -36,8 +37,25 @@ Send Message
 
       <button type="submit" class="btn btn-primary mt-5">Send</button>
     </form> 
+    {% include "messages/read_sms_counter.html" %}
   </div>
 </div>
 
 
+<script>
+function countCustomSegments() {
+    const text = document.getElementById("smsText").value;
+    const count = text.length;
+    let segments = 1;
+
+    if (count <= 100) {
+        segments = 1;
+    } else {
+        const remaining = count - 100;
+        segments = 1 + Math.ceil(remaining / 145);
+    }
+
+    document.getElementById("charCount").innerText = `Characters: ${count}, SMS Segments: ${segments}`;
+}
+</script>
 {% endblock content %}

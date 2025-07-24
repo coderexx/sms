@@ -59,6 +59,8 @@ urlpatterns = [
     #TODO:Message
     path('create_message', create_message, name='create_message'),
     path('read_message', read_message, name='read_message'),
+    path('reset_sms_counter', reset_sms_counter, name='reset_sms_counter'),
+    
     
     # TODO: Payment
     path('due_table/',due_table, name='due_table'),

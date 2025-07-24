@@ -1,0 +1,26 @@
+
+    <h3 class="card-title text-center mt-3">📟 Current Counter: {{ latest_counter.total_sms_sent|default:0 }} SMS</h3>
+    <a href="{% url 'reset_sms_counter' %}" class="btn btn-warning w-100">Reset Counter</a>
+
+    <hr>
+    <h4>📜 SMS Counter History</h4>
+    <table class="table">
+    <thead>
+        <tr>
+        <th>#</th>
+        <th>Total SMS Sent</th>
+        <th>Started At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for counter in all_counters %}
+        <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ counter.total_sms_sent }}</td>
+        <td>{{ counter.created_at }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+{% include "components/pagination.html" with page_obj=all_counters %}
