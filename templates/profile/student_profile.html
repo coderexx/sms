@@ -19,6 +19,28 @@ Student Profile
       {% else %}
         <img src="{% static "dist/assets/img/avatars/5.png" %}" class="img-fluid rounded" alt="Default" style="max-height: 300px;">
       {% endif %}
+
+      <div class="mt-5 shadow-lg py-1">
+         <h4 class="bg-danger text-white shadow-lg">Due Months</h4>
+          <ul>
+            {% for year, month in due_months %}
+              <li>{{ month }} / {{ year }}</li>
+            {% empty %}
+              <li>✅ No due</li>
+            {% endfor %}
+          </ul>
+      </div>
+
+      <div class="d-none d-lg-block shadow-lg mt-3">
+        <h4 class="bg-success text-white shadow-lg">Paid Months</h4>
+        <ul>
+          {% for payment in payments %}
+            <li>{{ payment.year }} - {{ payment.month }}: {{ payment.amount }} BDT</li>
+          {% empty %}
+            <li>No payments made yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
 
     <!-- Right: Details -->

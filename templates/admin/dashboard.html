@@ -5,63 +5,91 @@ Dashboard
 {% endblock title %}
 
 {% block content %}
-
-
 <div class="container py-5">
- 
-<div class="row g-4">
-    <h1 class="mb-4 text-center">📊 Origin Academy</h1>
-    <div class="row g-4 d-flex justify-content-center">
-      <div class="col-md-4">
-        <div class="card text-white bg-primary shadow">
-          <div class="card-body d-flex justify-content-between align-items-center">
-            <div>
-              <h5 class="card-title text-white">Total Students</h5>
-              <p class="display-6 fw-bold mb-0">{{ total_active_students }}</p>
-            </div>
-            <i class="fa-solid fa-user-graduate fa-3x"></i>
-          </div>
-        </div>
-      </div>
 
-      <div class="col-md-4">
-        <div class="card text-white bg-success shadow">
-          <div class="card-body d-flex justify-content-between align-items-center">
-            <div>
-              <h5 class="card-title text-white">Total Teachers</h5>
-              <p class="display-6 fw-bold mb-0">{{ total_active_teachers }}</p>
-            </div>
-            <i class="fa-solid fa-chalkboard-teacher fa-3x"></i>
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- Heading -->
+  <div class="text-center mb-5">
+  <h1 class="mb-5 fw-bold text-primary">🎓 Welcome to <span class="text-dark">Origin Academy</span></h1>
+    <p class="text-muted fs-5">Your education hub at a glance</p>
+  </div>
 
-    <h4 class="mt-5 mb-3">📚 Active Classes and Student Counts</h4>
+  <!-- Stats Cards -->
+  <div class="row g-4 justify-content-center">
+    <a href="{% url 'read_student' %}" class="col-md-4">
+      <div class="glass-card p-4 d-flex justify-content-between align-items-center rounded-0">
+        <div>
+          <h5 class="text-muted">Total Students</h5>
+          <p class="display-6 fw-bold text-dark mb-0 counter" data-target="{{ total_active_students }}">0</p>
+        </div>
+        <i class="fa-solid fa-user-graduate fa-3x text-primary"></i>
+      </div>
+    </a>
+
+    <a href="{% url 'read_teacher' %}" class="col-md-4">
+      <div class="glass-card p-4 d-flex justify-content-between align-items-center rounded-0">
+        <div>
+          <h5 class="text-muted">Total Teachers</h5>
+          <p class="display-6 fw-bold text-dark mb-0 counter" data-target="{{ total_active_teachers }}">0</p>
+        </div>
+        <i class="fa-solid fa-chalkboard-teacher fa-3x text-success"></i>
+      </div>
+    </a>
+  </div>
+
+
+  <hr class="my-5">
+
+  <!-- Class Summary -->
+  <div class="mt-5">
+    <h4 class="text-dark mb-4"><i class="fa-solid fa-layer-group text-primary"></i> Active Classes & Student Summary</h4>
     <div class="row row-cols-1 row-cols-md-3 g-4">
       {% for item in class_data %}
-      <div class="col">
-        <div class="card h-100 border-0 shadow-sm">
-          <div class="card-body d-flex justify-content-between align-items-center">
-            <div class="w-100">
-              <h5 class="card-title">Class {{ item.class.number }}</h5>
-              <p class="mb-0">Students: <strong>{{ item.student_count }}</strong></p>
-              <p class="mb-0">Male: <strong>{{ item.male_count }}</strong></p>
-              <p class="mb-0">Female: <strong>{{ item.female_count }}</strong></p>
-            </div>
-            <i class="fa-solid fa-users fa-2x text-primary"></i>
-          </div>
+      <a href="{% url 'read_student' %}?student_class_query={{ item.class.id }}" class="col">
+        <div class="glass-card p-4 h-100 rounded-0">
+          <h5 class="text-info"><span class="text-gradient">Class</span> - {{ item.class.number }}</h5>
+          <ul class="list-unstyled mb-0 text-black">
+            <li>👨‍🎓 Students: <strong class="counter" data-target="{{ item.student_count }}">0</strong></li>
+            <li>👦 Male: <strong class="counter" data-target="{{ item.male_count }}">0</strong></li>
+            <li>👧 Female: <strong class="counter" data-target="{{ item.female_count }}">0</strong></li>
+          </ul>
         </div>
-      </div>
+      </a>
       {% empty %}
       <div class="col">
-        <div class="alert alert-warning">No active classes available.</div>
+        <div class="alert alert-warning text-center">No active classes available.</div>
       </div>
       {% endfor %}
     </div>
+  </div>
 
 </div>
 
+<!-- Styles -->
+<style>
+  .text-gradient {
+    background: linear-gradient(90deg, #007bff, #6610f2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  body {
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+  }
+</style>
+
+
 
 {% endblock content %}
-

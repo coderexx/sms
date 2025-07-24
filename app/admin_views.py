@@ -296,6 +296,7 @@ def activation_student(request,id):
     else:
         student.active = True
         student.inactive_date = None
+        student.join_date = today
         messages.success(request,f"{student.name} was activation successfully.")
     student.save()
     return redirect(read_student)
@@ -596,8 +597,32 @@ def shift_up_student_class(request):
 @login_required
 def profile_student(request,id):
     student = Student.objects.get(id=id)
+    payments = student.monthly_payments.order_by('-year', '-month')
+
+    # Get list of paid months
+    paid_months = {(p.year, p.month) for p in payments}
+
+    # Assume from join date till today
+    current_year = date.today().year
+    current_month = date.today().month
+    due_months = []
+
+    year = student.join_date.year
+    month = student.join_date.month
+
+    while (year, month) <= (current_year, current_month):
+        if (year, month) not in paid_months:
+            due_months.append((year, month))
+        if month == 12:
+            month = 1
+            year += 1
+        else:
+            month += 1
+
     context = {
-        "student":student
+        "student":student,
+        "payments":payments,
+        "due_months":due_months
     }
     return render(request,'profile/student_profile.html',context)
 
