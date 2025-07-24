@@ -1,0 +1,29 @@
+@font-face {
+  font-family: 'Public Sans';
+  src: url('/static/dist/assets/fonts/PublicSans-Regular.ttf') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Public Sans';
+  src: url('/static/dist/assets/fonts/PublicSans-Bold.ttf') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Oswald';
+  src: url('/static/dist/assets/fonts/Oswald.ttf') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+.oswald{
+  font-family: 'Oswald';
+}
+.public{
+  font-family: 'Public Sans';
+}
+/* Add more weights/styles as needed */
