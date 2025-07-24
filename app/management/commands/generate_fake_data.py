@@ -19,7 +19,7 @@ class Command(BaseCommand):
 
         # Create Student Classes
         classes = []
-        for i in range(100, 110):
+        for i in range(1, 10):
             c = StudentClass.objects.create(number=i, active=True)
             classes.append(c)
         self.stdout.write(self.style.SUCCESS("✅ Created 10 Student Classes"))
