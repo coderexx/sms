@@ -13,7 +13,7 @@ Active Teachers
 {% block content %}
 
 <form method="GET">
-    <div class="d-flex flex-wrap mb-3 input-group-sm">
+    <div class="d-flex flex-wrap mb-3 input-group">
         <input class="form-control w-50 bg-white" type="text" placeholder="name ..." id="" name="query" value="{{ query }}" >
         <button type="submit" class="btn btn-primary w-25"><i class="fa-solid fa-magnifying-glass"></i></button>
         <a target="_blank" href="{% url 'read_teacher_pdf' inactive %}?{{query_string}}" class="btn btn-secondary w-25">

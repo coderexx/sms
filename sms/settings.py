@@ -144,6 +144,6 @@ AUTH_USER_MODEL = 'app.CustomUser'
 
 
 
-#TODO:TWILIO settings
+#TODO: SMS settings
 SMS_API_KEY = os.getenv("SMS_API_KEY")
 SMS_SENDER_ID = os.getenv("SMS_SENDER_ID")

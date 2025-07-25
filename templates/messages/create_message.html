@@ -48,11 +48,11 @@ function countCustomSegments() {
     const count = text.length;
     let segments = 1;
 
-    if (count <= 100) {
+    if (count <= 115) {
         segments = 1;
     } else {
-        const remaining = count - 100;
-        segments = 1 + Math.ceil(remaining / 145);
+        const remaining = count - 115;
+        segments = 1 + Math.ceil(remaining / 160);
     }
 
     document.getElementById("charCount").innerText = `Characters: ${count}, SMS Segments: ${segments}`;

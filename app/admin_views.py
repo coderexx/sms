@@ -640,7 +640,7 @@ def profile_teacher(request,id):
 
 @login_required
 def read_student_pdf(request,inactive=False):
-    if inactive:
+    if inactive == "True":
         students = Student.objects.filter(Q(active=False) | Q(student_class__active=False)).order_by('student_class__number','name')
     else:
         students = Student.objects.filter(active=True,student_class__active=True).order_by('student_class__number','name')
@@ -699,7 +699,7 @@ def read_student_pdf(request,inactive=False):
 
 @login_required
 def read_teacher_pdf(request,inactive=False):
-    if inactive:
+    if inactive == "True":
         teachers = Teacher.objects.filter(active=False).order_by('name')
     else:
         teachers = Teacher.objects.filter(active=True).order_by('name')
@@ -772,13 +772,11 @@ def create_message(request):
 
         for student in students:
             if student.mob_no:
-                total_sms_sent += segment_count
-                
-                # success, response = send_sms(student.mob_no, student.name, text)
-                # if success:
-                #     total_sms_sent += segment_count
-                # if not success:
-                #     messages.error(request, f"❌ Failed to send SMS to {student.name}: {response}")
+                success, response = send_sms(student.mob_no, student.name, text)
+                if success:
+                    total_sms_sent += segment_count
+                if not success:
+                    messages.error(request, f"❌ Failed to send SMS to {student.name}: {response}")
 
         # Save message
         Message.objects.create(

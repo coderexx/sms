@@ -20,7 +20,7 @@ def send_sms(number, name, message):
     if not formatted_to:
         return False, "Invalid phone number format."
 
-    final_message = f"Dear {name},\n{message}"
+    final_message = f"Origin Acad\nDear {name}\n{message}"
     api_key = settings.SMS_API_KEY
     senderid = settings.SMS_SENDER_ID
     url = "http://bulksmsbd.net/api/smsapi"
@@ -33,7 +33,7 @@ def send_sms(number, name, message):
 
     try:
         response = requests.post(url, data=payload)
-        if response.status_code == 200 and "SMS Sent" in response.text:
+        if response.status_code == 200:
             return True, response.text
         else:
             return False, response.text
@@ -43,8 +43,8 @@ def send_sms(number, name, message):
 
 # utils.py or inside views.py
 def calculate_sms_segments(text):
-    if len(text) <= 100:
+    if len(text) <= 115:
         return 1
     else:
-        return 1 + ((len(text) - 100 + 144) // 145)
+        return 1 + ((len(text) - 115 + 159) // 160)
     
