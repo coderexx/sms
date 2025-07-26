@@ -32,7 +32,7 @@ Due Table
  {% if students %}
 <div class="card shadow">
   <div class="card-body">
-    <div class="table-responsive">
+    <div class="table-responsive text-nowrap">
       <table class="table table-bordered align-middle">
         <thead class="table-dark">
           <tr>
@@ -46,7 +46,7 @@ Due Table
         <tbody>
           {% for s in students %}
           <tr>
-            <td>
+            <td class="d-flex gap-3">
               <a href="{% url "profile_student" s.id %}" class="btn rounded-pill btn-icon btn-primary btn-sm">
                     <span class="icon-base fa-regular fa-user icon-sm text-white"></span>
               </a>
