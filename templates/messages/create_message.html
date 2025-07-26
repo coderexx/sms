@@ -28,7 +28,7 @@ Send Message
           <label class="form-label fw-bold fs-6" for="text">Message</label>
           <textarea id="smsText" oninput="countCustomSegments()" name="text" class="form-control" rows="3" required></textarea>
           <div class="invalid-feedback">Message is required.</div>
-          <p id="charCount">Characters: 0</p>
+          <p id="charCount">Characters: 115, Segments: 1</p>
         </div>
         <!-- end col -->
       </div>
@@ -47,15 +47,20 @@ function countCustomSegments() {
     const text = document.getElementById("smsText").value;
     const count = text.length;
     let segments = 1;
+    let remaining = 0;
 
     if (count <= 115) {
         segments = 1;
+        remaining = 115 - count;
     } else {
-        const remaining = count - 115;
-        segments = 1 + Math.ceil(remaining / 160);
+        const extra = count - 115;
+        segments = 1 + Math.ceil(extra / 160);
+        const usedInLastSegment = extra % 160;
+        remaining = (usedInLastSegment === 0) ? 0 : 160 - usedInLastSegment;
     }
 
-    document.getElementById("charCount").innerText = `Characters: ${count}, SMS Segments: ${segments}`;
+    document.getElementById("charCount").innerText = 
+        `Characters: ${remaining}, Segments: ${segments}`;
 }
 </script>
 {% endblock content %}
