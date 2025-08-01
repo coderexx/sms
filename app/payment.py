@@ -13,6 +13,7 @@ from app.views import User
 from .utils.decorators import role_required
 from .models import *
 from django.db.models import Sum, F
+from django.db.models.functions import ExtractMonth, ExtractYear
 
 
 # global variables
@@ -27,41 +28,54 @@ def due_table(request):
 
     if roll_no:
         students = Student.objects.filter(roll_no=roll_no, active=True)
-        
-    if student_class_id:
+    elif student_class_id:
         students = Student.objects.filter(student_class=student_class_id, active=True)
 
-    current_year = datetime.today().year
-    current_month = datetime.today().month
+    today = datetime.today()
+    current_year = today.year
+    current_month = today.month
 
     student_data = []
 
     for student in students:
-        join_date = student.join_date or datetime(student.join_date.year, 1, 1).date()
-        inactive_date = student.inactive_date or datetime(current_year, current_month, 1).date()
+        join_date = student.join_date or date(current_year, 1, 1)
 
-        # Generate year-months from join to current/inactive date
+        # Billing starts from join month (postpaid), so include it in calculation
+        start_year = join_date.year
+        start_month = join_date.month
+
+        # Calculate end date: previous month of current date
+        # Because postpaid: current month is not yet due
+        if current_month == 1:
+            end_year = current_year - 1
+            end_month = 12
+        else:
+            end_year = current_year
+            end_month = current_month - 1
+
+        # If student became inactive earlier, limit due to inactive_date
+        inactive_date = student.inactive_date
+        if inactive_date:
+            if inactive_date.year < end_year or (inactive_date.year == end_year and inactive_date.month < end_month):
+                end_year = inactive_date.year
+                end_month = inactive_date.month
+
+        # Generate due months between start and end
         year_months = []
-        year = join_date.year
-        month = join_date.month
-
-        while (year < inactive_date.year) or (year == inactive_date.year and month <= inactive_date.month):
-            year_months.append((year, month))
-            if month == 12:
-                year += 1
-                month = 1
+        y, m = start_year, start_month
+        while (y < end_year) or (y == end_year and m <= end_month):
+            year_months.append((y, m))
+            if m == 12:
+                y += 1
+                m = 1
             else:
-                month += 1
+                m += 1
 
-        # Get paid months as set of (year, month)
-        paid = MonthlyPayment.objects.filter(student=student).values_list('year', 'month')
-        paid_set = set(paid)
+        # Fetch paid months
+        paid_set = set(MonthlyPayment.objects.filter(student=student).values_list('year', 'month'))
 
-        # Identify unpaid (due) months
-        dues = []
-        for y, m in year_months:
-            if (y, m) not in paid_set:
-                dues.append({'year': y, 'month': m})
+        # Filter out already paid months
+        dues = [{'year': y, 'month': m} for y, m in year_months if (y, m) not in paid_set]
 
         student_data.append({
             'id': student.id,
@@ -111,11 +125,13 @@ def pay_multiple_months(request):
 
 @login_required
 def read_credit(request):
-    years = MonthlyPayment.objects.values_list('year', flat=True).distinct().order_by('-year')
+    # Get distinct years from payment_date
+    years = MonthlyPayment.objects.annotate(payment_year=ExtractYear('payment_date')) \
+        .values_list('payment_year', flat=True).distinct().order_by('-payment_year')
+
     selected_year = request.GET.get('year')
     selected_class = request.GET.get('class_id')
-    
-    # Auto-select most recent year if not selected
+
     if not selected_year and years:
         selected_year = int(years[0])
     else:
@@ -127,10 +143,14 @@ def read_credit(request):
 
     if selected_year:
         for month in range(1, 13):
-            qs = MonthlyPayment.objects.filter(
-                year=selected_year,
-                month=month,
+            qs = MonthlyPayment.objects.annotate(
+                payment_year=ExtractYear('payment_date'),
+                payment_month=ExtractMonth('payment_date')
+            ).filter(
+                payment_year=selected_year,
+                payment_month=month
             )
+
             if selected_class_id:
                 qs = qs.filter(student__student_class=selected_class_id)
 

@@ -210,3 +210,63 @@ def delete_school(request,id):
     school = School.objects.get(id=id)
     messages.success(request,f"{school.name} was deleted successfully.")
     return redirect(read_school)
+
+
+
+#TODO:Subject
+#read_subject
+def read_subject(request):
+    subjects = Subject.objects.all().order_by('name')
+    
+    # pagination for main_leave
+    paginator = Paginator(subjects, 50)  # 50 records per page
+    page_number = request.GET.get('page')
+    subjects = paginator.get_page(page_number)
+    # Handle query parameters for pagination
+    query_dict = request.GET.copy()
+    if 'page' in query_dict:
+        query_dict.pop('page')
+    query_string = query_dict.urlencode()
+    context = {
+        "subjects":subjects,
+        "query_string": query_string
+    }
+    return render(request,'setting/read_subject.html',context)
+
+#create_subject
+def create_subject(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        if name:
+            Subject.objects.create(name=name)
+            messages.success(request, 'Subject created successfully.')
+            return redirect(read_subject)
+        else:
+            messages.error(request, 'Invalid subject name.')
+    context = {
+
+    }
+    return render(request,'setting/create_subject.html',context)
+
+#update_subject
+def update_subject(request,id):
+    subject = get_object_or_404(Subject, id=id)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        if name:
+            subject.name = name
+            subject.save()
+            messages.success(request, 'Subject updated successfully.')
+            return redirect(read_subject)
+        else:
+            messages.error(request, 'Invalid subject name.')
+    context = {
+        "subject": subject
+    }
+    return render(request,'setting/update_subject.html',context)
+
+#delete_subject
+def delete_subject(request,id):
+    subject = Subject.objects.get(id=id)
+    messages.success(request,f"{subject.name} was deleted successfully.")
+    return redirect(read_subject)

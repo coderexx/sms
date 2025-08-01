@@ -17,7 +17,6 @@
         <img src="{% static 'dist/assets/img/avatars/5.png' %}" class="img-thumbnail mb-3" alt="No image">
       {% endif %}
       <h5 class="mt-2">{{ teacher.name }}</h5>
-      <p class="text-muted">{{ teacher.gender|default:"N/A" }}</p>
     </div>
 
     <div class="col-md-8">
@@ -83,4 +82,77 @@
 
   </div>
 </div>
+
+
+
+
+<div>
+    <form method="get" class="d-flex">
+        <select name="year" id="year" class="form-select bg-white"  onchange="this.form.submit()">
+            {% for y in years %}
+                <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="month" id="month" class="form-select bg-white"  onchange="this.form.submit()">
+            {% for m, name in months %}
+                <option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="subject" id="subject" class="form-select bg-white" onchange="this.form.submit()">
+            <option value="">Subject</option>
+            {% for s in subjects %}
+                <option value="{{ s.id }}" {% if s.id == selected_subject %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="student_class" id="class" class="form-select bg-white" onchange="this.form.submit()">
+            <option value="">Class</option>
+            {% for c in student_classes %}
+                <option value="{{ c.id }}" {% if c.id == selected_class %}selected{% endif %}>Class {{ c.number }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+{% if teaching_assignments %}
+<div class="card shadow mt-3">
+    <p class="fw-bold text-center">
+        Assignments <br>
+        {{ total }}
+    </p>
+</div>
+<div class="card">
+    <div class="table-responsive text-nowrap">
+        <table class="table">
+            <thead class="table-dark">
+                <tr class="text-nowrap">
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Subject</th>
+                    <th>Class</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                {% for item in teaching_assignments %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{item.date|date:"d-M-Y"}}</td>
+                    <td>{{item.subject.name}}</td>
+                    <td>{{item.student_class.number}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% include "components/pagination.html" with page_obj=teaching_assignments %}
+
+{% else %}
+<div class="bg-black text-white fs-1 card oswald h-10 m-auto mt-5 py-5 text-center">
+  No Teaching Assignment entries found.
+</div>
+{% endif %}
+
 {% endblock content %}

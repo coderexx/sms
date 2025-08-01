@@ -75,6 +75,14 @@
     </li>
     <li class="menu-item">
         <a
+            href="{% url "read_teaching_assignment" %}"
+            class="menu-link active">
+            <i class="fa-solid fa-flag menu-icon"></i>
+            <div class="text-truncate" data-i18n="Class">Teaching Assignment</div>
+        </a>
+    </li>
+    <li class="menu-item">
+        <a
             href="{% url "read_message" %}"
             class="menu-link active">
             <i class="fa-solid fa-message menu-icon"></i>
@@ -114,6 +122,11 @@
             <li class="menu-item">
                 <a href="{% url "read_location" %}" class="menu-link">
                     <div class="text-truncate" data-i18n="text">Location</div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url "read_subject" %}" class="menu-link">
+                    <div class="text-truncate" data-i18n="text">Subject</div>
                 </a>
             </li>
             <li class="menu-item">

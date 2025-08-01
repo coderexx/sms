@@ -91,6 +91,12 @@ class School(BaseModel):
 
     def __str__(self):
         return self.name
+    
+class Subject(BaseModel):
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
 
 class StudentClass(BaseModel):
     number = models.IntegerField(unique=True)
@@ -219,6 +225,15 @@ class Student(BaseModel):
     def __str__(self):
         return self.name
     
+    
+class TeachingAssignment(BaseModel):
+    date = models.DateField(null=True,blank=True)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    student_class = models.ForeignKey(StudentClass, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"{self.teacher} - {self.subject} - {self.student_class}"
     
 class Message(BaseModel):
     text = models.TextField(null=True,blank=True)

@@ -3,6 +3,12 @@ from .views import *
 from .setting import *
 from .admin_views import *
 from .payment import *
+from .message import *
+from .information import *
+from .profile import *
+from .student_class import *
+
+
 urlpatterns = [
     
     path('', do_login, name='login'),
@@ -49,11 +55,21 @@ urlpatterns = [
     path('read_school', read_school, name='read_school'),
     path('update_school/<int:id>', update_school, name='update_school'),
     path('delete_school/<int:id>', delete_school, name='delete_school'),
+    #TODO:Subject
+    path('create_subject', create_subject, name='create_subject'),
+    path('read_subject', read_subject, name='read_subject'),
+    path('update_subject/<int:id>', update_subject, name='update_subject'),
+    path('delete_subject/<int:id>', delete_subject, name='delete_subject'),
     
     
     #TODO:Profile
     path('profile_student/<int:id>', profile_student, name='profile_student'),
     path('profile_teacher/<int:id>', profile_teacher, name='profile_teacher'),
+    
+    #TODO:Teaching Assignment
+    path('create_teaching_assignment', create_teaching_assignment, name='create_teaching_assignment'),
+    path('read_teaching_assignment', read_teaching_assignment, name='read_teaching_assignment'),
+    path('delete_teaching_assignment/<int:id>', delete_teaching_assignment, name='delete_teaching_assignment'),
     
     
     #TODO:Message

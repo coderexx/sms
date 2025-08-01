@@ -1,0 +1,126 @@
+{% extends 'base/base_template.html' %}
+
+{% block title %}
+
+Teaching Assignment
+
+{% endblock title %}
+
+{% block content %}
+
+<div class="py-3">
+    <a type="button" class="btn btn-icon btn-primary" href="{% url "create_teaching_assignment" %}">
+        <i class="fa-solid fa-plus"></i>
+    </a>
+</div>
+<div>
+    <form method="get" class="d-flex">
+        <select name="year" id="year" class="form-select bg-white"  onchange="this.form.submit()">
+            {% for y in years %}
+                <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="month" id="month" class="form-select bg-white"  onchange="this.form.submit()">
+            {% for m, name in months %}
+                <option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="teacher" id="teacher" class="form-select bg-white" onchange="this.form.submit()">
+            <option value="">Teacher</option>
+            {% for t in teachers %}
+                <option value="{{ t.id }}" {% if t.id == selected_teacher %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="subject" id="subject" class="form-select bg-white" onchange="this.form.submit()">
+            <option value="">Subject</option>
+            {% for s in subjects %}
+                <option value="{{ s.id }}" {% if s.id == selected_subject %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="student_class" id="class" class="form-select bg-white" onchange="this.form.submit()">
+            <option value="">Class</option>
+            {% for c in classes %}
+                <option value="{{ c.id }}" {% if c.id == selected_class %}selected{% endif %}>Class {{ c.number }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+{% if teaching_assignments %}
+<div class="card shadow mt-3">
+    <p class="fw-bold text-center">
+        Assignments <br>
+        {{ total }}
+    </p>
+</div>
+<div class="card">
+    <div class="table-responsive text-nowrap">
+        <table class="table">
+            <thead class="table-dark">
+                <tr class="text-nowrap">
+                    <th>Action</th>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Teacher</th>
+                    <th>Subject</th>
+                    <th>Class</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                {% for item in teaching_assignments %}
+                <!-- Start Delete Modal -->
+                <div class="modal fade" id="modal-delete-{{i.id}}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h4 class="modal-title" id="modalCenterTitle">Delete {{item.name}}</h4>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        <p>Are you sure you want to delete?</p>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <a href="{% url 'delete_teaching_assignment' item.id %}" class="btn btn-danger">Delete</a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- End Delete Modal -->
+                <tr>
+                    <th>
+                        <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{i.id}}">
+                           <span class="icon-base fa-regular fa-trash-can icon-sm text-white"></span>
+                        </button>
+                    </th>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{item.date|date:"d-M-Y"}}</td>
+                    <td>{{item.teacher.name}}</td>
+                    <td>{{item.subject.name}}</td>
+                    <td>{{item.student_class.number}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% include "components/pagination.html" with page_obj=teaching_assignments %}
+
+{% else %}
+<div class="bg-black text-white fs-1 card oswald h-100 m-auto pt-5 text-center mt-5">
+  No Teaching Assignment entries found.
+</div>
+{% endif %}
+
+
+{% endblock content %}

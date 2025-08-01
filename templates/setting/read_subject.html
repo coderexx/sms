@@ -2,19 +2,19 @@
 
 {% block title %}
 
-School
+Subject
 
 {% endblock title %}
 
 {% block content %}
 
 <div class="py-3">
-    <a type="button" class="btn btn-icon btn-primary" href="{% url "create_school" %}">
+    <a type="button" class="btn btn-icon btn-primary" href="{% url "create_subject" %}">
         <i class="fa-solid fa-plus"></i>
     </a>
 </div>
 
-{% if schools %}
+{% if subjects %}
 <div class="card">
     <div class="table-responsive text-nowrap">
         <table class="table">
@@ -22,12 +22,11 @@ School
                 <tr class="text-nowrap">
                     <th>Action</th>
                     <th>#</th>
-                    <th>School</th>
-                    <th>Location</th>
+                    <th>Subject</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                {% for item in schools %}
+                {% for item in subjects %}
                 <!-- Start Delete Modal -->
                 <div class="modal fade" id="modal-delete-{{i.id}}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -47,7 +46,7 @@ School
                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
                             Close
                         </button>
-                        <a href="{% url 'delete_school' item.id %}" class="btn btn-danger">Delete</a>
+                        <a href="{% url 'delete_subject' item.id %}" class="btn btn-danger">Delete</a>
                         </div>
                     </div>
                     </div>
@@ -55,7 +54,7 @@ School
                 <!-- End Delete Modal -->
                 <tr>
                     <th>
-                        <a href="{% url "update_school" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
+                        <a href="{% url "update_subject" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
                               <span class="icon-base fa fa-edit icon-sm text-white"></span>
                         </a>
                         <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{i.id}}">
@@ -64,17 +63,17 @@ School
                     </th>
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{item.name}}</td>
-                    <td>{{item.location.name}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
-{% include "components/pagination.html" with page_obj=schools %}
+{% include "components/pagination.html" with page_obj=subjects %}
+
 {% else %}
 <div class="bg-black text-white fs-1 card oswald h-100 m-auto pt-5 text-center mt-5">
-  No Location entries found.
+  No Subject entries found.
 </div>
 {% endif %}
 

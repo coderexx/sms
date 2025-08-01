@@ -1,0 +1,67 @@
+{% extends 'base/base_template.html' %}
+
+{% block title %}
+Add Teaching Assignment
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <form class="needs-validation" novalidate action="{% url "create_teaching_assignment" %}" method="POST">
+      {% csrf_token %}
+      <!-- start row -->
+      <div class="row">
+        <!-- start col -->
+        <div class="mb-3 col-xl-4 col-md-6">
+          <label class="form-label fw-bold fs-6" for="date">Date</label>
+          <input type="date" class="form-control" id="date" name="date" required>
+          <div class="invalid-feedback">Date is required.</div>
+        </div>
+        <!-- end col -->
+        <!-- start col -->
+        <div class="mb-3 col-xl-4 col-md-6">
+          <label class="form-label fw-bold fs-6" for="teacher">Teacher</label>
+          <select name="teacher" id="teacher" class="form-select" required>
+            <option value="">Select Teacher</option>
+            {% for teacher in teachers %}
+              <option value="{{ teacher.id }}">{{ teacher.name }}</option>
+            {% endfor %}
+          </select>
+          <div class="invalid-feedback">Teacher is required.</div>
+        </div>
+        <!-- end col -->
+        <!-- start col -->
+        <div class="mb-3 col-xl-4 col-md-6">
+          <label class="form-label fw-bold fs-6" for="student_class">Class</label>
+          <select name="student_class" id="student_class" class="form-select" required>
+            <option value="">Select Class</option>
+            {% for student_class in student_classes %}
+              <option value="{{ student_class.id }}">{{ student_class.number }}</option>
+            {% endfor %}
+          </select>
+          <div class="invalid-feedback">Class is required.</div>
+        </div>
+        <!-- end col -->
+        <!-- start col -->
+        <div class="mb-3 col-xl-4 col-md-6">
+          <label class="form-label fw-bold fs-6" for="subject">Subject</label>
+          <select name="subject" id="subject" class="form-select" required>
+            <option value="">Select Subject</option>
+            {% for subject in subjects %}
+              <option value="{{ subject.id }}">{{ subject.name }}</option>
+            {% endfor %}
+          </select>
+          <div class="invalid-feedback">Subject is required.</div>
+        </div>
+        <!-- end col -->
+      </div>
+      <!-- end row -->
+
+
+      <button type="submit" class="btn btn-primary mt-5">Add</button>
+    </form> 
+  </div>
+</div>
+
+
+{% endblock content %}
