@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from faker import Faker
 import random
 from datetime import date
-from app.models import Location, School, StudentClass, Teacher, Student
+from app.models import *
 
 class Command(BaseCommand):
     help = 'Generate fake data for Location, School, StudentClass, Teacher, and Student'
@@ -30,6 +30,13 @@ class Command(BaseCommand):
             sch = School.objects.create(name=fake.company(), location=random.choice(locations))
             schools.append(sch)
         self.stdout.write(self.style.SUCCESS("✅ Created 5 Schools"))
+        
+        # Create Schools
+        subjects = []
+        for _ in range(5):
+            sub = Subject.objects.create(name=fake.company())
+            subjects.append(sub)
+        self.stdout.write(self.style.SUCCESS("✅ Created 5 Subjects"))
 
         # Choices
         GENDER_LIST = ["male", "female"]

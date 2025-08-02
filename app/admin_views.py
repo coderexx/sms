@@ -79,6 +79,15 @@ def read_teaching_assignment(request):
         queryset = queryset.filter(student_class_id=selected_class)
 
     total = queryset.count()
+    # pagination for main_leave
+    paginator = Paginator(queryset, 50)  # 50 records per page
+    page_number = request.GET.get('page')
+    queryset = paginator.get_page(page_number)
+    # Handle query parameters for pagination
+    query_dict = request.GET.copy()
+    if 'page' in query_dict:
+        query_dict.pop('page')
+    query_string = query_dict.urlencode()
 
     context = {
         'teaching_assignments': queryset,
@@ -89,11 +98,12 @@ def read_teaching_assignment(request):
         'selected_subject': int(selected_subject) if selected_subject else '',
         'selected_class': int(selected_class) if selected_class else '',
 
-        'teachers': Teacher.objects.all(),
-        'subjects': Subject.objects.all(),
-        'classes': StudentClass.objects.all(),
+        'teachers': Teacher.objects.all().order_by('name'),
+        'subjects': Subject.objects.all().order_by('name'),
+        'classes': StudentClass.objects.all().order_by('number'),
         'months': [(i, calendar.month_name[i]) for i in range(1, 13)],
-        'years': years
+        'years': years,
+        'query_string': query_string
     }
     return render(request, 'teaching_assignment/read_teaching_assignment.html', context)
 
@@ -120,8 +130,8 @@ def create_teaching_assignment(request):
         return redirect('read_teaching_assignment')
 
     context = {
-        'teachers': Teacher.objects.all(),
-        'subjects': Subject.objects.all(),
+        'teachers': Teacher.objects.all().order_by('name'),
+        'subjects': Subject.objects.all().order_by('name'),
         'student_classes': StudentClass.objects.all()
     }
     return render(request, 'teaching_assignment/create_teaching_assignment.html', context)

@@ -27,9 +27,9 @@ def due_table(request):
     students = []
 
     if roll_no:
-        students = Student.objects.filter(roll_no=roll_no, active=True)
+        students = Student.objects.filter(roll_no=roll_no, active=True).order_by('name')
     elif student_class_id:
-        students = Student.objects.filter(student_class=student_class_id, active=True)
+        students = Student.objects.filter(student_class=student_class_id, active=True).order_by('name')
 
     today = datetime.today()
     current_year = today.year

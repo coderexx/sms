@@ -56,7 +56,7 @@ def profile_teacher(request,id):
     selected_class = request.GET.get('student_class')
 
     # Base queryset
-    assignments = TeachingAssignment.objects.filter(teacher=teacher)
+    assignments = TeachingAssignment.objects.filter(teacher=teacher).order_by('-date','-created_at')
 
     # Apply filters
     if selected_year:
@@ -78,8 +78,8 @@ def profile_teacher(request,id):
         'total': total,
         'years': years,
         'months': [(i, calendar.month_name[i]) for i in range(1, 13)],
-        'subjects': Subject.objects.all(),
-        'student_classes': StudentClass.objects.all(),
+        'subjects': Subject.objects.all().order_by('name'),
+        'student_classes': StudentClass.objects.all().order_by('number'),
         'selected_year': selected_year,
         'selected_month': selected_month,
         'selected_subject': int(selected_subject) if selected_subject else '',

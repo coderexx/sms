@@ -167,7 +167,7 @@ def read_school(request):
 
 #create_school
 def create_school(request):
-    locations = Location.objects.all()
+    locations = Location.objects.all().order_by('name')
     if request.method == 'POST':
         name = request.POST.get('name')
         location_id = request.POST.get('location')
@@ -186,7 +186,7 @@ def create_school(request):
 #update_school
 def update_school(request,id):
     school = get_object_or_404(School, id=id)
-    locations = Location.objects.all()
+    locations = Location.objects.all().order_by('name')
     if request.method == 'POST':
         name = request.POST.get('name')
         location_id = request.POST.get('location')

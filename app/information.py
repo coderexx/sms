@@ -366,7 +366,7 @@ def create_teacher(request):
         'bloods': Teacher.BLOOD_LIST,
         'religions': Teacher.RELIGION_LIST,
         'marital_statuses': Teacher.MARITAL_STATUS_LIST,
-        'locations': Location.objects.all()
+        'locations': Location.objects.all().order_by('name'),
     }
     return render(request,'teacher/create_teacher.html',context)
 
@@ -412,7 +412,7 @@ def update_teacher(request,id):
     # GET request — show the form with existing data
     context = {
         'teacher': teacher,
-        'locations': Location.objects.all(),
+        'locations': Location.objects.all().order_by('name'),
         'genders': Teacher.GENDER_LIST,
         'bloods': Teacher.BLOOD_LIST,
         'religions': Teacher.RELIGION_LIST,
