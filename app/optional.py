@@ -1,4 +1,4 @@
-def due_table(request):
+def old_due_table(request):
     student_class_id = request.GET.get('class_id')
     roll_no = request.GET.get('roll_no')
     students = []
@@ -54,3 +54,25 @@ def due_table(request):
         'class_id': student_class_id,
         'student_classes': StudentClass.objects.filter(active=True).order_by('number'),
     })
+    
+    
+def old_profile_payment():
+        # Get list of paid months
+    paid_months = {(p.year, p.month) for p in payments}
+
+    # Assume from join date till today
+    current_year = date.today().year
+    current_month = date.today().month
+    due_months = []
+
+    join_year = student.join_date.year
+    join_month = student.join_date.month
+
+    while (join_year, join_month) <= (current_year, current_month):
+        if (join_year, join_month) not in paid_months:
+            due_months.append((join_year, join_month))
+        if join_month == 12:
+            join_month = 1
+            join_year += 1
+        else:
+            join_month += 1

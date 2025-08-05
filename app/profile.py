@@ -16,30 +16,97 @@ def profile_student(request,id):
     student = Student.objects.get(id=id)
     payments = student.monthly_payments.order_by('-year', '-month')
 
-    # Get list of paid months
-    paid_months = {(p.year, p.month) for p in payments}
+    current_year = today.year
+    current_month = today.month
+    # Determine start date from join_date
+    join_date = student.join_date or date(current_year, 1, 1)
+    start_year = join_date.year
+    start_month = join_date.month
 
-    # Assume from join date till today
-    current_year = date.today().year
-    current_month = date.today().month
-    due_months = []
+    # End month is previous month (postpaid logic)
+    if current_month == 1:
+        end_year = current_year - 1
+        end_month = 12
+    else:
+        end_year = current_year
+        end_month = current_month - 1
 
-    year = student.join_date.year
-    month = student.join_date.month
+    # If student is inactive, adjust end year/month
+    if student.inactive_date:
+        inactive_year = student.inactive_date.year
+        inactive_month = student.inactive_date.month
+        if (inactive_year, inactive_month) < (end_year, end_month):
+            end_year = inactive_year
+            end_month = inactive_month
 
-    while (year, month) <= (current_year, current_month):
-        if (year, month) not in paid_months:
-            due_months.append((year, month))
-        if month == 12:
-            month = 1
-            year += 1
+    # Build list of (year, month) from join to end
+    year_months = []
+    y, m = start_year, start_month
+    while (y < end_year) or (y == end_year and m <= end_month):
+        year_months.append((y, m))
+        if m == 12:
+            y += 1
+            m = 1
         else:
-            month += 1
+            m += 1
 
+    # Get paid months
+    paid_months = set(
+        MonthlyPayment.objects.filter(student=student)
+        .values_list('year', 'month')
+    )
+
+    # Identify due months
+    due_months = [(y, m) for y, m in year_months if (y, m) not in paid_months]
+            
+            
+    
+            
+    # Attendance
+    attendance_month = int(request.GET.get('attendance_month', today.month))
+    attendance_year = int(request.GET.get('attendance_year', today.year))
+    
+
+    attendances = Attendance.objects.filter(
+        student=student, 
+        date__year=attendance_year,
+        date__month=attendance_month
+    )
+
+    # Dictionary like {day: True/False}
+    attendance_status_by_day = {a.date.day: a.is_present for a in attendances}
+
+    cal = calendar.Calendar()
+    attendance_days = cal.itermonthdays(attendance_year, attendance_month)
+    weekday_names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    weeks = []
+    week = []
+
+    for day in attendance_days:
+        week.append(day)
+        if len(week) == 7:
+            weeks.append(week)
+            week = []
+
+    # if the last week is not full
+    if week:
+        while len(week) < 7:
+            week.append(0)
+        weeks.append(week)
+
+    years = Attendance.objects.filter(student=student).annotate(year=ExtractYear('date')).values_list('year', flat=True).distinct().order_by('-year')
     context = {
         "student":student,
         "payments":payments,
-        "due_months":due_months
+        "due_months":due_months,
+        'attendance_days': attendance_days,
+        'attendance_status_by_day': attendance_status_by_day,
+        'attendance_month': attendance_month,
+        'attendance_year': attendance_year,
+        'weekday_names': weekday_names,
+        'weeks': weeks,
+        'years': years,
+        'months': [(i, calendar.month_name[i]) for i in range(1, 13)],
     }
     return render(request,'profile/student_profile.html',context)
 

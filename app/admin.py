@@ -27,3 +27,7 @@ class StudentClassAdmin(admin.ModelAdmin):
 @admin.register(MonthlyPayment)
 class MonthlyPaymentAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(Attendance)
+class AttendanceAdmin(admin.ModelAdmin):
+    pass 

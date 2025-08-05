@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse, FileResponse
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib.auth.hashers import make_password
 from django.db import transaction
 from django.db.models.functions import ExtractYear
@@ -37,17 +37,35 @@ def dashboard(request):
         student_count = Student.objects.filter(student_class=cls, active=True).count()
         male_count = Student.objects.filter(student_class=cls, active=True, gender='male').count()
         female_count = Student.objects.filter(student_class=cls, active=True, gender='female').count()
+        
+        # Today's attendance
+        attendance_today = Attendance.objects.filter(student__student_class=cls, date=today)
+        present_count = attendance_today.filter(is_present=True).count()
+        absent_count = attendance_today.filter(is_present=False).count()
         class_data.append({
             'class': cls,
             'student_count': student_count,
             'male_count': male_count,
-            'female_count': female_count
+            'female_count': female_count,
+            'present_count': present_count,
+            'absent_count': absent_count,
         })
+        
+    attendance_data = (
+        Attendance.objects.filter(date=today)  # ✅ Only today's records
+        .values('date')
+        .annotate(
+            present=Count('id', filter=Q(is_present=True)),
+            absent=Count('id', filter=Q(is_present=False)),
+            total=Count('id')
+        )
+    )
 
     context = {
         'total_active_students': total_active_students,
         'total_active_teachers': total_active_teachers,
-        'class_data': class_data
+        'class_data': class_data,
+        "attendance_data":attendance_data,
     }
 
     return render(request, 'admin/dashboard.html', context)

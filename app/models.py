@@ -263,3 +263,14 @@ class SMSCounter(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return f"SMS Sent: {self.total_sms_sent} (Started {self.created_at})"
+
+
+
+
+class Attendance(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    date = models.DateField(default=timezone.now)
+    is_present = models.BooleanField()
+
+    class Meta:
+        unique_together = ('student', 'date')  # Prevent duplicate entries

@@ -1,5 +1,6 @@
 {% extends 'base/base_template.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}
 Student Profile
@@ -149,4 +150,81 @@ Student Profile
     </div>
   </div>
 </div>
+
+
+
+<div class="mt-4">
+    <form method="get" class="d-flex">
+        <select name="attendance_year" id="attendance_year" class="form-select bg-white"  onchange="this.form.submit()">
+            {% for y in years %}
+                <option value="{{ y }}" {% if y == attendance_year %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="attendance_month" id="attendance_month" class="form-select bg-white"  onchange="this.form.submit()">
+            {% for m, name in months %}
+                <option value="{{ m }}" {% if m == attendance_month %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+
+
+<!-- ✅ Attendance Table -->
+<div class="table-responsive mt-4 shadow-sm">
+  <table class="table table-bordered text-center align-middle">
+    <thead>
+      <tr>
+        {% for day in weekday_names %}
+            <th class="table-primary text-uppercase">{{ day }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for week in weeks %}
+      <tr>
+        {% for day in week %}
+        <td 
+          class="{% if day %}bg-light{% else %}bg-white{% endif %}" 
+          style="cursor: {% if day %}pointer{% else %}default{% endif %};" 
+          {% if day %}
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="{% if day in attendance_status_by_day %}
+                      {% if attendance_status_by_day|get_item:day %}
+                        Present
+                      {% else %}
+                        Absent
+                      {% endif %}
+                    {% else %}
+                      No Data
+                    {% endif %}"
+          {% endif %}
+        >
+          {% if day %}
+            <div class="fw-semibold">{{ day }}</div>
+            {% if day in attendance_status_by_day %}
+              {% if attendance_status_by_day|get_item:day %}
+                <span class="text-success fs-5">✅</span>
+              {% else %}
+                <span class="text-danger fs-5">❌</span>
+              {% endif %}
+            {% else %}
+              <span class="text-muted">–</span>
+            {% endif %}
+          {% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ✅ Enable Bootstrap Tooltips -->
+<script>
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+</script>
 {% endblock content %}

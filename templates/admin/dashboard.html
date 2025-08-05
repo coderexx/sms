@@ -37,6 +37,30 @@ Dashboard
   </div>
 
 
+  <!-- ✅ Attendance Table -->
+<div class="table-responsive shadow-sm mt-5">
+  <table class="table table-bordered table-striped table-hover align-middle">
+    <thead class="table-dark text-center">
+      <tr>
+        <th scope="col">📅 Date</th>
+        <th scope="col">✅ Present</th>
+        <th scope="col">❌ Absent</th>
+        <th scope="col">🔢 Total</th>
+      </tr>
+    </thead>
+    <tbody class="text-center">
+      {% for day in attendance_data %}
+      <tr>
+        <td>{{ day.date }}</td>
+        <td class="text-success fw-semibold">{{ day.present }}</td>
+        <td class="text-danger fw-semibold">{{ day.absent }}</td>
+        <td class="fw-semibold">{{ day.total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
   <hr class="my-5">
 
   <!-- Class Summary -->
@@ -51,6 +75,8 @@ Dashboard
             <li>👨‍🎓 Students: <strong class="counter" data-target="{{ item.student_count }}">0</strong></li>
             <li>👦 Male: <strong class="counter" data-target="{{ item.male_count }}">0</strong></li>
             <li>👧 Female: <strong class="counter" data-target="{{ item.female_count }}">0</strong></li>
+            <li>✅ Present: <strong class="text-success">{{ item.present_count }}</strong></li>
+            <li>❌ Absent: <strong class="text-danger">{{ item.absent_count }}</strong></li>
           </ul>
         </div>
       </a>

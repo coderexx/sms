@@ -7,7 +7,7 @@ from .message import *
 from .information import *
 from .profile import *
 from .student_class import *
-
+from .attendance import *
 
 urlpatterns = [
     
@@ -82,6 +82,11 @@ urlpatterns = [
     path('due_table/',due_table, name='due_table'),
     path('pay_multiple/',pay_multiple_months, name='pay_multiple'),
     path('read_credit/',read_credit, name='read_credit'),
+    
+    # TODO: Attendance
+    path('take_attendance', take_attendance, name='take_attendance'),
+    path('attendance_report', attendance_report, name='attendance_report'),
+    
 
 
 
