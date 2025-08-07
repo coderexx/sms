@@ -87,7 +87,7 @@ class Location(BaseModel):
 
 class School(BaseModel):
     name = models.CharField(max_length=100)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -195,8 +195,8 @@ class Student(BaseModel):
         ("other", "Other"),
     ]
     name = models.CharField(max_length=100)
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
     student_class = models.ForeignKey(StudentClass, on_delete=models.CASCADE)
+    school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
     mob_no = models.CharField(max_length=50, null=True, blank=True)
     picture = models.ImageField(upload_to='students/', null=True, blank=True)
