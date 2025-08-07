@@ -11,6 +11,8 @@ from .models import *
 from django.template.loader import get_template
 from django.http import HttpResponse
 from xhtml2pdf import pisa
+
+from .utils.decorators import role_required
 from django.contrib.auth.decorators import login_required
 
 
@@ -22,7 +24,7 @@ today = date.today()
 
 #TODO:Student
 #read_student
-@login_required
+@role_required('read_student')
 def read_student(request):
     students = Student.objects.filter(active=True,student_class__active=True).order_by('student_class__number','name')
     
@@ -90,7 +92,7 @@ def read_student(request):
     }
     return render(request,'student/read_student.html',context)
 
-@login_required
+@role_required('read_student')
 def read_inactive_student(request):
     students = Student.objects.filter(Q(active=False) | Q(student_class__active=False)).order_by('student_class__number','name')
     
@@ -158,7 +160,7 @@ def read_inactive_student(request):
     return render(request,'student/read_student.html',context)
 
 #create_student
-@login_required
+@role_required('create_student')
 def create_student(request):
     if request.method == 'POST':
         # ✅ Extract Required Fields
@@ -207,7 +209,7 @@ def create_student(request):
     return render(request,'student/create_student.html',context)
 
 #update_student
-@login_required
+@role_required('update_student')
 def update_student(request,id):
     student = get_object_or_404(Student, id=id)
     if request.method == 'POST':
@@ -246,14 +248,14 @@ def update_student(request,id):
     return render(request,'student/update_student.html',context)
 
 #delete_student
-@login_required
+@role_required('delete_student')
 def delete_student(request,id):
     student = Student.objects.get(id=id)
     messages.success(request,f"{student.name} was deleted successfully.")
     return redirect(read_student)
 
 #activation_student
-@login_required
+@role_required('update_student')
 def activation_student(request,id):
     student = Student.objects.get(id=id)
     if student.active == True:
@@ -273,7 +275,7 @@ def activation_student(request,id):
 
 #TODO:Teacher
 #read_teacher
-@login_required
+@role_required('read_teacher')
 def read_teacher(request):
     teachers = Teacher.objects.filter(active=True).order_by('name')
     
@@ -304,7 +306,7 @@ def read_teacher(request):
     }
     return render(request,'teacher/read_teacher.html',context)
 
-@login_required
+@role_required('read_teacher')
 def read_inactive_teacher(request):
     teachers = Teacher.objects.filter(active=False).order_by('name')
     
@@ -334,7 +336,7 @@ def read_inactive_teacher(request):
     return render(request,'teacher/read_teacher.html',context)
 
 #create_teacher
-@login_required
+@role_required('create_teacher')
 def create_teacher(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -371,7 +373,7 @@ def create_teacher(request):
     return render(request,'teacher/create_teacher.html',context)
 
 #update_teacher
-@login_required
+@role_required('update_teacher')
 def update_teacher(request,id):
     teacher = get_object_or_404(Teacher, id=id)
 
@@ -421,14 +423,14 @@ def update_teacher(request,id):
     return render(request,'teacher/update_teacher.html',context)
 
 #delete_teacher
-@login_required
+@role_required('delete_teacher')
 def delete_teacher(request,id):
     teacher = Teacher.objects.get(id=id)
     messages.success(request,f"{teacher.name} was deleted successfully.")
     return redirect(read_teacher)
 
 #activation_teacher
-@login_required
+@role_required('update_teacher')
 def activation_teacher(request,id):
     teacher = Teacher.objects.get(id=id)
     if teacher.active == True:
@@ -447,7 +449,7 @@ def activation_teacher(request,id):
 
 
 
-@login_required
+@role_required('read_student')
 def read_student_pdf(request,inactive=False):
     if inactive == "True":
         students = Student.objects.filter(Q(active=False) | Q(student_class__active=False)).order_by('student_class__number','name')
@@ -506,7 +508,7 @@ def read_student_pdf(request,inactive=False):
 
 
 
-@login_required
+@role_required('read_teacher')
 def read_teacher_pdf(request,inactive=False):
     if inactive == "True":
         teachers = Teacher.objects.filter(active=False).order_by('name')

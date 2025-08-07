@@ -47,16 +47,21 @@ Due Table
           {% for s in students %}
           <tr>
             <td class="d-flex gap-3">
+              {% for i in user_modules %}
+              {% if i.name == "read_student" %}
               <a href="{% url "profile_student" s.id %}" class="btn rounded-pill btn-icon btn-primary btn-sm">
                     <span class="icon-base fa-regular fa-user icon-sm text-white"></span>
               </a>
-              {% if s.dues %}
-              <button type="button" class="btn btn-success btn-sm" onclick="openModal({{ s.id }}, '{{ s.name }}', {{ s.dues|safe }})" data-bs-toggle="modal" data-bs-target="#paymentModal">
-                Pay
-              </button>
-              {% else %}
-              ✅ Paid
+              {% elif i.name == "make_payment" %}
+                  {% if s.dues %}
+                  <button type="button" class="btn btn-success btn-sm" onclick="openModal({{ s.id }}, '{{ s.name }}', {{ s.dues|safe }})" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                    Pay
+                  </button>
+                  {% else %}
+                  ✅ Paid
+                  {% endif %}
               {% endif %}
+              {% endfor %}
             </td>
             <td>{{ s.name }}</td>
             <td>{{ s.roll }}</td>

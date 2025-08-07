@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from .utils.decorators import role_required
 
 User = get_user_model()
 # Create your views here.
@@ -50,7 +51,7 @@ def do_logout(request):
 
 
 
-@login_required
+@role_required('change_password')
 def change_password(request):
     if request.method == 'POST':
         old_password = request.POST.get('old_password')
@@ -82,3 +83,7 @@ def change_password(request):
             return redirect('change_password')
 
     return render(request, 'setting/change_password.html')
+
+
+def documentation(request):
+    return render(request, 'others/documentation.html')

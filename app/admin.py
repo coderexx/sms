@@ -1,6 +1,25 @@
 from django.contrib import admin
 from .models import *
+from .forms import RoleAdminForm 
+
 # Register your models here.
+
+class RoleAdmin(admin.ModelAdmin):
+    form = RoleAdminForm
+    list_display = ['name']
+    # inlines = [RoleModuleAccessInline]
+    class Media:
+        css = {
+            'all': ('admin/css/custom_module_checkbox.css',)
+        }
+    
+
+class ModuleAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ['name']
+admin.site.register(Module, ModuleAdmin)
+admin.site.register(Role, RoleAdmin)
+
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):

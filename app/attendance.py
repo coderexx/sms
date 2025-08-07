@@ -5,11 +5,13 @@ from django.shortcuts import render
 from django.db.models import Count, Q
 from django.contrib import messages
 from django.core.paginator import Paginator
+from .utils.decorators import role_required
 
 today = date.today()
 
 
 
+@role_required('take_attendance')
 def take_attendance(request):
     student_class_id = request.GET.get('student_class')
     students = Student.objects.filter(student_class_id=student_class_id)
@@ -44,6 +46,7 @@ def take_attendance(request):
 
 
 
+@role_required('attendance_report')
 def attendance_report(request):
     # Get filter values from query params
     date_str = request.GET.get('date')

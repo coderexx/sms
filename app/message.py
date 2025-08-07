@@ -6,9 +6,11 @@ from .utils.send_sms import *
 from .models import *
 from django.contrib.auth.decorators import login_required
 
+from .utils.decorators import role_required
+
 
 #TODO:Message
-@login_required
+@role_required('read_message')
 def read_message(request):
     messages = Message.objects.all().order_by('-created_at')
     
@@ -35,7 +37,7 @@ def read_message(request):
     return render(request,'messages/read_message.html',context)
 
 
-@login_required
+@role_required('create_message')
 def create_message(request):
     if request.method == 'POST':
         student_class = request.POST.get('student_class')
@@ -84,7 +86,7 @@ def create_message(request):
     return render(request, 'messages/create_message.html', context)
 
 
-@login_required
+@role_required('reset_sms_counter')
 def reset_sms_counter(request):
     # Create a new counter instance (old one stays in DB)
     SMSCounter.objects.get_or_create(total_sms_sent=0)

@@ -87,6 +87,7 @@ def restore_database(request):
 
 #TODO:Location
 #read_location
+@role_required('read_location')
 def read_location(request):
     locations = Location.objects.all().order_by('name')
     
@@ -106,6 +107,7 @@ def read_location(request):
     return render(request,'setting/read_location.html',context)
 
 #create_location
+@role_required('create_location')
 def create_location(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -121,6 +123,7 @@ def create_location(request):
     return render(request,'setting/create_location.html',context)
 
 #update_location
+@role_required('update_location')
 def update_location(request,id):
     location = get_object_or_404(Location, id=id)
     if request.method == 'POST':
@@ -138,6 +141,7 @@ def update_location(request,id):
     return render(request,'setting/update_location.html',context)
 
 #delete_location
+@role_required('delete_location')
 def delete_location(request,id):
     location = Location.objects.get(id=id)
     messages.success(request,f"{location.name} was deleted successfully.")
@@ -147,6 +151,7 @@ def delete_location(request,id):
 
 #TODO:School
 #read_location
+@role_required('read_school')
 def read_school(request):
     schools = School.objects.all().order_by('name')
     
@@ -166,6 +171,7 @@ def read_school(request):
     return render(request,'setting/read_school.html',context)
 
 #create_school
+@role_required('create_school')
 def create_school(request):
     locations = Location.objects.all().order_by('name')
     if request.method == 'POST':
@@ -184,6 +190,7 @@ def create_school(request):
     return render(request,'setting/create_school.html',context)
 
 #update_school
+@role_required('update_school')
 def update_school(request,id):
     school = get_object_or_404(School, id=id)
     locations = Location.objects.all().order_by('name')
@@ -206,6 +213,7 @@ def update_school(request,id):
     return render(request,'setting/update_school.html',context)
 
 #delete_school
+@role_required('delete_school')
 def delete_school(request,id):
     school = School.objects.get(id=id)
     messages.success(request,f"{school.name} was deleted successfully.")
@@ -215,6 +223,7 @@ def delete_school(request,id):
 
 #TODO:Subject
 #read_subject
+@role_required('read_subject')
 def read_subject(request):
     subjects = Subject.objects.all().order_by('name')
     
@@ -234,6 +243,7 @@ def read_subject(request):
     return render(request,'setting/read_subject.html',context)
 
 #create_subject
+@role_required('create_subject')
 def create_subject(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -249,6 +259,7 @@ def create_subject(request):
     return render(request,'setting/create_subject.html',context)
 
 #update_subject
+@role_required('update_subject')
 def update_subject(request,id):
     subject = get_object_or_404(Subject, id=id)
     if request.method == 'POST':
@@ -266,6 +277,7 @@ def update_subject(request,id):
     return render(request,'setting/update_subject.html',context)
 
 #delete_subject
+@role_required('delete_subject')
 def delete_subject(request,id):
     subject = Subject.objects.get(id=id)
     messages.success(request,f"{subject.name} was deleted successfully.")

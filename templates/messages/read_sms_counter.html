@@ -1,6 +1,8 @@
 
     <h3 class="card-title text-center mt-3">📟 Current Counter: {{ latest_counter.total_sms_sent|default:0 }} SMS</h3>
+    {% if 'reset_sms_counter' in module_names %}
     <a href="{% url 'reset_sms_counter' %}" class="btn btn-warning w-100">Reset Counter</a>
+    {% endif %}
 
     <hr>
     <h4>📜 SMS Counter History</h4>

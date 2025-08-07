@@ -9,9 +9,11 @@ Subject
 {% block content %}
 
 <div class="py-3">
+    {% if 'create_subject' in module_names %}
     <a type="button" class="btn btn-icon btn-primary" href="{% url "create_subject" %}">
         <i class="fa-solid fa-plus"></i>
     </a>
+    {% endif %}
 </div>
 
 {% if subjects %}
@@ -54,12 +56,17 @@ Subject
                 <!-- End Delete Modal -->
                 <tr>
                     <th>
+                        {% for i in user_modules %}
+                        {% if i.name == "update_subject" %}
                         <a href="{% url "update_subject" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
                               <span class="icon-base fa fa-edit icon-sm text-white"></span>
                         </a>
+                        {% elif i.name == "delete_subject" %}
                         <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{i.id}}">
                            <span class="icon-base fa-regular fa-trash-can icon-sm text-white"></span>
                         </button>
+                        {% endif %}
+                        {% endfor %}
                     </th>
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{item.name}}</td>

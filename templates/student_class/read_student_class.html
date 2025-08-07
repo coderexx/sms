@@ -9,15 +9,20 @@ Class
 {% block content %}
 
 <div class="py-3">
+    {% for i in user_modules %}
+    {% if i.name == "create_student_class" %}
     <a type="button" class="btn btn-icon btn-primary" href="{% url "create_student_class" %}">
         <i class="fa-solid fa-plus"></i>
     </a>
+    {% elif i.name == "update_student_class" %}
     <a type="button" class="btn btn-icon btn-primary" href="{% url "shift_up_student_class" %}">
         <i class="fa-solid fa-arrow-up"></i>
     </a>
     <a type="button" class="btn btn-icon btn-primary" href="{% url "shift_down_student_class" %}">
         <i class="fa-solid fa-arrow-down"></i>
     </a>
+    {% endif %}
+    {% endfor %}
 </div>
 
 {% if student_classes %}
@@ -86,15 +91,21 @@ Class
                 <!-- End Activation Modal -->
                 <tr>
                     <th>
+                        {% for i in user_modules %}
+                        {% if i.name == "update_student_class" %}
                         <a href="{% url "update_student_class" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
                               <span class="icon-base fa fa-edit icon-sm text-white"></span>
                         </a>
-                        <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{item.id}}">
-                           <span class="icon-base fa-regular fa-trash-can icon-sm text-white"></span>
-                        </button>
+                                     
                         <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
                            <span class="icon-base fa-solid fa-ban icon-sm text-white"></span>
                         </button>
+                        {% elif i.name == "delete_student_class" %}
+                        <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{item.id}}">
+                           <span class="icon-base fa-regular fa-trash-can icon-sm text-white"></span>
+                        </button>
+                        {% endif %}
+                        {% endfor %}
                     </th>
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{item.number}}</td>

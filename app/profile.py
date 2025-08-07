@@ -2,8 +2,10 @@ from datetime import datetime, date
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from .models import *
-from django.contrib.auth.decorators import login_required
 from django.db.models.functions import ExtractYear
+
+from django.contrib.auth.decorators import login_required
+from .utils.decorators import role_required
 
 
 # global variables
@@ -11,7 +13,7 @@ today = date.today()
 
 
 #student profile
-@login_required
+@role_required('read_student')
 def profile_student(request,id):
     student = Student.objects.get(id=id)
     payments = student.monthly_payments.order_by('-year', '-month')
@@ -111,7 +113,7 @@ def profile_student(request,id):
     return render(request,'profile/student_profile.html',context)
 
 #teacher profile
-@login_required
+@role_required('read_teacher')
 def profile_teacher(request,id):
     teacher = get_object_or_404(Teacher, id=id)
 

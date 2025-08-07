@@ -1,24 +1,16 @@
 from datetime import datetime, date
-import os
-import subprocess
-from io import BytesIO
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import HttpResponse, FileResponse
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
-from django.contrib.auth.hashers import make_password
-from django.db import transaction
 from django.db.models.functions import ExtractYear
 
 from app.views import User
-from .utils.decorators import role_required
 from .utils.send_sms import *
 from .models import *
 #for pdf
-from django.template.loader import get_template
-from django.http import HttpResponse
-from xhtml2pdf import pisa
+
+from .utils.decorators import role_required
 from django.contrib.auth.decorators import login_required
 
 
@@ -73,6 +65,7 @@ def dashboard(request):
 
 
 # TODO: Teaching Assignment
+@role_required('read_teaching_assignment')
 def read_teaching_assignment(request):
     years = TeachingAssignment.objects.annotate(
         year=ExtractYear('date')
@@ -127,6 +120,7 @@ def read_teaching_assignment(request):
 
 
 # Create new assignment
+@role_required('create_teaching_assignment')
 def create_teaching_assignment(request):
     if request.method == 'POST':
         teacher_id = request.POST.get('teacher')
@@ -157,6 +151,7 @@ def create_teaching_assignment(request):
 
 
 # Delete an assignment
+@role_required('delete_teaching_assignment')
 def delete_teaching_assignment(request, id):
     assignment = get_object_or_404(TeachingAssignment, id=id)
     assignment.delete()

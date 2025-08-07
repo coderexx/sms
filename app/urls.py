@@ -14,6 +14,7 @@ urlpatterns = [
     path('', do_login, name='login'),
     path('logout', do_logout, name='logout'),
     path('no_permission', no_permission, name='no_permission'),
+    path('documentation', documentation, name='documentation'),
     
     # TODO: Admin
     path('dashboard', dashboard, name='dashboard'),
@@ -86,7 +87,6 @@ urlpatterns = [
     # TODO: Attendance
     path('take_attendance', take_attendance, name='take_attendance'),
     path('attendance_report', attendance_report, name='attendance_report'),
-    
 
 
 

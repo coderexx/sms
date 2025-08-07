@@ -7,6 +7,7 @@ from .utils.send_sms import *
 from .models import *
 from django.contrib.auth.decorators import login_required
 
+from .utils.decorators import role_required
 
 # global variables
 today = date.today()
@@ -14,7 +15,7 @@ today = date.today()
 
 #TODO:StudentClass
 #read_student_class
-@login_required
+@role_required('read_student_class')
 def read_student_class(request):
     student_classes = StudentClass.objects.all().order_by('number')
     
@@ -34,7 +35,7 @@ def read_student_class(request):
     return render(request,'student_class/read_student_class.html',context)
 
 #create_student_class
-@login_required
+@role_required('create_student_class')
 def create_student_class(request):
     if request.method == 'POST':
         number = request.POST.get('number')
@@ -51,7 +52,7 @@ def create_student_class(request):
     return render(request,'student_class/create_student_class.html',context)
 
 #update_student_class
-@login_required
+@role_required('update_student_class')
 def update_student_class(request,id):
     student_class = get_object_or_404(StudentClass, id=id)
     if request.method == 'POST':
@@ -66,7 +67,7 @@ def update_student_class(request,id):
     return render(request,'student_class/update_student_class.html',context)
 
 #delete_student_class
-@login_required
+@role_required('delete_student_class')
 def delete_student_class(request,id):
     student_class = StudentClass.objects.get(id=id)
     messages.success(request,f"{student_class.number} was deleted successfully.")
@@ -74,7 +75,7 @@ def delete_student_class(request,id):
 
 
 #activation_student_class
-@login_required
+@role_required('update_student_class')
 def activation_student_class(request,id):
     student_class = StudentClass.objects.get(id=id)
     if student_class.active == True:
@@ -87,7 +88,7 @@ def activation_student_class(request,id):
     return redirect(read_student_class)
 
 #shift_down_student_class
-@login_required
+@role_required('update_student_class')
 def shift_down_student_class(request):
     student_classes = StudentClass.objects.all().order_by('number')  # Important: reverse order!
 
@@ -106,7 +107,7 @@ def shift_down_student_class(request):
     return redirect(read_student_class)
 
 #student_class_shift_up
-@login_required
+@role_required('update_student_class')
 def shift_up_student_class(request):
     student_classes = StudentClass.objects.all().order_by('-number')  # Important: reverse order!
 

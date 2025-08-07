@@ -10,9 +10,11 @@ Messages
 
 <div class="py-3 d-flex justify-content-between">
     <div>
+        {% if 'create_message' in module_names %}
         <a type="button" class="btn btn-icon btn-primary" href="{% url "create_message" %}">
             <i class="fa-solid fa-plus"></i>
         </a>
+        {% endif %}
     </div>
 
     <form method="GET">

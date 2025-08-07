@@ -1,7 +1,4 @@
 from datetime import datetime, date
-import os
-import subprocess
-from io import BytesIO
 import random
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -20,7 +17,7 @@ from django.db.models.functions import ExtractMonth, ExtractYear
 today = date.today()
 
 
-
+@role_required('due_table')
 def due_table(request):
     student_class_id = request.GET.get('class_id')
     roll_no = request.GET.get('roll_no')
@@ -99,6 +96,7 @@ def generate_unique_code():
             return code
     
 @csrf_exempt
+@role_required('make_payment')
 def pay_multiple_months(request):
     if request.method == 'POST':
         student_id = request.POST.get('student_id')
@@ -123,7 +121,7 @@ def pay_multiple_months(request):
 
 
 
-@login_required
+@role_required('read_credit')
 def read_credit(request):
     # Get distinct years from payment_date
     years = MonthlyPayment.objects.annotate(payment_year=ExtractYear('payment_date')) \

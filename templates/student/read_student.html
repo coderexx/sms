@@ -134,21 +134,26 @@ Active Students
                 <!-- End Activation Modal -->
                 <tr>
                     <th>
+                        {% for i in user_modules %}
+                        {% if i.name == "update_student" %}
                         <a href="{% url "update_student" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
                               <span class="icon-base fa fa-edit icon-sm text-white"></span>
                         </a>
+                            {% if item.active %}
+                            <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
+                            <span class="icon-base fa-solid fa-ban icon-sm text-white"></span>
+                            </button>
+                            {% else %}
+                            <button type="button" class="btn rounded-pill btn-icon btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
+                            <span class="icon-base fa-solid fa-check icon-sm text-white"></span>
+                            </button>
+                            {% endif %}
+                        {% elif i.name == "delete_student" %}
                         <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{item.id}}">
                            <span class="icon-base fa-regular fa-trash-can icon-sm text-white"></span>
                         </button>
-                        {% if item.active %}
-                        <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
-                           <span class="icon-base fa-solid fa-ban icon-sm text-white"></span>
-                        </button>
-                        {% else %}
-                        <button type="button" class="btn rounded-pill btn-icon btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
-                           <span class="icon-base fa-solid fa-check icon-sm text-white"></span>
-                        </button>
                         {% endif %}
+                        {% endfor %}
                         <a href="{% url "profile_student" item.id %}" class="btn rounded-pill btn-icon btn-primary btn-sm">
                             <span class="icon-base fa-regular fa-user icon-sm text-white"></span>
                         </a>

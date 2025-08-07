@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coaching Management System - Documentation</title>
+  <style>
+    :root {
+      --primary-color: #1e3a8a;
+      --secondary-color: #f1f5f9;
+      --text-color: #333;
+      --bg-color: #fff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 20px 40px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    section {
+      margin-bottom: 40px;
+      background-color: var(--bg-color);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    section h2 {
+      color: var(--primary-color);
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    section ul, section ol {
+      padding-left: 20px;
+    }
+
+    section ul li,
+    section ol li {
+      margin-bottom: 6px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background-color: #f9fafb;
+      padding: 15px 20px;
+      border-radius: 6px;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #777;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📘 Coaching Management System</h1>
+    <p>Complete documentation for administrators, staff, and developers</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>🧾 Overview</h2>
+      <p>
+        This system helps manage all aspects of a coaching center efficiently including students, teachers, attendance, payment, SMS messaging, and teaching assignments. It also supports report generation in PDF format.
+      </p>
+    </section>
+
+    <section>
+      <h2>📦 Key Modules</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>🎓 Student Management</h3>
+          <ul>
+            <li>Create, update, delete students</li>
+            <li>View active/inactive students</li>
+            <li>Student profile view</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>🧑‍🏫 Teacher Management</h3>
+          <ul>
+            <li>Manage teacher profiles</li>
+            <li>Assign classes</li>
+            <li>Deactivate/reactivate teachers</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>📅 Attendance</h3>
+          <ul>
+            <li>Mark daily attendance</li>
+            <li>Generate attendance reports</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>💳 Payment & Credit</h3>
+          <ul>
+            <li>Pay monthly fees</li>
+            <li>Track due/paid months</li>
+            <li>View credit reports</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>📤 SMS Messaging</h3>
+          <ul>
+            <li>Send bulk or individual messages</li>
+            <li>Reset SMS counter</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>📚 Teaching Assignments</h3>
+          <ul>
+            <li>Assign subjects to teachers</li>
+            <li>Manage class-subject combinations</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>🚀 How to Use</h2>
+      <ol>
+        <li>Login with your credentials.</li>
+        <li>Navigate to the desired module (Student, Teacher, etc.) from the dashboard.</li>
+        <li>Perform create/update/delete operations as required.</li>
+        <li>Use PDF options to export reports if needed.</li>
+        <li>Use the SMS module to communicate with students/parents.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>💻 System Requirements</h2>
+      <ul>
+        <li>Python 3.9+ with Django Framework</li>
+        <li>MySQL or PostgreSQL database</li>
+        <li>Custom CSS for frontend styling</li>
+        <li>Internet connection for SMS API (e.g., Twilio or local provider)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>📞 Contact & Support</h2>
+      <ul>
+        <li><strong>Name:</strong> Maksud Hasan Bishal</li>
+        <li><strong>Email:</strong> 3xbishal@gmail.com</li>
+        <li><strong>GitHub:</strong> https://github.com/crabhub19</li>
+      </ul>
+    </section>
+  </main>
+
+  {% include "base/base_footer.html" %}
+
+</body>
+</html>

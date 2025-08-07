@@ -8,6 +8,8 @@ def role_required(module_name):
                 role = request.user.role
                 if role and role.modules.filter(name=module_name).exists():
                     return view_func(request, *args, **kwargs)
+            else:
+                return redirect('login')
             return render(request, 'others/no_permission.html')
         return wrapper
     return decorator

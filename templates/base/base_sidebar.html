@@ -16,6 +16,8 @@
     <li class="menu-header small text-uppercase">
         <span class="menu-header-text">Modules</span>
     </li>
+
+    {% if has_students %}    
     <li class="menu-item">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon fa-brands fa-ubuntu"></i>
@@ -23,11 +25,14 @@
         </a>
 
         <ul class="menu-sub">
+            {% for i in user_modules %}
+            {% if i.name == "create_student" %}
             <li class="menu-item">
                 <a href="{% url "create_student" %}" class="menu-link">
                 <div class="text-truncate" data-i18n="create_student">Add Student</div>
                 </a>
             </li>
+            {% elif i.name == "read_student" %}
             <li class="menu-item">
                 <a href="{% url "read_student" %}" class="menu-link">
                 <div class="text-truncate" data-i18n="read_student">Students</div>
@@ -38,8 +43,13 @@
                 <div class="text-truncate" data-i18n="read_student">Inactive Students</div>
                 </a>
             </li>
+            {% endif %}
+            {% endfor %}
         </ul>
     </li>
+    {% endif %}
+
+    {% if has_teachers %}
     <li class="menu-item">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon fa-brands fa-ubuntu"></i>
@@ -47,11 +57,14 @@
         </a>
 
         <ul class="menu-sub">
+            {% for i in user_modules %}
+            {% if i.name == "create_teacher" %}
             <li class="menu-item">
                 <a href="{% url "create_teacher" %}" class="menu-link">
                 <div class="text-truncate" data-i18n="create_teacher">Add Teacher</div>
                 </a>
             </li>
+            {% elif i.name == "read_teacher" %}
             <li class="menu-item">
                 <a href="{% url "read_teacher" %}" class="menu-link">
                 <div class="text-truncate" data-i18n="read_teacher">Teachers</div>
@@ -62,17 +75,14 @@
                 <div class="text-truncate" data-i18n="read_teacher">Inactive Teachers</div>
                 </a>
             </li>
+            {% endif %}
+            {% endfor %}
         </ul>
     </li>
+    {% endif %}
 
-    <li class="menu-item">
-        <a
-            href="{% url "read_student_class" %}"
-            class="menu-link active">
-            <i class="menu-icon tf-icons bx bx-file"></i>
-            <div class="text-truncate" data-i18n="Class">Class</div>
-        </a>
-    </li>
+
+    {% if has_attendance %}
     <li class="menu-item">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="fa-solid fa-clipboard-user menu-icon"></i>
@@ -80,18 +90,26 @@
         </a>
 
         <ul class="menu-sub">
+            {% for i in user_modules %}
+            {% if i.name == "take_attendance" %}
             <li class="menu-item">
                 <a href="{% url "take_attendance" %}" class="menu-link">
-                <div class="text-truncate" data-i18n="create_teacher">Take Attendance</div>
+                <div class="text-truncate">Take Attendance</div>
                 </a>
             </li>
+            {% elif i.name == "attendance_report" %}
             <li class="menu-item">
                 <a href="{% url "attendance_report" %}" class="menu-link">
-                <div class="text-truncate" data-i18n="read_teacher">Attendance Report</div>
+                <div class="text-truncate">Attendance Report</div>
                 </a>
             </li>
+            {% endif %}
+            {% endfor %}
         </ul>
     </li>
+    {% endif %}
+    {% for i in user_modules %}
+    {% if i.name == "read_teaching_assignment" %}
     <li class="menu-item">
         <a
             href="{% url "read_teaching_assignment" %}"
@@ -100,6 +118,7 @@
             <div class="text-truncate" data-i18n="Class">Teaching Assignment</div>
         </a>
     </li>
+    {% elif i.name == "read_message" %}
     <li class="menu-item">
         <a
             href="{% url "read_message" %}"
@@ -108,6 +127,7 @@
             <div class="text-truncate" data-i18n="Class">Message</div>
         </a>
     </li>
+    {% elif i.name == "due_table" %}
     <li class="menu-item">
         <a
             href="{% url "due_table" %}"
@@ -116,6 +136,7 @@
             <div class="text-truncate" data-i18n="Class">Payment</div>
         </a>
     </li>
+    {% elif i.name == "read_credit" %}
     <li class="menu-item">
         <a
             href="{% url "read_credit" %}"
@@ -124,8 +145,21 @@
             <div class="text-truncate" data-i18n="Class">Credit</div>
         </a>
     </li>
+    {% elif i.name == "read_student_class" %}
+    <li class="menu-item">
+        <a
+            href="{% url "read_student_class" %}"
+            class="menu-link active">
+            <i class="menu-icon tf-icons bx bx-file"></i>
+            <div class="text-truncate" data-i18n="Class">Class</div>
+        </a>
+    </li>
+    {% endif %}
+    {% endfor %}
+
 
     <!-- Setting -->
+     {% if has_setting %}
     <li class="menu-item">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon fa-solid fa-gears"></i>
@@ -133,39 +167,47 @@
         </a>
 
         <ul class="menu-sub">
+            {% for i in user_modules %}
+            {% if i.name == "read_school" %}
             <li class="menu-item">
                 <a href="{% url "read_school" %}" class="menu-link">
                     <div class="text-truncate" data-i18n="text">School</div>
                 </a>
             </li>
+            {% elif i.name == "read_location" %}
             <li class="menu-item">
                 <a href="{% url "read_location" %}" class="menu-link">
                     <div class="text-truncate" data-i18n="text">Location</div>
                 </a>
             </li>
+            {% elif i.name == "read_subject" %}
             <li class="menu-item">
                 <a href="{% url "read_subject" %}" class="menu-link">
                     <div class="text-truncate" data-i18n="text">Subject</div>
                 </a>
             </li>
-            <li class="menu-item">
-                <a href="{% url "database" %}" class="menu-link">
-                    <div class="text-truncate" data-i18n="text">Database</div>
-                </a>
-            </li>
+            {% elif i.name == "change_password" %}
             <li class="menu-item">
                 <a href="{% url "change_password" %}" class="menu-link">
                     <div class="text-truncate" data-i18n="text">Change Password</div>
                 </a>
             </li>
+            {% elif i.name == "database" %}
+            <li class="menu-item">
+                <a href="{% url "database" %}" class="menu-link">
+                    <div class="text-truncate" data-i18n="text">Database</div>
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
         </ul>
     </li>
-
+     {% endif %}
     <!-- Documentation -->
     <li class="menu-header small text-uppercase"><span class="menu-header-text">Documentation</span></li>
     <li class="menu-item">
         <a
-        href=""
+        href="{% url "documentation" %}"
         target=""
         class="menu-link">
         <i class="menu-icon tf-icons bx bx-file"></i>
