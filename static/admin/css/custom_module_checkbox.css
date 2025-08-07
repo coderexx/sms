@@ -1,0 +1,30 @@
+.module-checkbox-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Container div for each checkbox + label */
+.module-checkbox-grid > div {
+    width: 33%;
+    display: flex;
+    align-items: center;  /* vertical center */
+}
+
+/* Make the label a flex container and align items center */
+.module-checkbox-grid label {
+    display: flex;
+    align-items: center;  /* vertical center */
+    white-space: nowrap;
+}
+
+.module-checkbox-grid input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+
+
+@media (max-width: 600px) {
+    .module-checkbox-grid{
+        display: block;
+    }
+}
