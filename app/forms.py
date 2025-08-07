@@ -20,10 +20,10 @@ class RoleAdminForm(forms.ModelForm):
 
         self.fields['modules'].queryset = Module.objects.annotate(
             suffix=Case(
-                When(name__endswith='_admin', then=Value('admin')),
-                When(name__endswith='_battalion', then=Value('battalion')),
-                When(name__endswith='_company', then=Value('company')),
-                When(name__endswith='_member', then=Value('member')),
+                When(name__startswith='read', then=Value('read')),
+                When(name__startswith='create_', then=Value('create')),
+                When(name__startswith='update', then=Value('update')),
+                When(name__startswith='delete', then=Value('delete')),
                 default=Value('zzz'),
                 output_field=CharField()
             )
