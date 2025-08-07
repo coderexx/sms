@@ -1,28 +1,28 @@
 {% extends 'base/base_template.html' %}
-
+{% load static %}
 {% block title %}
-
-{% if inactive %}
-Inactive Teachers
-{% else %}
-Active Teachers
-{% endif %}
-
+User
 {% endblock title %}
 
 {% block content %}
 
 <form method="GET">
     <div class="d-flex flex-wrap mb-3 input-group">
-        <input class="form-control w-50 bg-white" type="text" placeholder="name ..." id="" name="query" value="{{ query }}" >
+        <input class="form-control w-50 bg-white" type="text" placeholder="name, username, mobile ..." id="" name="query" value="{{ query }}" >
         <button type="submit" class="btn btn-primary w-25"><i class="fa-solid fa-magnifying-glass"></i></button>
-        <a target="_blank" href="{% url 'read_teacher_pdf' inactive %}?{{query_string}}" class="btn btn-secondary w-25">
-            <i class="fa-solid fa-file-pdf"></i>
-        </a>
     </div>
 </form>
 
-{% if teachers %}
+<div class="py-3">
+    {% if 'create_user' in module_names %}
+    <a type="button" class="btn btn-icon btn-primary" href="{% url "create_user" %}">
+        <i class="fa-solid fa-plus"></i>
+    </a>
+    {% endif %}
+</div>
+
+
+{% if users %}
 <div class="card">
     <div class="table-responsive text-nowrap">
         <table class="table">
@@ -31,11 +31,14 @@ Active Teachers
                     <th>Action</th>
                     <th>Sn</th>
                     <th>Name</th>
-                    <th>Location</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Mobile</th>
+                    <th>Photo</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                {% for item in teachers %}
+                {% for item in users %}
                 <!-- Start Delete Modal -->
                 <div class="modal fade" id="modal-delete-{{item.id}}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -55,18 +58,18 @@ Active Teachers
                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
                             Close
                         </button>
-                        <a href="{% url 'delete_teacher' item.id %}" class="btn btn-danger">Delete</a>
+                        <a href="{% url 'delete_user' item.id %}" class="btn btn-danger">Delete</a>
                         </div>
                     </div>
                     </div>
                 </div>
                 <!-- End Delete Modal -->
                 <!-- Start Activation Modal -->
-                <div class="modal fade" id="modal-activation-{{item.id}}" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="modal-reset-{{item.id}}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h4 class="modal-title" id="modalCenterTitle">Activation {{item.name}}</h4>
+                        <h4 class="modal-title" id="modalCenterTitle">Reset Password {{item.name}}</h4>
                         <button
                             type="button"
                             class="btn-close"
@@ -74,15 +77,13 @@ Active Teachers
                             aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                        <p>Are you sure you want to {% if item.active %}deactivate{% else %}activate{% endif %}?</p>
+                        <p>Are you sure you want to reset password?</p>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
                             Close
                         </button>
-                        <a href="{% url 'activation_teacher' item.id %}" class="btn {% if item.active %}btn-warning{% else %}btn-success{% endif %}">
-                            {% if item.active %}Deactivation{% else %}Activation{% endif %}
-                        </a>
+                        <a href="{% url 'reset_user_password' item.id %}" class="btn btn-warning">Reset Password</a>
                         </div>
                     </div>
                     </div>
@@ -91,32 +92,32 @@ Active Teachers
                 <tr>
                     <th>
                         {% for i in user_modules %}
-                        {% if i.name == "update_teacher" %}
-                        <a href="{% url "update_teacher" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
+                        {% if i.name == "update_user" %}
+                        <a href="{% url "update_user" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
                               <span class="icon-base fa fa-edit icon-sm text-white"></span>
                         </a>
-                            {% if item.active %}
-                            <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
-                            <span class="icon-base fa-solid fa-power-off icon-sm text-white"></span>
-                            </button>
-                            {% else %}
-                            <button type="button" class="btn rounded-pill btn-icon btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
-                            <span class="icon-base fa-solid fa-check icon-sm text-white"></span>
-                            </button>
-                            {% endif %}
-                        {% elif i.name == "delete_teacher" %}
+                        <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-reset-{{item.id}}">
+                        <span class="icon-base fa-solid fa-recycle icon-sm text-white"></span>
+                        </button>
+                        {% elif i.name == "delete_user" %}
                         <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{item.id}}">
                            <span class="icon-base fa-regular fa-trash-can icon-sm text-white"></span>
                         </button>
                         {% endif %}
                         {% endfor %}
-                        <a href="{% url "profile_teacher" item.id %}" class="btn rounded-pill btn-icon btn-primary btn-sm">
-                            <span class="icon-base fa-regular fa-user icon-sm text-white"></span>
-                        </a>
                     </th>
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{item.name|default:"N/A"}}</td>
-                    <td>{{item.location.name|default:"N/A"}}</td>
+                    <td>{{item.username|default:"N/A"}}</td>
+                    <td>{{item.role.name|default:"N/A"}}</td>
+                    <td>{{item.mobile_no|default:"N/A"}}</td>
+                    <td>
+                        {% if item.picture %}
+                        <img class="object-fit-cover rounded-circle" src="{{item.picture.url}}" alt="" width="30px" height="30px" class="rounded-circle">
+                        {% else %}
+                        <img src="{% static 'dist/assets/img/avatars/5.png' %}" alt="" width="30px" height="30px" class="rounded-circle">
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -124,7 +125,7 @@ Active Teachers
     </div>
 </div>
 
-{% include "components/pagination.html" with page_obj=teachers %}
+{% include "components/pagination.html" with page_obj=users %}
 
 {% else %}
 <div class="bg-black text-white fs-1 card oswald h-100 m-auto pt-5 text-center">

@@ -9,6 +9,8 @@ class Command(BaseCommand):
             'create_student', 'read_student', 'update_student', 'delete_student',
             # Teacher
             'create_teacher', 'read_teacher', 'update_teacher', 'delete_teacher',
+            # User
+            'create_user', 'read_user', 'update_user', 'delete_user',
             # Student Class
             'create_student_class', 'read_student_class', 'update_student_class', 'delete_student_class',
             # Location

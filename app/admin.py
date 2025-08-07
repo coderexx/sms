@@ -21,6 +21,15 @@ admin.site.register(Module, ModuleAdmin)
 admin.site.register(Role, RoleAdmin)
 
 
+class CustomUserAdmin(admin.ModelAdmin):
+    list_display = ['username', 'name', 'mobile_no', 'role']
+    search_fields = ['username', 'name', 'mobile_no']
+    list_filter = ['role']
+admin.site.register(CustomUser, CustomUserAdmin)
+
+
+
+
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')

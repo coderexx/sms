@@ -20,7 +20,7 @@
     {% if has_students %}    
     <li class="menu-item">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon fa-brands fa-ubuntu"></i>
+        <i class="fa-solid fa-user-graduate menu-icon"></i>
         <div class="text-truncate" data-i18n="Vehicle">Students</div>
         </a>
 
@@ -52,7 +52,7 @@
     {% if has_teachers %}
     <li class="menu-item">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon fa-brands fa-ubuntu"></i>
+        <i class="fa-solid fa-person-chalkboard menu-icon"></i>
         <div class="text-truncate" data-i18n="Vehicle">Teachers</div>
         </a>
 
@@ -150,8 +150,18 @@
         <a
             href="{% url "read_student_class" %}"
             class="menu-link active">
-            <i class="menu-icon tf-icons bx bx-file"></i>
+            <i class="fa-solid fa-layer-group menu-icon"></i>
             <div class="text-truncate" data-i18n="Class">Class</div>
+        </a>
+    </li>
+
+    {% elif i.name == "read_user" %}
+    <li class="menu-item">
+        <a
+            href="{% url "read_user" %}"
+            class="menu-link active">
+            <i class="fa-solid fa-users menu-icon"></i>
+            <div class="text-truncate" data-i18n="Class">User</div>
         </a>
     </li>
     {% endif %}

@@ -87,6 +87,14 @@ urlpatterns = [
     # TODO: Attendance
     path('take_attendance', take_attendance, name='take_attendance'),
     path('attendance_report', attendance_report, name='attendance_report'),
+    
+    
+    #TODO:User
+    path('create_user', create_user, name='create_user'),
+    path('read_user', read_user, name='read_user'),
+    path('update_user/<int:id>', update_user, name='update_user'),
+    path('reset_user_password/<int:id>', reset_user_password, name='reset_user_password'),
+    path('delete_user/<int:id>', delete_user, name='delete_user'),
 
 
 

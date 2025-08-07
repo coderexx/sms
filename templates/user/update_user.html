@@ -1,0 +1,54 @@
+{% extends 'base/base_template.html' %}
+
+{% block title %}
+Update User
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <form action="{% url 'update_user' user.id %}" method="POST" enctype="multipart/form-data" class="needs-validation row g-3" novalidate>
+        {% csrf_token %}
+
+        <div class="col-xl-4 col-md-6">
+            <label class="form-label">Name</label>
+            <input name="name" type="text" class="form-control" value="{{ user.name }}" required>
+            <div class="invalid-feedback">Please enter Name.</div>
+        </div>
+
+
+        <div class="col-xl-4 col-md-6">
+            <label class="form-label">Mobile Number</label>
+            <input name="mobile_no" type="text" class="form-control" value="{{ user.mobile_no }}" required>
+            <div class="invalid-feedback">Please enter mobile number.</div>
+        </div>
+
+        <div class="col-xl-4 col-md-6">
+            <label class="form-label">Picture</label>
+            <input name="picture" type="file" class="form-control">
+        </div>
+
+        <div class="col-xl-4 col-md-6">
+            <label class="form-label">Role</label>
+            <select name="role" class="form-select">
+                <option disabled selected >Choose...</option>
+                {% for i in roles %}
+                    <option {% if i.id == user.role.id %}selected{% endif %} value="{{ i.id }}">
+                        {{ i.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <div class="invalid-feedback">Please select Role.</div>
+        </div>
+
+        
+        <div class="col-12">
+            <button class="btn btn-primary" type="submit">Update User</button>
+            <a href="{% url 'read_user' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+  </div>
+</div>
+
+
+{% endblock content %}

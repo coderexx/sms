@@ -19,7 +19,11 @@
                     href="javascript:void(0);"
                     data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
+                      {% if request.user.picture %}
+                      <img src="{{request.user.picture.url}}" alt class="w-px-40 h-auto rounded-circle object-fit-cover" />
+                      {% else %}
                       <img src={% static "dist/assets/img/avatars/5.png" %} alt class="w-px-40 h-auto rounded-circle" />
+                      {% endif %}
                     </div>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
@@ -28,7 +32,11 @@
                         <div class="d-flex">
                           <div class="flex-shrink-0 me-3">
                             <div class="avatar avatar-online">
+                              {% if request.user.picture %}
+                              <img src="{{request.user.picture.url}}" alt class="w-px-40 h-auto rounded-circle object-fit-cover" />
+                              {% else %}
                               <img src={% static "dist/assets/img/avatars/5.png" %} alt class="w-px-40 h-auto rounded-circle" />
+                              {% endif %}
                             </div>
                           </div>
                           <div class="flex-grow-1">
@@ -39,9 +47,10 @@
                       </div>
                     </li>
                     
-                    <li>
-                      <div class="dropdown-divider my-1"></div>
-                    </li>
+                    <div class="flex-grow-1 text-center border-top border-bottom border-warning border-5 py-3">
+                            <h6 class="mb-0">{{request.user.name}}</h6>
+                            <small class="text-body-secondary">{{request.user.mobile_no}}</small>
+                    </div>
                     <li>
                       <a class="dropdown-item" href="{% url 'logout' %}">
                         <i class="icon-base bx bx-power-off icon-md me-3"></i><span>Log Out</span>

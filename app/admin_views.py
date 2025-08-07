@@ -160,7 +160,78 @@ def delete_teaching_assignment(request, id):
 
 
 
+@role_required('create_user')
+def create_user(request):
+    roles = Role.objects.all().order_by('id')
+    if request.method == 'POST':
+        role_id = request.POST.get('role')
+        username = request.POST.get('username')
+        name = request.POST.get('name')
+        mobile_no = request.POST.get('mobile_no')
+        picture = request.FILES.get('picture')
+        if not all([role_id, username, name, mobile_no]):
+            messages.error(request, "All fields are required.")
+            return redirect('create_user')
+        User.objects.create_user(username=username,password=mobile_no, name=name, mobile_no=mobile_no, role_id=role_id, picture=picture)
+        messages.success(request, "User created successfully.")
+        return redirect('read_user')
+        
+    context = {
+        'roles': roles
+    }
+    return render(request, 'user/create_user.html', context)
 
+
+@role_required('read_user')
+def read_user(request):
+    users = User.objects.all().order_by('role')
+    context = {
+        'users': users
+    }
+    return render(request, 'user/read_user.html', context)
+
+@role_required('update_user')
+def update_user(request, id):
+    roles = Role.objects.all().order_by('id')
+    user = get_object_or_404(User, id=id)
+    if request.method == 'POST':
+        role_id = request.POST.get('role')
+        username = request.POST.get('username')
+        name = request.POST.get('name')
+        mobile_no = request.POST.get('mobile_no')
+        picture = request.FILES.get('picture')
+        if not all([role_id, name, mobile_no]):
+            messages.error(request, "All fields are required.")
+            return redirect('update_user', id=id)
+        user.role_id = role_id
+        user.name = name
+        user.mobile_no = mobile_no
+        if picture is not None:
+            user.picture = picture
+        user.save()
+        messages.success(request, "User updated successfully.")
+        return redirect('read_user')
+        
+    context = {
+        'user': user,
+        'roles': roles
+    }
+    return render(request, 'user/update_user.html', context)
+
+@role_required('update_user')
+def reset_user_password(request,id):
+    user = get_object_or_404(User, id=id)
+    user.set_password(user.mobile_no)
+    user.save()
+    messages.success(request, "Password reset successfully.")
+    return redirect('read_user')
+    
+
+@role_required('delete_user')
+def delete_user(request,id):
+    user = get_object_or_404(User, id=id)
+    user.delete()
+    return redirect('read_user')
 
 
 
