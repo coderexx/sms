@@ -80,7 +80,7 @@ def read_teaching_assignment(request):
     queryset = TeachingAssignment.objects.filter(
         date__year=selected_year,
         date__month=selected_month
-    )
+    ).order_by('-date')
 
     if selected_teacher:
         queryset = queryset.filter(teacher_id=selected_teacher)
