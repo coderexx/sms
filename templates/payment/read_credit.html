@@ -6,7 +6,7 @@
   <form method="get" class="row g-3 mb-4" >
     <div class="col-md-4">
       <label for="year" class="form-label">Select Year:</label>
-      <select name="year" id="year" class="form-select" onchange="this.form.submit()">
+      <select name="year" id="year" class="form-select bg-white" onchange="this.form.submit()">
         <option value="">-- Select Year --</option>
         {% for year in years %}
           <option value="{{ year }}" {% if year|stringformat:"s" == selected_year|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
@@ -16,10 +16,10 @@
 
     <div class="col-md-4">
       <label for="class_id" class="form-label">Select Class:</label>
-      <select name="class_id" id="class_id" class="form-select" onchange="this.form.submit()">
+      <select name="class_id" id="class_id" class="form-select bg-white" onchange="this.form.submit()">
         <option value="">-- Select Class --</option>
         {% for class in classes %}
-          <option value="{{ class.id }}" {% if class.id == selected_class %}selected{% endif %}>{{ class.number }}</option>
+          <option value="{{ class.id }}" {% if class.id == selected_class %}selected{% endif %}>Class {{ class.number }}</option>
         {% endfor %}
       </select>
     </div>

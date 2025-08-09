@@ -8,7 +8,7 @@ Take Attendance
 
 
 <form method="GET" class="mb-5">
-    <select class="form-select" name="student_class" id="student_class" onchange="this.form.submit()">
+    <select class="form-select bg-white" name="student_class" id="student_class" onchange="this.form.submit()">
         <option selected disabled>Choose Class</option>
         {% for i in student_classes %}
         <option {% if i.id == student_class %}selected{% endif %} value="{{ i.id }}">Class {{ i.number }}</option>
@@ -30,12 +30,14 @@ Take Attendance
     <div class="table-responsive">
         <table class="table">
             <tr>
+                <th>#</th>
                 <th>Name</th>
                 <th>Roll</th>
                 <th>Present</th>
             </tr>
             {% for student in students %}
             <tr>
+                <td>{{ forloop.counter }}</td>
                 <td>{{ student.name }}</td>
                 <td>{{ student.roll_no }}</td>
                 <td>

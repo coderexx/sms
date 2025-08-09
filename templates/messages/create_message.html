@@ -17,7 +17,7 @@ Send Message
           <select name="student_class" id="student_class" class="form-select" required>
             <option value="">Select Class</option>
             {% for student_class in student_classes %}
-              <option value="{{ student_class.id }}">{{ student_class.number }}</option>
+              <option value="{{ student_class.id }}">Class {{ student_class.number }}</option>
             {% endfor %}
           </select>
           <div class="invalid-feedback">Class is required.</div>
@@ -26,7 +26,7 @@ Send Message
         <!-- start col -->
         <div class="mb-3 col-xl-8 col-md-6">
           <label class="form-label fw-bold fs-6" for="text">Message</label>
-          <textarea id="smsText" oninput="countCustomSegments()" name="text" class="form-control" rows="3" required></textarea>
+          <textarea id="smsText" oninput="countCustomSegments()" name="text" class="form-control" rows="9" required></textarea>
           <div class="invalid-feedback">Message is required.</div>
           <p id="charCount">Characters: 115, Segments: 1</p>
         </div>

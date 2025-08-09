@@ -10,33 +10,30 @@ Due Table
 <form method="get" class="mb-4">
   <div class="row g-3 align-items-center">
     <div class="col-auto">
-      <label for="class_id" class="col-form-label">Select Class:</label>
-    </div>
-    <div class="col-auto">
-      <select name="class_id" onchange="this.form.submit()" id="class_id" class="form-select">
+      <select name="class_id" onchange="this.form.submit()" id="class_id" class="form-select bg-white">
         <option value="">-- Select Class --</option>
         {% for cls in student_classes %}
-          <option value="{{ cls.id }}" {% if cls.id|stringformat:"s" == class_id %}selected{% endif %}>
+          <option value="{{ cls.id }}" {% if cls.id|stringformat:"s" == class_id %}selected{% endif %}>Class 
             {{ cls.number }}
           </option>
         {% endfor %}
       </select>
     </div>
     <div class="col-auto">
-      <input placeholder="Roll Number" type="text" name="roll_no" value="{{ roll_no }}" onchange="this.form.submit()" class="form-control">
+      <input placeholder="Roll Number" type="text" name="roll_no" value="{{ roll_no }}" onchange="this.form.submit()" class="form-control bg-white">
     </div>
   </div>
 </form>
 
 <!-- Student Table -->
  {% if students %}
-<div class="card shadow">
-  <div class="card-body">
+<div class="card">
     <div class="table-responsive text-nowrap">
       <table class="table table-bordered align-middle">
         <thead class="table-dark">
           <tr>
             <th scope="col">Action</th>
+            <th>#</th>
             <th scope="col">Name</th>
             <th scope="col">Roll</th>
             <th scope="col">Phone</th>
@@ -63,6 +60,7 @@ Due Table
               {% endif %}
               {% endfor %}
             </td>
+            <td>{{ forloop.counter }}</td>
             <td>{{ s.name }}</td>
             <td>{{ s.roll }}</td>
             <td>{{ s.phone }}</td>
@@ -76,7 +74,6 @@ Due Table
         </tbody>
       </table>
     </div>
-  </div>
 </div>
 
 {% else %}

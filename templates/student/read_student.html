@@ -19,7 +19,7 @@ Active Students
         <select name="student_class_query" id="" class="form-select w-25 bg-white">
             <option value="">Select Class</option>
             {% for student_class in student_classes %}
-            <option value="{{ student_class.id }}" {% if student_class.id == student_class_query %}selected{% endif %}>{{ student_class.number }}</option>
+            <option value="{{ student_class.id }}" {% if student_class.id == student_class_query %}selected{% endif %}>Class {{ student_class.number }}</option>
             {% endfor %}
         </select>
         <select name="school_query" id="" class="form-select w-25 bg-white">

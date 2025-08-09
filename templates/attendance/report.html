@@ -8,12 +8,12 @@
     <form method="GET" class="row g-3 mb-4 align-items-end">
         <div class="col-md-3">
             <label for="date" class="form-label">Date</label>
-            <input value="{{ date|date:'Y-m-d' }}" type="date" id="date" name="date" class="form-control">
+            <input value="{{ date|date:'Y-m-d' }}" type="date" id="date" name="date" class="form-control bg-white">
         </div>
 
         <div class="col-md-3">
             <label for="student_class" class="form-label">Class</label>
-            <select id="student_class" name="student_class" class="form-select">
+            <select id="student_class" name="student_class" class="form-select bg-white">
                 <option value="" {% if not selected_class %}selected{% endif %}>All Classes</option>
                 {% for cls in classes %}
                     <option value="{{ cls.id }}" {% if cls.id|stringformat:"s" == selected_class|stringformat:"s" %}selected{% endif %}>
@@ -39,6 +39,7 @@
         <table class="table table-striped table-bordered align-middle">
             <thead class="table-dark">
                 <tr>
+                    <th>#</th>
                     <th>Date</th>
                     <th>Student</th>
                     <th>Roll</th>
@@ -49,6 +50,7 @@
             <tbody>
                     {% for attendance in attendances %}
                     <tr>
+                        <td>{{ forloop.counter }}</td>
                         <td>{{ attendance.date }}</td>
                         <td>{{ attendance.student.name }}</td>
                         <td>{{ attendance.student.roll_no }}</td>
