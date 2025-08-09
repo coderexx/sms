@@ -112,7 +112,7 @@ Active Students
                     <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h4 class="modal-title" id="modalCenterTitle">Activation {{item.name}}</h4>
+                        <h4 class="modal-title" id="modalCenterTitle">{% if item.active %}Deactivation{% else %}Activation{% endif %} {{item.name}}</h4>
                         <button
                             type="button"
                             class="btn-close"
@@ -177,7 +177,7 @@ Active Students
 
 {% else %}
 <div class="bg-black text-white fs-1 card oswald h-100 m-auto pt-5 text-center">
-  No Class entries found.
+  No Student entries found.
 </div>
 {% endif %}
 

@@ -22,6 +22,14 @@
                 {% endfor %}
             </select>
         </div>
+        <div class="col-md-3">
+            <label for="student_class" class="form-label">Status</label>
+            <select name="is_present" id="is_present" class="form-select bg-white">
+                <option value="">All Status</option>
+                <option {% if is_present == "True" %}selected{% endif %} value="True">Present</option>
+                <option {% if is_present == "False" %}selected{% endif %} value="False">Absent</option>
+            </select>
+        </div>
 
         <div class="col-md-3">
             <button type="submit" class="btn btn-primary w-100">Filter</button>

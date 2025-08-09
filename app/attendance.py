@@ -60,11 +60,18 @@ def attendance_report(request):
     selected_class = request.GET.get('student_class')
 
     # Base queryset
-    attendances = Attendance.objects.filter(date=date).order_by('student__student_class__number')
+    attendances = Attendance.objects.filter(date=date).order_by('student__student_class__number','is_present')
 
     # Apply filters
     if selected_class:
         attendances = attendances.filter(student__student_class_id=selected_class)
+        
+    # Get is_present filter
+    is_present = request.GET.get('is_present')
+    if is_present == 'True':
+        attendances = attendances.filter(is_present=True)
+    elif is_present == 'False':
+        attendances = attendances.filter(is_present=False)
 
     # Get distinct classes for filter dropdown
     classes = StudentClass.objects.all().order_by('number')
@@ -76,6 +83,8 @@ def attendance_report(request):
     paginator = Paginator(attendances, 100)  # 100 records per page
     page_number = request.GET.get('page')
     attendances = paginator.get_page(page_number)
+    
+    
     # Handle query parameters for pagination
     query_dict = request.GET.copy()
     if 'page' in query_dict:
@@ -87,6 +96,7 @@ def attendance_report(request):
         'date': date,
         'selected_class': selected_class,
         'total': total,
-        'query_string': query_string
+        'query_string': query_string,
+        'is_present': is_present
     }
     return render(request, 'attendance/report.html', context)

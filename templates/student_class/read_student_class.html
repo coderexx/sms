@@ -69,7 +69,7 @@ Class
                     <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h4 class="modal-title" id="modalCenterTitle">Activation {{item.number}}</h4>
+                        <h4 class="modal-title" id="modalCenterTitle">{% if item.active %}Deactivation{% else %}Activation{% endif %} Class {{item.number}}</h4>
                         <button
                             type="button"
                             class="btn-close"
@@ -77,13 +77,15 @@ Class
                             aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                        <p>Are you sure you want to activation {{item.number}}?</p>
+                        <p>Are you sure you want to {% if item.active %}deactivate{% else %}activate{% endif %} Class {{item.number}}?</p>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
                             Close
                         </button>
-                        <a href="{% url 'activation_student_class' item.id %}" class="btn btn-warning">Activation</a>
+                        <a href="{% url 'activation_student_class' item.id %}" class="btn {% if item.active %}btn-warning{% else %}btn-success{% endif %}">
+                            {% if item.active %}Deactivation{% else %}Activation{% endif %}
+                        </a>
                         </div>
                     </div>
                     </div>
@@ -97,9 +99,16 @@ Class
                               <span class="icon-base fa fa-edit icon-sm text-white"></span>
                         </a>
                                      
-                        <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
-                           <span class="icon-base fa-solid fa-ban icon-sm text-white"></span>
-                        </button>
+                            {% if item.active %}
+                            <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
+                            <span class="icon-base fa-solid fa-power-off icon-sm text-white"></span>
+                            </button>
+                            {% else %}
+                            <button type="button" class="btn rounded-pill btn-icon btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
+                            <span class="icon-base fa-solid fa-check icon-sm text-white"></span>
+                            </button>
+                            {% endif %}
+                            
                         {% elif i.name == "delete_student_class" %}
                         <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{item.id}}">
                            <span class="icon-base fa-regular fa-trash-can icon-sm text-white"></span>
