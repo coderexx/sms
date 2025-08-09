@@ -29,8 +29,9 @@ Active Teachers
             <thead class="table-dark">
                 <tr class="text-nowrap">
                     <th>Action</th>
-                    <th>Sn</th>
+                    <th>#</th>
                     <th>Name</th>
+                    <th>Mobile No</th>
                     <th>Location</th>
                 </tr>
             </thead>
@@ -116,6 +117,7 @@ Active Teachers
                     </th>
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{item.name|default:"N/A"}}</td>
+                    <td>{{item.mob_no|default:"N/A"}}</td>
                     <td>{{item.location.name|default:"N/A"}}</td>
                 </tr>
                 {% endfor %}

@@ -72,12 +72,12 @@ Active Students
             <thead class="table-dark">
                 <tr class="text-nowrap">
                     <th>Action</th>
-                    <th>Sn</th>
+                    <th>#</th>
                     <th>Name</th>
                     <th>Roll</th>
                     <th>Class</th>
+                    <th>Mobile No</th>
                     <th>School</th>
-                    <th>Location</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -164,8 +164,8 @@ Active Students
                     <td>{{item.name}}</td>
                     <td>{{item.roll_no}}</td>
                     <td>{{item.student_class.number}}</td>
+                    <td>{{item.mob_no}}</td>
                     <td>{{item.school.name}}</td>
-                    <td>{{item.location.name}}</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -30,14 +30,12 @@ Take Attendance
     <div class="table-responsive">
         <table class="table">
             <tr>
-                <th>#</th>
                 <th>Name</th>
                 <th>Roll</th>
                 <th>Present</th>
             </tr>
             {% for student in students %}
             <tr>
-                <td>{{ forloop.counter }}</td>
                 <td>{{ student.name }}</td>
                 <td>{{ student.roll_no }}</td>
                 <td>
