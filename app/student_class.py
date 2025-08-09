@@ -80,6 +80,8 @@ def activation_student_class(request,id):
     student_class = StudentClass.objects.get(id=id)
     if student_class.active == True:
         student_class.active = False
+        if not student_class.inactive_date:
+            student_class.inactive_date = today
         messages.success(request,f"class {student_class.number} was deactivation successfully.")
     else:
         student_class.active = True

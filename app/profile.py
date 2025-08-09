@@ -32,6 +32,15 @@ def profile_student(request,id):
     else:
         end_year = current_year
         end_month = current_month - 1
+    
+    # if student_class is inactive, adjust end year/month
+    if student.student_class.inactive_date:
+        inactive_year = student.student_class.inactive_date.year
+        inactive_month = student.student_class.inactive_date.month
+        if (inactive_year, inactive_month) < (end_year, end_month):
+            end_year = inactive_year
+            end_month = inactive_month
+    
 
     # If student is inactive, adjust end year/month
     if student.inactive_date:
