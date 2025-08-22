@@ -3,6 +3,8 @@ from faker import Faker
 import random
 from datetime import date
 from app.models import *
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class Command(BaseCommand):
     help = 'Generate fake data for Location, School, StudentClass, Teacher, and Student'
@@ -20,7 +22,7 @@ class Command(BaseCommand):
         # Create Student Classes
         classes = []
         for i in range(1, 10):
-            c = StudentClass.objects.create(number=i, active=True)
+            c, created = StudentClass.objects.get_or_create(number=i, active=True)
             classes.append(c)
         self.stdout.write(self.style.SUCCESS("✅ Created 10 Student Classes"))
 
@@ -62,14 +64,21 @@ class Command(BaseCommand):
 
         # Create Students
         for _ in range(2000):
+            roll_no=str(fake.random_int(min=1000, max=9999)),
+            if User.objects.filter(username=roll_no).exists():
+                continue
+            mob_no=fake.phone_number(),
+            role, created = Role.objects.get_or_create(h_name="student")
+            user = User.objects.create(username=roll_no,mobile_no=mob_no,role=role)
             Student.objects.create(
+                user=user,
+                roll_no=roll_no,
+                mob_no=mob_no,
                 name=fake.name(),
                 school=random.choice(schools),
                 student_class=random.choice(classes),
                 location=random.choice(locations),
-                mob_no=fake.phone_number(),
                 email=fake.email(),
-                roll_no=str(fake.random_int(min=1000, max=9999)),
                 father_name=fake.name_male(),
                 mother_name=fake.name_female(),
                 date_of_birth=fake.date_of_birth(minimum_age=6, maximum_age=18),

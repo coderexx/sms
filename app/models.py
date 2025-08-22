@@ -18,13 +18,13 @@ class Module(BaseModel):
         return self.name
 
 class Role(BaseModel):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
     modules = models.ManyToManyField(Module, through='RoleModuleAccess')
-    h_name = models.CharField(max_length=100, blank=True, null=True)
+    h_name = models.CharField(max_length=100, blank=True, null=True, unique=True)
     sn = models.IntegerField(null=True,blank=True)
 
     def __str__(self):
-        return self.name
+        return self.h_name
 
 class RoleModuleAccess(BaseModel):
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
@@ -43,7 +43,7 @@ class CustomUserManager(BaseUserManager):
         # Auto-assign default role 'Admin' if not given
         if 'role' not in extra_fields or extra_fields['role'] is None:
             try:
-                admin_role, created = Role.objects.get_or_create(name='Admin')
+                admin_role, created = Role.objects.get_or_create(h_name='admin')
             except Role.DoesNotExist:
                 raise ValueError("❌ Role 'Admin' does not exist. Please create it first.")
             extra_fields['role'] = admin_role
@@ -241,8 +241,8 @@ class ExamResult(BaseModel):
     date = models.DateField(default=timezone.now)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    total_mark = models.IntegerField(null=True, blank=True)
-    obtained_mark = models.IntegerField(null=True, blank=True)
+    total_mark = models.IntegerField(null=True, blank=True, default=0)
+    obtained_mark = models.IntegerField(null=True, blank=True, default=0)
 
     def __str__(self):
         return f"{self.teacher} - {self.student} - {self.subject}"
