@@ -18,12 +18,12 @@ Update Student
 
         <div class="col-md-6">
             <label class="form-label">Roll Number</label>
-            <input name="roll_no" type="text" class="form-control" value="{{ student.roll_no }}">
+            <input name="roll_no" type="text" class="form-control" value="{{ student.roll_no }}" required>
         </div>
 
         <div class="col-md-6">
             <label class="form-label">Mobile Number</label>
-            <input name="mob_no" type="text" class="form-control" value="{{ student.mob_no }}" required>
+            <input name="mob_no" type="text" class="form-control" value="{{ student.mob_no }}" placeholder="01xxxxxxxxx" required>
             <div class="invalid-feedback">Please enter mobile number.</div>
         </div>
 

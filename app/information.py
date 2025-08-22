@@ -182,7 +182,7 @@ def create_student(request):
         religion = request.POST.get('religion')
         
         # ✅ Manual Required Validation
-        if not all([name, school_id, student_class_id, mob_no]):
+        if not all([name, school_id, student_class_id, mob_no, roll_no]):
             messages.error(request, 'Please fill in all required fields.')
             return redirect('create_student')
 
