@@ -209,7 +209,8 @@ def create_student(request):
             # ✅ Handle Picture Upload
             if request.FILES.get('picture'):
                 student.picture = request.FILES['picture']
-
+                user.picture = request.FILES['picture']
+                user.save()
             student.save()
             messages.success(request, 'Student added successfully.')
             return redirect('create_student')
@@ -252,6 +253,7 @@ def update_student(request,id):
         student.religion = request.POST.get('religion')
         if request.FILES.get('picture'):
             student.picture = request.FILES['picture']
+            student.user.picture = request.FILES['picture']
         student.save()
 
         if student.user.name != name:
