@@ -1,20 +1,28 @@
 # management/commands/seed_modules.py
 from django.core.management.base import BaseCommand
-from app.models import *
+from app.models import Student, Role
 from django.contrib.auth import get_user_model
-User = get_user_model()
 
+User = get_user_model()
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        students = Student.object.all()
+        students = Student.objects.all()
         role = Role.objects.get(h_name="student")
         count = 0
+
         for i in students:
-            user = User.object.create(role=role, username=i.role_no, password=i.mob_no, name=i.name, mobile_no=i.mob_no, picture=i.picture)
-            i.user = user
-            i.save()
-            count=count+1
+            if not i.user:  # only if student is not already linked to a user
+                user = User.objects.create_user(
+                    username=i.roll_no,         # Student roll no as username
+                    password=i.mob_no,          # Mobile no as password (hashed)
+                    name=i.name,
+                    mobile_no=i.mob_no,
+                    role=role,
+                    picture=i.picture
+                )
+                i.user = user
+                i.save()
+                count += 1
 
-
-        self.stdout.write(self.style.SUCCESS(f"🎉 Done ! {count} have been updated"))
+        self.stdout.write(self.style.SUCCESS(f"🎉 Done! {count} students have been linked to users"))
