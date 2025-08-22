@@ -13,10 +13,24 @@ today = date.today()
 
 
 #student profile
-@role_required('read_student')
+@login_required
 def profile_student(request,id):
+    # check if the user has permission to read member profile
+    role = request.user.role
+    if role and role.modules.filter(name='read_student').exists():
+        if not Student.objects.filter(id=id).exists():
+            messages.error(request, "Student Doesn't Exist")
+            return redirect('home')
+    elif role and role.modules.filter(name='read_student_self').exists():
+        if not Student.objects.filter(id=id, user=request.user).exists():
+            messages.error(request, "Student Doesn't Exist")
+            return redirect('home')
+    else:
+        return render(request, 'others/no_permission.html')
     student = Student.objects.get(id=id)
     payments = student.monthly_payments.order_by('-year', '-month')
+
+    exam_results = ExamResult.objects.filter(student=student)
 
     current_year = today.year
     current_month = today.month
@@ -108,6 +122,7 @@ def profile_student(request,id):
     years = Attendance.objects.filter(student=student).annotate(year=ExtractYear('date')).values_list('year', flat=True).distinct().order_by('-year')
     context = {
         "student":student,
+        "exam_results":exam_results,
         "payments":payments,
         "due_months":due_months,
         'attendance_days': attendance_days,

@@ -134,6 +134,31 @@ Active Students
                     </div>
                 </div>
                 <!-- End Activation Modal -->
+                <!-- Start Reset Modal -->
+                <div class="modal fade" id="modal-reset-{{item.id}}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h4 class="modal-title" id="modalCenterTitle">Reset Password {{item.name}}</h4>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        <p>Are you sure you want to reset password?</p>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <a href="{% url 'reset_student_password' item.id %}" class="btn btn-warning">Reset Password</a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- End Reset Modal -->
                 <tr>
                     <th>
                         {% for i in user_modules %}
@@ -141,6 +166,9 @@ Active Students
                         <a href="{% url "update_student" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
                               <span class="icon-base fa fa-edit icon-sm text-white"></span>
                         </a>
+                        <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-reset-{{item.id}}">
+                        <span class="icon-base fa-solid fa-recycle icon-sm text-white"></span>
+                        </button>
                             {% if item.active %}
                             <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-activation-{{item.id}}">
                             <span class="icon-base fa-solid fa-power-off icon-sm text-white"></span>

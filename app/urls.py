@@ -8,7 +8,7 @@ from .information import *
 from .profile import *
 from .student_class import *
 from .attendance import *
-
+from .exam import *
 urlpatterns = [
     
     path('', do_login, name='login'),
@@ -17,6 +17,7 @@ urlpatterns = [
     path('documentation', documentation, name='documentation'),
     
     # TODO: Admin
+    path('home', home, name='home'),
     path('dashboard', dashboard, name='dashboard'),
     
      
@@ -28,6 +29,7 @@ urlpatterns = [
     path('read_student_pdf/<str:inactive>', read_student_pdf, name='read_student_pdf'),
     path('update_student/<int:id>', update_student, name='update_student'),
     path('delete_student/<int:id>', delete_student, name='delete_student'),
+    path('reset_student_password/<int:id>', reset_student_password, name='reset_student_password'),
     path('activation_student/<int:id>', activation_student, name='activation_student'),
     #TODO:Teacher
     path('create_teacher', create_teacher, name='create_teacher'),
@@ -87,6 +89,10 @@ urlpatterns = [
     # TODO: Attendance
     path('take_attendance', take_attendance, name='take_attendance'),
     path('attendance_report', attendance_report, name='attendance_report'),
+
+    # TODO: Exam
+    path('create_exam_result', create_exam_result, name='create_exam_result'),
+    path('read_exam_result', read_exam_result, name='read_exam_result'),
     
     
     #TODO:User

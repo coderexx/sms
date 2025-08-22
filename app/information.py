@@ -14,6 +14,8 @@ from xhtml2pdf import pisa
 
 from .utils.decorators import role_required
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 # global variables
@@ -185,16 +187,35 @@ def create_student(request):
         if not all([name, school_id, student_class_id, mob_no, roll_no]):
             messages.error(request, 'Please fill in all required fields.')
             return redirect('create_student')
+        if len(mob_no) != 11 or not mob_no.startswith("01") or not mob_no.isdigit():
+            messages.error(request, "Mobile number must be exactly 11 digits and start with 01")
+            return redirect('create_student')
 
-        # ✅ Create Student Object
-        student = Student(name=name, school_id=school_id, student_class_id=student_class_id, location_id=location_id, mob_no=mob_no, email=email, roll_no=roll_no, father_name=father_name, mother_name=mother_name, date_of_birth=date_of_birth, father_mob_no=father_mob_no, mother_mob_no=mother_mob_no, gender=gender, marital_status=marital_status, blood=blood, religion=religion, active=True)
+        # Check if the roll_no is already in use
+        if User.objects.filter(username=roll_no).exists():
+            messages.error(request, "Student already in use")
+            return redirect('create_student')
+        
+        try:
+            user = User.objects.create_user(username=roll_no, password=mob_no)
+            user.role = Role.objects.get(h_name='student')
+            user.name = name
+            user.mobile_no = mob_no
+            user.save()
 
-        # ✅ Handle Picture Upload
-        if request.FILES.get('picture'):
-            student.picture = request.FILES['picture']
+            # ✅ Create Student Object
+            student = Student(user=user,name=name, school_id=school_id, student_class_id=student_class_id, location_id=location_id, mob_no=mob_no, email=email, roll_no=roll_no, father_name=father_name, mother_name=mother_name, date_of_birth=date_of_birth, father_mob_no=father_mob_no, mother_mob_no=mother_mob_no, gender=gender, marital_status=marital_status, blood=blood, religion=religion, active=True)
 
-        student.save()
-        messages.success(request, 'Student added successfully.')
+            # ✅ Handle Picture Upload
+            if request.FILES.get('picture'):
+                student.picture = request.FILES['picture']
+
+            student.save()
+            messages.success(request, 'Student added successfully.')
+            return redirect('create_student')
+        except Exception as e:
+            print(e)
+            messages.error(request, "An error occurred")
         return redirect('create_student')
     
     context = {
@@ -232,6 +253,14 @@ def update_student(request,id):
         if request.FILES.get('picture'):
             student.picture = request.FILES['picture']
         student.save()
+
+        if student.user.name != name:
+            student.user.name = name
+        if student.user.username != roll_no:
+            student.user.username = roll_no
+        if student.user.mobile_no != mob_no:
+            student.user.mobile_no = mob_no
+        student.user.save()
         messages.success(request, 'Student updated successfully.')
         return redirect('read_student')
 
@@ -246,6 +275,18 @@ def update_student(request,id):
         'marital_statuses': Student.MARITAL_STATUS_LIST
     }
     return render(request,'student/update_student.html',context)
+
+
+# reset_student_password
+@role_required('update_student')
+def reset_student_password(request,id):
+    student = Student.objects.get(id=id)
+    student.user.username = student.roll_no
+    student.user.set_password(student.mob_no)
+    student.user.save()
+    messages.success(request, "Student password reset successfully")
+    return redirect("read_student")
+
 
 #delete_student
 @role_required('delete_student')

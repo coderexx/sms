@@ -196,13 +196,14 @@ class Student(BaseModel):
         ("other", "Other"),
     ]
     name = models.CharField(max_length=100)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='student', blank=True, null=True)
     student_class = models.ForeignKey(StudentClass, on_delete=models.CASCADE)
     school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
     mob_no = models.CharField(max_length=50, null=True, blank=True)
     picture = models.ImageField(upload_to='students/', null=True, blank=True)
     email = models.EmailField(max_length=254, null=True, blank=True)
-    roll_no = models.CharField(max_length=50, null=True, blank=True)
+    roll_no = models.CharField(max_length=50, unique=True)
     father_name = models.CharField(max_length=100, null=True, blank=True)
     mother_name = models.CharField(max_length=100, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
@@ -235,6 +236,16 @@ class TeachingAssignment(BaseModel):
     
     def __str__(self):
         return f"{self.teacher} - {self.subject} - {self.student_class}"
+
+class ExamResult(BaseModel):
+    date = models.DateField(default=timezone.now)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    total_mark = models.IntegerField(null=True, blank=True)
+    obtained_mark = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.teacher} - {self.student} - {self.subject}"
     
 class Message(BaseModel):
     text = models.TextField(null=True,blank=True)

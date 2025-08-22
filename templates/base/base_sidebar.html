@@ -4,6 +4,17 @@
 
 <ul class="menu-inner pb-5">
     <!-- Dashboards -->
+    {% for module in user_modules %}
+    {% if module.name == 'read_student_self' %}
+    <li class="menu-item">
+        <a
+        href="{% url "profile_student" request.user.student.id %}"
+        class="menu-link active">
+        <i class="fa-regular fa-user menu-icon"></i>
+        <div class="text-truncate" data-i18n="Profile">Profile</div>
+        </a>
+    </li>
+    {% elif module.name == 'dashboard' %}
     <li class="menu-item">
         <a
         href="{% url "dashboard" %}"
@@ -12,7 +23,8 @@
         <div class="text-truncate" data-i18n="Dashboard">Dashboard</div>
         </a>
     </li>
-    
+    {% endif %}
+    {% endfor %}
     <li class="menu-header small text-uppercase">
         <span class="menu-header-text">Modules</span>
     </li>
@@ -108,6 +120,35 @@
         </ul>
     </li>
     {% endif %}
+
+
+    {% if has_exam %}
+    <li class="menu-item">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="fa-solid fa-clipboard-user menu-icon"></i>
+        <div class="text-truncate" data-i18n="Vehicle">Exam</div>
+        </a>
+
+        <ul class="menu-sub">
+            {% for i in user_modules %}
+            {% if i.name == "create_exam_result" %}
+            <li class="menu-item">
+                <a href="{% url "create_exam_result" %}" class="menu-link">
+                <div class="text-truncate">Make Exam Result</div>
+                </a>
+            </li>
+            {% elif i.name == "read_exam_result" %}
+            <li class="menu-item">
+                <a href="{% url "read_exam_result" %}" class="menu-link">
+                <div class="text-truncate">Exam Result</div>
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </li>
+    {% endif %}
+
     {% for i in user_modules %}
     {% if i.name == "read_teaching_assignment" %}
     <li class="menu-item">

@@ -5,6 +5,7 @@ from app.models import Module
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         module_names = [
+            'dashboard',
             # Student
             'create_student', 'read_student', 'update_student', 'delete_student',
             # Teacher
@@ -21,6 +22,8 @@ class Command(BaseCommand):
             'create_subject', 'read_subject', 'update_subject', 'delete_subject',
             # Teaching Assignment
             'create_teaching_assignment', 'read_teaching_assignment', 'delete_teaching_assignment',
+            # Exam Result
+            'create_exam_result','read_exam_result','delete_exam_result'
             # Message
             'create_message', 'read_message', 'reset_sms_counter',
             # Payment
@@ -29,6 +32,9 @@ class Command(BaseCommand):
             'take_attendance', 'attendance_report',
             # Settings
             'database', 'change_password',
+
+            #For student
+            'read_student_self','update_student_self'
         ]
         Module.objects.exclude(name__in=module_names).delete()
         for name in module_names:

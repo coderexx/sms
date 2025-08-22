@@ -1,0 +1,78 @@
+{% extends 'base/base_template.html' %}
+
+{% block title %}
+
+Exam Result
+
+{% endblock title %}
+
+{% block content %}
+
+<div class="mb-5">
+    <form method="get" class="d-flex">
+        <select name="subject" id="subject" class="form-select bg-white" onchange="this.form.submit()">
+            <option value="">Subject</option>
+            {% for s in subjects %}
+                <option value="{{ s.id }}" {% if s.id == selected_subject %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="student_class" id="class" class="form-select bg-white" onchange="this.form.submit()">
+            <option value="">Class</option>
+            {% for c in classes %}
+                <option value="{{ c.id }}" {% if c.id == selected_class %}selected{% endif %}>Class {{ c.number }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+{% if results %}
+
+<div class="card">
+    <div class="table-responsive text-nowrap">
+        <table class="table">
+            <thead class="table-dark">
+                <tr class="text-nowrap">
+                    <th>Action</th>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Student</th>
+                    <th>Roll</th>
+                    <th>Class</th>
+                    <th>Subject</th>
+                    <th>Total Mark</th>
+                    <th>Obtained Mark</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                {% for item in results %}
+                <tr>
+                    <td>
+                        <a href="{% url "profile_student" item.id %}" class="btn rounded-pill btn-icon btn-primary btn-sm">
+                            <span class="icon-base fa-regular fa-user icon-sm text-white"></span>
+                        </a>
+                    </td>
+                    <td scope="row">{{forloop.counter}}</td>
+                    <td>{{item.date|date:"d-M-Y"}}</td>
+                    <td>{{item.student.name}}</td>
+                    <td>{{item.student.roll_no}}</td>
+                    <td>{{item.student.student_class.number}}</td>
+                    <td>{{item.subject.name}}</td>
+                    <td>{{item.total_mark}}</td>
+                    <td>{{item.obtained_mark}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% include "components/pagination.html" with page_obj=results %}
+
+{% else %}
+<div class="bg-black text-white fs-1 card oswald h-100 m-auto pt-5 text-center mt-5">
+  No Teaching Assignment entries found.
+</div>
+{% endif %}
+
+
+{% endblock content %}

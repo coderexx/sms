@@ -14,9 +14,22 @@ User = get_user_model()
 def no_permission(request):
     return render(request, 'others/no_permission.html')
 
+def home(request):
+    if request.user.is_authenticated:
+        role = request.user.role
+        if role and role.modules.filter(name='dashboard').exists():
+            return redirect("dashboard")
+        if role and role.modules.filter(name='read_student_self').exists():
+            return redirect("profile_student",id=request.user.student.id)
+        else:
+            return render(request, 'others/no_permission.html')
+    else:
+        return redirect("login")
+
+
 def do_login(request):
     if request.user.is_authenticated:
-        return redirect("dashboard")
+        return redirect("home")
     if request.method == "POST":
         try:
             username = request.POST.get("username")
@@ -34,7 +47,7 @@ def do_login(request):
                     request.session.set_expiry(0)  # Session expires when browser closes
                 else:
                     request.session.set_expiry(1209600)  # 2 weeks (in seconds)
-                return redirect("dashboard")
+                return redirect("home")
             else:
                 messages.error(request, "Invalid Login Password")
                 return redirect("login")

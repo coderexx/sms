@@ -143,15 +143,18 @@ Student Profile
         </tbody>
       </table>
 
-      <div class="mt-3">
-        <a href="{% url 'update_student' student.id %}" class="btn btn-warning">Edit Profile</a>
-        <a href="{% url 'read_student' %}" class="btn btn-secondary">Back to List</a>
-      </div>
     </div>
   </div>
 </div>
 
 
+
+
+
+<div class=" mt-5 fw-bold">
+  <h4 class="mb-0 text-center">ATTENDANCE</h4>
+  <hr>
+</div>
 
 <div class="mt-4">
     <form method="get" class="d-flex">
@@ -168,8 +171,6 @@ Student Profile
         </select>
     </form>
 </div>
-
-
 
 <!-- ✅ Attendance Table -->
 <div class="table-responsive mt-4 shadow-sm">
@@ -221,6 +222,53 @@ Student Profile
     </tbody>
   </table>
 </div>
+
+
+<div class=" mt-5 fw-bold">
+  <h4 class="mb-0 text-center">RESULT</h4>
+  <hr>
+</div>
+
+{% if exam_results %}
+<div class="card">
+    <div class="table-responsive text-nowrap">
+        <table class="table">
+            <thead class="table-dark">
+                <tr class="text-nowrap">
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Subject</th>
+                    <th>Total Mark</th>
+                    <th>Obtained Mark</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                {% for item in exam_results %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{item.date|date:"d-M-Y"}}</td>
+                    <td>{{item.subject.name}}</td>
+                    <td>{{item.total_mark}}</td>
+                    <td>{{item.obtained_mark}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% else %}
+<div class="bg-black text-white fs-1 card oswald h-10 m-auto mt-5 py-5 text-center">
+  No Result entries found.
+</div>
+{% endif %}
+
+
+
+
+
+
+
 
 <!-- ✅ Enable Bootstrap Tooltips -->
 <script>

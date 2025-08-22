@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 # global variables
 today = date.today()
 
-@login_required
+@role_required('dashboard')
 def dashboard(request):
     total_active_students = Student.objects.filter(active=True, student_class__active=True).count()
     total_active_teachers = Teacher.objects.filter(active=True).count()
