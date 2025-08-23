@@ -22,7 +22,7 @@ Make Exam Result
     {% csrf_token %}
 
     <div class="row mb-5">
-        <div class="col-6">
+        <div class="col-md-4">
             <label class="form-label fw-bold fs-6" for="subject">Subject</label>
             <select name="subject" id="subject" class="form-select bg-white" required>
                 <option value="">Select Subject</option>
@@ -32,13 +32,16 @@ Make Exam Result
             </select>
             <div class="invalid-feedback">Subject is required.</div>
         </div>
-        <div class="col-6">
+        <div class="col-md-4">
             <label class="form-label fw-bold fs-6" for="subject">Total Mark</label>
             <input type="number" class="form-control bg-white" name="total_mark" id="total_mark" required>
             <div class="invalid-feedback">Subject is required.</div>
         </div>
-
-    
+        <div class="col-md-4">
+            <label class="form-label fw-bold fs-6" for="remarks">Remarks</label>
+            <input type="text" class="form-control bg-white" name="remarks" id="remarks">
+            <div class="invalid-feedback">Remarks are required.</div>
+        </div>
     </div>
     <div class="table-responsive">
         <table class="table">

@@ -249,30 +249,56 @@ def update_student(request,id):
 
     student = get_object_or_404(Student, id=id)
     if request.method == 'POST':
-        student.name = request.POST.get('name')
-        student.school_id = request.POST.get('school')
-        student.student_class_id = request.POST.get('student_class')
-        student.location_id = request.POST.get('location') or None
-        student.mob_no = request.POST.get('mob_no')
-        student.email = request.POST.get('email')
-        student.roll_no = request.POST.get('roll_no')
-        student.father_name = request.POST.get('father_name')
-        student.mother_name = request.POST.get('mother_name')
-        student.date_of_birth = request.POST.get('date_of_birth') or None
-        student.father_mob_no = request.POST.get('father_mob_no')
-        student.mother_mob_no = request.POST.get('mother_mob_no')
-        student.gender = request.POST.get('gender')
-        student.marital_status = request.POST.get('marital_status')
-        student.blood = request.POST.get('blood')
-        student.religion = request.POST.get('religion')
-        if request.FILES.get('picture'):
-            student.picture = request.FILES['picture']
-            student.user.picture = request.FILES['picture']
+        name = request.POST.get('name')
+        school_id = request.POST.get('school')
+        student_class_id = request.POST.get('student_class')
+        location_id = request.POST.get('location') or None
+        mob_no = request.POST.get('mob_no')
+        email = request.POST.get('email')
+        roll_no = request.POST.get('roll_no')
+        father_name = request.POST.get('father_name')
+        mother_name = request.POST.get('mother_name')
+        date_of_birth = request.POST.get('date_of_birth') or None
+        father_mob_no = request.POST.get('father_mob_no')
+        mother_mob_no = request.POST.get('mother_mob_no')
+        gender = request.POST.get('gender')
+        marital_status = request.POST.get('marital_status')
+        blood = request.POST.get('blood')
+        religion = request.POST.get('religion')
+        picture = request.FILES.get('picture')
+
+        # ✅ Manual Required Validation
+        if not all([name, school_id, student_class_id, mob_no, roll_no]):
+            messages.error(request, 'Please fill in all required fields.')
+            return redirect('create_student')
+        if len(mob_no) != 11 or not mob_no.startswith("01") or not mob_no.isdigit():
+            messages.error(request, "Mobile number must be exactly 11 digits and start with 01")
+            return redirect('create_student')
+
+        student.name = name
+        student.school_id = school_id
+        student.student_class_id = student_class_id
+        student.location_id = location_id
+        student.mob_no = mob_no
+        student.email = email
+        student.roll_no = roll_no
+        student.father_name = father_name
+        student.mother_name = mother_name
+        student.date_of_birth = date_of_birth
+        student.father_mob_no = father_mob_no
+        student.mother_mob_no = mother_mob_no
+        student.gender = gender
+        student.marital_status = marital_status
+        student.blood = blood
+        student.religion = religion
+        if picture:
+            student.picture = picture
+            student.user.picture = picture
         student.save()
 
-        student.user.name = student.name
-        student.user.username = student.roll_no
-        student.user.mobile_no = student.mob_no
+        student.user.name = name
+        student.user.username = roll_no
+        student.user.mobile_no = mob_no
         student.user.save()
         messages.success(request, 'Student updated successfully.')
         if role and role.modules.filter(name='update_student').exists():

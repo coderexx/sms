@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from .models import *
 from django.db.models.functions import ExtractYear
-from django.db.models import Sum
+from django.db.models import Sum, Max
 
 from django.contrib.auth.decorators import login_required
 from .utils.decorators import role_required
@@ -30,8 +30,6 @@ def profile_student(request,id):
         return render(request, 'others/no_permission.html')
     student = Student.objects.get(id=id)
     payments = student.monthly_payments.order_by('-year', '-month')
-
-    exam_results = ExamResult.objects.filter(student=student)
 
     current_year = today.year
     current_month = today.month
@@ -77,10 +75,7 @@ def profile_student(request,id):
             m += 1
 
     # Get paid months
-    paid_months = set(
-        MonthlyPayment.objects.filter(student=student)
-        .values_list('year', 'month')
-    )
+    paid_months = set(MonthlyPayment.objects.filter(student=student).values_list('year', 'month'))
 
     # Identify due months
     due_months = [(y, m) for y, m in year_months if (y, m) not in paid_months]
@@ -88,16 +83,10 @@ def profile_student(request,id):
             
     
             
-    # Attendance
+    # TODO:Attendance
     attendance_month = int(request.GET.get('attendance_month', today.month))
     attendance_year = int(request.GET.get('attendance_year', today.year))
-    
-
-    attendances = Attendance.objects.filter(
-        student=student, 
-        date__year=attendance_year,
-        date__month=attendance_month
-    )
+    attendances = Attendance.objects.filter(student=student, date__year=attendance_year, date__month=attendance_month)
 
     # Dictionary like {day: True/False}
     attendance_status_by_day = {a.date.day: a.is_present for a in attendances}
@@ -125,40 +114,55 @@ def profile_student(request,id):
 
 
 
-    # Exam Result Position 
+    # TODO: Exam Result Position
+    exam_results = ExamResult.objects.filter(student=student).order_by('-date','-created_at')
     # Step 1: Get all students in the same class
     student_class = student.student_class  # assuming you have a field `student_class` in Student model
-
-    # Step 2: Get total marks of all students in this class for current month
-    scores = (
-        ExamResult.objects.filter(
-            student__student_class=student_class,
-            date__year=today.year,
-            date__month=today.month
-        )
-        .values('student')
-        .annotate(total=Sum('obtained_mark'))
-        .order_by('-total')  # highest first
-    )
-
+    # Step 2: Get total marks of all students in this class for current year
+    yearly_scores = (ExamResult.objects.filter(student__student_class=student_class,date__year=today.year).values('student').annotate(total=Sum('obtained_mark')).order_by('-total'))
     # Step 3: Find this student's position in their class
-    position = None
+    yearly_position = None
     rank = 1
-    for s in scores:
+    for s in yearly_scores:
         if s['student'] == student.id:
-            position = rank
+            yearly_position = rank
             break
         rank += 1
-
     # Step 4: Get this student's own total score
-    monthly_score = (
-        ExamResult.objects.filter(
-            student=student,
-            date__year=today.year,
-            date__month=today.month
-        )
-        .aggregate(total=Sum('obtained_mark'))['total'] or 0
+    yearly_score = (ExamResult.objects.filter(student=student,date__year=today.year).aggregate(total=Sum('obtained_mark'))['total'] or 0)
+
+    # XXX:Step 1: Monthly Position
+    # Step 2: Get total marks of all students in this class for current month
+    monthly_scores = (yearly_scores.filter(date__month=today.month).values('student').annotate(total=Sum('obtained_mark')).order_by('-total')  # highest first
     )
+    # Step 3: Find this student's position in their class
+    monthly_position = None
+    rank = 1
+    for s in monthly_scores:
+        if s['student'] == student.id:
+            monthly_position = rank
+            break
+        rank += 1
+    # Step 4: Get this student's own total score
+    monthly_score = (ExamResult.objects.filter(student=student,date__year=today.year,date__month=today.month).aggregate(total=Sum('obtained_mark'))['total'] or 0)
+
+    #XXX: last exam position
+    # Step 1: Find the latest exam date for this student's class
+    last_exam_date = (ExamResult.objects.filter(student__student_class=student.student_class).aggregate(latest=Max('date'))['latest'])
+    # Step 2: Get total marks of all students in this class for current month
+    last_scores = (ExamResult.objects.filter(student__student_class=student.student_class, date=last_exam_date).values('student').annotate(total=Sum('obtained_mark')).order_by('-total'))
+    # Step 3: Find this student's position in their class
+    last_position = None
+    rank = 1
+    for s in last_scores:
+        if s['student'] == student.id:
+            last_position = rank
+            break
+        rank += 1
+    # Step 4: Get this student's own total score
+    last_score = (ExamResult.objects.filter(student=student,date=last_exam_date).aggregate(total=Sum('obtained_mark'))['total'] or 0)
+
+
     context = {
         "student":student,
         "exam_results":exam_results,
@@ -173,7 +177,11 @@ def profile_student(request,id):
         'years': years,
         'months': [(i, calendar.month_name[i]) for i in range(1, 13)],
         "monthly_score": monthly_score,
-        "monthly_position": position,
+        "monthly_position": monthly_position,
+        "yearly_score": yearly_score,
+        "yearly_position": yearly_position,
+        "last_score": last_score,
+        "last_position": last_position,
     }
     return render(request,'profile/student_profile.html',context)
 

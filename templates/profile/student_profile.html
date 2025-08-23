@@ -236,16 +236,36 @@ Student Profile
 {% if exam_results %}
 <!-- Student Position Card -->
 <div class="card shadow-lg border-0 rounded-3">
-    <div class="card-body d-flex justify-content-around">
+    <div class="card-body row">
+        <!-- Yearly Score -->
+        <p class="col-lg-2 col-md-4 col-6 d-flex flex-column text-center fs-6">
+            <strong>Yearly Score</strong>
+            <span class="badge fs-4 bg-info ms-2">{{ yearly_score }}</span>
+        </p>
+        <!-- Yearly Position -->
+        <p class="col-lg-2 col-md-4 col-6 d-flex flex-column text-center fs-6">
+            <strong>Yearly Position</strong>
+            <span class="badge fs-4 bg-success text-white text-dark ms-2">{{ yearly_position }}</span>
+        </p>
         <!-- Monthly Score -->
-        <p class="fs-5">
-            <strong>Monthly Score:</strong>
-            <span class="badge bg-info ms-2">{{ monthly_score }}</span>
+        <p class="col-lg-2 col-md-4 col-6 d-flex flex-column text-center fs-6">
+            <strong>Monthly Score</strong>
+            <span class="badge fs-4 bg-info ms-2">{{ monthly_score }}</span>
+        </p>
+        <!-- Monthly Position -->
+        <p class="col-lg-2 col-md-4 col-6 d-flex flex-column text-center fs-6">
+            <strong>Monthly Position</strong>
+            <span class="badge fs-4 bg-success text-white text-dark ms-2">{{ monthly_position }}</span>
+        </p>
+        <!-- Last Exam Score -->
+        <p class="col-lg-2 col-md-4 col-6 d-flex flex-column text-center fs-6">
+            <strong>Last Exam Score</strong>
+            <span class="badge fs-4 bg-info ms-2">{{ last_score }}</span>
         </p>
         <!-- Position in Class -->
-        <p class="fs-5">
-            <strong>Position in Class:</strong>
-            <span class="badge bg-success text-white text-dark ms-2">{{ monthly_position }}</span>
+        <p class="col-lg-2 col-md-4 col-6 d-flex flex-column text-center fs-6">
+            <strong>Last Exam Position</strong>
+            <span class="badge fs-4 bg-success text-white text-dark ms-2">{{ last_position }}</span>
         </p>
     </div>
 </div>
@@ -259,6 +279,7 @@ Student Profile
                     <th>Subject</th>
                     <th>Total Mark</th>
                     <th>Obtained Mark</th>
+                    <th>Remarks</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -269,6 +290,7 @@ Student Profile
                     <td>{{item.subject.name}}</td>
                     <td>{{item.total_mark}}</td>
                     <td>{{item.obtained_mark}}</td>
+                    <td>{{item.remarks}}</td>
                 </tr>
                 {% endfor %}
             </tbody>

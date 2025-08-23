@@ -18,19 +18,20 @@ def create_exam_result(request):
     if request.method == 'POST':
         subject_id = request.POST.get("subject")
         total_mark = request.POST.get("total_mark")
+        remarks = request.POST.get("remarks")
         if not all([subject_id, total_mark]):
             messages.error(request, 'Please fill in all required fields.')
             return redirect('create_exam_result')
         # Submit attendance
         for student in students:
             obtained_mark = request.POST.get(f"obtained_mark_{student.id}")
-            student_id = student.id
             ExamResult.objects.create(
                 date=today,
                 student=student,
                 subject_id=subject_id,
                 total_mark=total_mark,
-                obtained_mark=obtained_mark
+                obtained_mark=obtained_mark,
+                remarks=remarks
             )
 
         messages.success(request, "✅ Exam Result Created successfully.")

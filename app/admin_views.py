@@ -45,12 +45,7 @@ def dashboard(request):
         
     attendance_data = (
         Attendance.objects.filter(date=today)  # ✅ Only today's records
-        .values('date')
-        .annotate(
-            present=Count('id', filter=Q(is_present=True)),
-            absent=Count('id', filter=Q(is_present=False)),
-            total=Count('id')
-        )
+        .values('date').annotate(present=Count('id', filter=Q(is_present=True)),absent=Count('id', filter=Q(is_present=False)),total=Count('id'))
     )
 
     context = {

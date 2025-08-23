@@ -38,7 +38,7 @@ Dashboard
 
 
   <!-- ✅ Attendance Table -->
-<div class="table-responsive shadow-sm mt-5">
+<div class="table-responsive card  mt-5">
   <table class="table table-bordered table-striped table-hover align-middle">
     <thead class="table-dark text-center">
       <tr>
@@ -49,14 +49,20 @@ Dashboard
       </tr>
     </thead>
     <tbody class="text-center">
+      {% if attendance_data %}
       {% for day in attendance_data %}
       <tr>
-        <td>{{ day.date }}</td>
+        <td class="fw-semibold">{{ day.date|date:"d M Y" }}</td>
         <td class="text-success fw-semibold">{{ day.present }}</td>
         <td class="text-danger fw-semibold">{{ day.absent }}</td>
         <td class="fw-semibold">{{ day.total }}</td>
       </tr>
       {% endfor %}
+      {% else %}      
+      <tr>
+        <td colspan="4" class="">No attendance records available for today.</td>
+      </tr>
+      {% endif %}
     </tbody>
   </table>
 </div>
