@@ -52,7 +52,7 @@ Make Exam Result
                 <td>{{ student.name }}</td>
                 <td>{{ student.roll_no }}</td>
                 <td>
-                    <input type="number" name="obtained_mark_{{ student.id }}" class="form-control">
+                    <input type="number" value=0 required name="obtained_mark_{{ student.id }}" class="form-control">
                 </td>
             </tr>
             {% endfor %}

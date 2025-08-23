@@ -16,9 +16,21 @@ Update Student
             <div class="invalid-feedback">Please enter name.</div>
         </div>
 
-        <div class="col-md-6">
+
+        <div class="col-md-6 {% if 'update_student_self' in module_names %}d-none{% endif %}">
             <label class="form-label">Roll Number</label>
             <input name="roll_no" type="text" class="form-control" value="{{ student.roll_no }}" required>
+        </div>
+
+        <div class="col-md-6 {% if 'update_student_self' in module_names %}d-none{% endif %}">
+            <label class="form-label">Class</label>
+            <select name="student_class" class="form-select" required>
+                <option value="">Choose...</option>
+                {% for c in student_classes %}
+                    <option value="{{ c.id }}" {% if student.student_class.id == c.id %}selected{% endif %}>{{ c.number }}</option>
+                {% endfor %}
+            </select>
+            <div class="invalid-feedback">Please select a class.</div>
         </div>
 
         <div class="col-md-6">
@@ -38,16 +50,6 @@ Update Student
             <div class="invalid-feedback">Please select a school.</div>
         </div>
 
-        <div class="col-md-6">
-            <label class="form-label">Class</label>
-            <select name="student_class" class="form-select" required>
-                <option value="">Choose...</option>
-                {% for c in student_classes %}
-                    <option value="{{ c.id }}" {% if student.student_class.id == c.id %}selected{% endif %}>{{ c.number }}</option>
-                {% endfor %}
-            </select>
-            <div class="invalid-feedback">Please select a class.</div>
-        </div>
 
         <div class="col-md-6">
             <label class="form-label">Location</label>
@@ -141,7 +143,11 @@ Update Student
 
         <div class="col-12">
             <button class="btn btn-primary" type="submit">Update Student</button>
+            {% if 'update_student_self' in module_names %}
+              <a href="{% url 'profile_student' student.id %}" class="btn btn-secondary">Cancel</a>
+            {% else %}
             <a href="{% url 'read_student' %}" class="btn btn-secondary">Cancel</a>
+            {% endif %}
         </div>
     </form>
   </div>

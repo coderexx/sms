@@ -142,7 +142,11 @@ Student Profile
           </tr>
         </tbody>
       </table>
-
+      {% if 'update_student_self' in module_names %}
+        <div class="mt-3">
+          <a href="{% url 'update_student' student.id %}" class="btn btn-primary">Edit Profile</a>
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>
@@ -230,6 +234,21 @@ Student Profile
 </div>
 
 {% if exam_results %}
+<!-- Student Position Card -->
+<div class="card shadow-lg border-0 rounded-3">
+    <div class="card-body d-flex justify-content-around">
+        <!-- Monthly Score -->
+        <p class="fs-5">
+            <strong>Monthly Score:</strong>
+            <span class="badge bg-info ms-2">{{ monthly_score }}</span>
+        </p>
+        <!-- Position in Class -->
+        <p class="fs-5">
+            <strong>Position in Class:</strong>
+            <span class="badge bg-success text-white text-dark ms-2">{{ monthly_position }}</span>
+        </p>
+    </div>
+</div>
 <div class="card">
     <div class="table-responsive text-nowrap">
         <table class="table">

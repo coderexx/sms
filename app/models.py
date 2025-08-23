@@ -245,7 +245,7 @@ class ExamResult(BaseModel):
     obtained_mark = models.IntegerField(null=True, blank=True, default=0)
 
     def __str__(self):
-        return f"{self.teacher} - {self.student} - {self.subject}"
+        return f"{self.student} - {self.subject}"
     
 class Message(BaseModel):
     text = models.TextField(null=True,blank=True)

@@ -231,8 +231,22 @@ def create_student(request):
     return render(request,'student/create_student.html',context)
 
 #update_student
-@role_required('update_student')
+@login_required
 def update_student(request,id):
+    # check if the user has permission to update profile
+    role = request.user.role
+    if role and role.modules.filter(name='update_student').exists():
+        if not Student.objects.filter(id=id).exists():
+            messages.error(request, "Student Doesn't Exist")
+            return redirect('home')
+    elif role and role.modules.filter(name='update_student_self').exists():
+        if not Student.objects.filter(id=id, user=request.user).exists():
+            messages.error(request, "Student Doesn't Exist")
+            return redirect('home')
+    else:
+        return render(request, 'others/no_permission.html')
+    
+
     student = get_object_or_404(Student, id=id)
     if request.method == 'POST':
         student.name = request.POST.get('name')
@@ -256,15 +270,14 @@ def update_student(request,id):
             student.user.picture = request.FILES['picture']
         student.save()
 
-        if student.user.name != name:
-            student.user.name = name
-        if student.user.username != roll_no:
-            student.user.username = roll_no
-        if student.user.mobile_no != mob_no:
-            student.user.mobile_no = mob_no
+        student.user.name = student.name
+        student.user.username = student.roll_no
+        student.user.mobile_no = student.mob_no
         student.user.save()
         messages.success(request, 'Student updated successfully.')
-        return redirect('read_student')
+        if role and role.modules.filter(name='update_student').exists():
+            return redirect('read_student')
+        return redirect('profile_student', student.id)
 
     context = {
         'student': student,

@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from .models import *
 from django.db.models.functions import ExtractYear
+from django.db.models import Sum
 
 from django.contrib.auth.decorators import login_required
 from .utils.decorators import role_required
@@ -120,6 +121,44 @@ def profile_student(request,id):
         weeks.append(week)
 
     years = Attendance.objects.filter(student=student).annotate(year=ExtractYear('date')).values_list('year', flat=True).distinct().order_by('-year')
+
+
+
+
+    # Exam Result Position 
+    # Step 1: Get all students in the same class
+    student_class = student.student_class  # assuming you have a field `student_class` in Student model
+
+    # Step 2: Get total marks of all students in this class for current month
+    scores = (
+        ExamResult.objects.filter(
+            student__student_class=student_class,
+            date__year=today.year,
+            date__month=today.month
+        )
+        .values('student')
+        .annotate(total=Sum('obtained_mark'))
+        .order_by('-total')  # highest first
+    )
+
+    # Step 3: Find this student's position in their class
+    position = None
+    rank = 1
+    for s in scores:
+        if s['student'] == student.id:
+            position = rank
+            break
+        rank += 1
+
+    # Step 4: Get this student's own total score
+    monthly_score = (
+        ExamResult.objects.filter(
+            student=student,
+            date__year=today.year,
+            date__month=today.month
+        )
+        .aggregate(total=Sum('obtained_mark'))['total'] or 0
+    )
     context = {
         "student":student,
         "exam_results":exam_results,
@@ -133,6 +172,8 @@ def profile_student(request,id):
         'weeks': weeks,
         'years': years,
         'months': [(i, calendar.month_name[i]) for i in range(1, 13)],
+        "monthly_score": monthly_score,
+        "monthly_position": position,
     }
     return render(request,'profile/student_profile.html',context)
 
