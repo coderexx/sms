@@ -157,7 +157,7 @@ def delete_teaching_assignment(request, id):
 
 @role_required('create_user')
 def create_user(request):
-    roles = Role.objects.all().order_by('sn','id')
+    roles = Role.objects.all().order_by('sn', 'id').exclude(h_name__in=["student", "super_admin"])
     if request.method == 'POST':
         role_id = request.POST.get('role')
         username = request.POST.get('username')
@@ -166,6 +166,9 @@ def create_user(request):
         picture = request.FILES.get('picture')
         if not all([role_id, username, name, mobile_no]):
             messages.error(request, "All fields are required.")
+            return redirect('create_user')
+        if Role.objects.get(id=role_id).h_name == "super_admin":
+            messages.error(request, "Cannot assign super admin role.")
             return redirect('create_user')
         User.objects.create_user(username=username,password=mobile_no, name=name, mobile_no=mobile_no, role_id=role_id, picture=picture)
         messages.success(request, "User created successfully.")
@@ -187,17 +190,20 @@ def read_user(request):
 
 @role_required('update_user')
 def update_user(request, id):
-    roles = Role.objects.all().order_by('sn','id')
+    roles = Role.objects.all().order_by('sn', 'id').exclude(h_name__in=["student", "super_admin"])
     user = get_object_or_404(User, id=id)
     if request.method == 'POST':
         role_id = request.POST.get('role')
-        username = request.POST.get('username')
         name = request.POST.get('name')
         mobile_no = request.POST.get('mobile_no')
         picture = request.FILES.get('picture')
         if not all([role_id, name, mobile_no]):
             messages.error(request, "All fields are required.")
             return redirect('update_user', id=id)
+        if Role.objects.get(id=role_id).h_name == "super_admin":
+            messages.error(request, "Cannot assign super admin role.")
+            return redirect('update_user', id=id)
+
         user.role_id = role_id
         user.name = name
         user.mobile_no = mobile_no
