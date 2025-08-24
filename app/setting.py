@@ -1,84 +1,8 @@
-from datetime import datetime, date
-import os
-import subprocess
-from io import BytesIO
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import HttpResponse, FileResponse
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q
-from django.contrib.auth.hashers import make_password
-
-from app.views import User
 from .utils.decorators import role_required
 from .models import *
-
-
-#XXX: Database Backup
-@role_required('database')
-def database(request):
-    return render(request, 'setting/database.html')
-
-@role_required('database')
-def backup_database(request):
-    db_name = os.environ.get('DB_NAME')
-    db_user = os.environ.get('DB_USER')
-    db_password = os.environ.get('DB_PASSWORD')
-    db_host = os.environ.get('DB_HOST', '127.0.0.1')
-    db_port = os.environ.get('DB_PORT', '3306')
-
-    filename = f"vomms_backup_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.sql"
-
-    # Use BytesIO instead of saving to disk
-    buffer = BytesIO()
-
-    # Build the command
-    cmd = [
-        'mysqldump',
-        '-h', db_host,
-        '-P', db_port,
-        '-u', db_user,
-        f'-p{db_password}',  # Note: this is insecure in subprocess, use Popen with stdin for better security
-        db_name
-    ]
-
-    # Run the command and write output to buffer
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = process.communicate()
-
-    if process.returncode != 0:
-        return HttpResponse(f"Backup failed: {err.decode()}", status=500)
-
-    buffer.write(out)
-    buffer.seek(0)
-
-    # Return the in-memory file as a response
-    return FileResponse(buffer, as_attachment=True, filename=filename)
-
-@role_required('database')
-def restore_database(request):
-    if request.method == 'POST' and request.FILES.get('file'):
-        upload = request.FILES['file']
-        temp_path = os.path.join(os.getcwd(), 'temp_restore.sql')
-
-        with open(temp_path, 'wb+') as f:
-            for chunk in upload.chunks():
-                f.write(chunk)
-
-        db_name = os.environ.get('DB_NAME')
-        db_user = os.environ.get('DB_USER')
-        db_password = os.environ.get('DB_PASSWORD')
-        db_host = os.environ.get('DB_HOST', '127.0.0.1')
-        db_port = os.environ.get('DB_PORT', '3306')
-
-        cmd = f'mysql -h {db_host} -P {db_port} -u {db_user} -p{db_password} {db_name} < "{temp_path}"'
-        subprocess.run(cmd, shell=True, check=True)
-
-        os.remove(temp_path)  # Cleanup uploaded file
-        messages.success(request, 'Database restored successfully.')
-        return redirect('database')
-    messages.error(request, 'No file uploaded or invalid request.')
-    return redirect('database')
 
 
 

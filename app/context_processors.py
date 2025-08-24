@@ -1,6 +1,5 @@
 # context_processors.py
 
-from .models import RoleModuleAccess
 
 def role_modules(request):
     if request.user.is_authenticated:

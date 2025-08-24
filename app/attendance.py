@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from .models import Student, Attendance, StudentClass
 from datetime import date,datetime
 from django.shortcuts import render
-from django.db.models import Count, Q
 from django.contrib import messages
 from django.core.paginator import Paginator
 from .utils.decorators import role_required

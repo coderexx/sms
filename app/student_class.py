@@ -1,12 +1,10 @@
-from datetime import datetime, date
+from datetime import date
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import transaction
 from .utils.send_sms import *
 from .models import *
-from django.contrib.auth.decorators import login_required
-
 from .utils.decorators import role_required
 
 # global variables

@@ -4,7 +4,6 @@ from django.contrib import messages
 from .models import *
 from django.db.models.functions import ExtractYear
 from django.db.models import Sum, Max
-
 from django.contrib.auth.decorators import login_required
 from .utils.decorators import role_required
 

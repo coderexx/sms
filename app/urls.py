@@ -15,6 +15,14 @@ urlpatterns = [
     path('logout', do_logout, name='logout'),
     path('no_permission', no_permission, name='no_permission'),
     path('documentation', documentation, name='documentation'),
+    # database
+    path('database', database, name='database'),
+    path('backup_database', backup_database, name='backup_database'),
+    path('restore_database', restore_database, name='restore_database'),
+    # change password
+    path('change_password', change_password, name='change_password'),
+
+    
     
     # TODO: Admin
     path('home', home, name='home'),
@@ -105,12 +113,5 @@ urlpatterns = [
 
 
     # TODO:setting
-    # vehicle type
-    # database
-    path('database', database, name='database'),
-    path('backup_database', backup_database, name='backup_database'),
-    path('restore_database', restore_database, name='restore_database'),
-    # change password
-    path('change_password', change_password, name='change_password'),
 ]
 

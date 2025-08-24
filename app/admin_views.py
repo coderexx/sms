@@ -4,14 +4,10 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.db.models.functions import ExtractYear
-
 from app.views import User
 from .utils.send_sms import *
 from .models import *
-#for pdf
-
 from .utils.decorators import role_required
-from django.contrib.auth.decorators import login_required
 
 
 # global variables

@@ -2,10 +2,8 @@ from datetime import datetime, date
 import random
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.dateparse import parse_date
 from django.http import JsonResponse
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from app.views import User
 from .utils.decorators import role_required
 from .models import *
