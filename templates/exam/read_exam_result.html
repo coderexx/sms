@@ -10,19 +10,22 @@ Exam Result
 
 <div class="mb-5">
     <form method="get" class="d-flex">
+        <input type="date" name="date" id="date" class="form-control bg-white me-3" value="{{ selected_date }}" onchange="this.form.submit()">
         <select name="subject" id="subject" class="form-select bg-white" onchange="this.form.submit()">
             <option value="">Subject</option>
             {% for s in subjects %}
                 <option value="{{ s.id }}" {% if s.id == selected_subject %}selected{% endif %}>{{ s }}</option>
             {% endfor %}
         </select>
-
         <select name="student_class" id="class" class="form-select bg-white" onchange="this.form.submit()">
             <option value="">Class</option>
             {% for c in classes %}
                 <option value="{{ c.id }}" {% if c.id == selected_class %}selected{% endif %}>Class {{ c.number }}</option>
             {% endfor %}
         </select>
+        <a target="_blank" href="{% url 'read_exam_result_pdf' %}?student_class={{selected_class}}&date={{selected_date}}&subject={{selected_subject}}" class="btn btn-secondary">
+            <i class="fa-solid fa-file-pdf"></i>
+        </a>
     </form>
 </div>
 

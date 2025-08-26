@@ -74,14 +74,16 @@ def create_exam_result(request):
 @role_required('read_exam_result')
 def read_exam_result(request):
     results = ExamResult.objects.all().order_by('-date')
-    
+
+    selected_date = request.GET.get('date')
     selected_subject = request.GET.get('subject')
     selected_class = request.GET.get('student_class')
     if selected_subject:
         results = results.filter(subject_id=selected_subject)
     if selected_class:
         results = results.filter(student__student_class_id=selected_class)
-
+    if selected_date:
+        results = results.filter(date=selected_date)
 
     # pagination for main_leave
     paginator = Paginator(results, 100)  # 50 records per page
@@ -98,11 +100,44 @@ def read_exam_result(request):
         'selected_class': int(selected_class) if selected_class else '',
         'subjects': Subject.objects.all().order_by('name'),
         'classes': StudentClass.objects.all().order_by('number'),
-        "query_string":query_string
+        "query_string":query_string,
+        "selected_date": selected_date
     }
     return render(request, 'exam/read_exam_result.html', context)
 
 
+@role_required('read_exam_result')
+def read_exam_result_pdf(request):
+    results = ExamResult.objects.all().order_by('-date')
+    selected_date = request.GET.get('date')
+    selected_subject = request.GET.get('subject')
+    selected_class = request.GET.get('student_class')
+    if selected_subject:
+        results = results.filter(subject_id=selected_subject)
+    if selected_class:
+        results = results.filter(student__student_class_id=selected_class)
+    if selected_date:
+        results = results.filter(date=selected_date)
+
+    context = {
+        "results": results,
+        "head":f"Exam Result"
+    }
+    # Load the HTML template and render it with context data
+    template = get_template('pdf/read_exam_result_pdf.html')
+    html = template.render(context)
+
+    # Create a response with PDF content type
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="result.pdf"'
+
+    # Convert HTML to PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse("Error generating PDF", status=500)
+    
+    return response
 
 @role_required('read_exam_position')
 def read_exam_position(request):

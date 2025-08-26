@@ -102,6 +102,7 @@ urlpatterns = [
     # TODO: Exam
     path('create_exam_result', create_exam_result, name='create_exam_result'),
     path('read_exam_result', read_exam_result, name='read_exam_result'),
+    path('read_exam_result_pdf', read_exam_result_pdf, name='read_exam_result_pdf'),
     path('read_exam_position', read_exam_position, name='read_exam_position'),
     path('read_exam_position_pdf', read_exam_position_pdf, name='read_exam_position_pdf'),
 
