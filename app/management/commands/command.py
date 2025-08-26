@@ -8,7 +8,7 @@ User = get_user_model()
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         students = Student.objects.all()
-        role = Role.objects.get(h_name="student")
+        role, created = Role.objects.get_or_create(h_name="student")
         count = 0
 
         for i in students:
