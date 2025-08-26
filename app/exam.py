@@ -64,7 +64,7 @@ def create_exam_result(request):
         messages.success(request, f"✅ Exam Result Created successfully. SMS sent: {total_sms_sent}")
         return redirect('create_exam_result')
 
-    return render(request, 'exam_result/create_exam_result.html', {
+    return render(request, 'exam/create_exam_result.html', {
         'students': students,
         'student_class': int(student_class_id) if student_class_id else None,
         "student_classes": StudentClass.objects.all().order_by('number'),
@@ -100,7 +100,7 @@ def read_exam_result(request):
         'classes': StudentClass.objects.all().order_by('number'),
         "query_string":query_string
     }
-    return render(request, 'exam_result/read_exam_result.html', context)
+    return render(request, 'exam/read_exam_result.html', context)
 
 
 
@@ -177,7 +177,7 @@ def read_exam_position(request):
         'student_class': int(student_class_id) if student_class_id else None,
         'years': years
     }
-    return render(request, 'exam_result/read_exam_position.html', context)
+    return render(request, 'exam/read_exam_position.html', context)
 
 
 @role_required('read_exam_position')
