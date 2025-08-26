@@ -72,6 +72,12 @@
               {% endif %}
             </td>
           </tr>
+          {% if teacher.inactive_date %}
+          <tr>
+            <th>Inactive Date</th>
+            <td>{{ teacher.inactive_date|default:"N/A" }}</td>
+          </tr>
+          {% endif %}
         </tbody>
       </table>
     </div>

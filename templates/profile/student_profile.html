@@ -130,6 +130,12 @@ Student Profile
               {% endif %}
             </td>
           </tr>
+          {% if student.inactive_date %}
+          <tr>
+            <th>Inactive Date</th>
+            <td>{{ student.inactive_date|default:"N/A" }}</td>
+          </tr>
+          {% endif %}
           <tr>
             <th>Class Status</th>
             <td>
