@@ -336,6 +336,7 @@ def reset_student_password(request,id):
 @role_required('delete_student')
 def delete_student(request,id):
     student = Student.objects.get(id=id)
+    student.user.delete()
     messages.success(request,f"{student.name} was deleted successfully.")
     return redirect(read_student)
 
@@ -511,6 +512,7 @@ def update_teacher(request,id):
 @role_required('delete_teacher')
 def delete_teacher(request,id):
     teacher = Teacher.objects.get(id=id)
+    teacher.delete()
     messages.success(request,f"{teacher.name} was deleted successfully.")
     return redirect(read_teacher)
 
