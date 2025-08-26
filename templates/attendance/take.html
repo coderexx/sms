@@ -22,11 +22,14 @@ Take Attendance
   <span id="currentDate" class="me-2"></span>
   <span id="runningTime" class="badge bg-primary"></span>
 </p>
-
 {% if student_class %}
 <form method="POST" class="mt-5">
     {% csrf_token %}
-
+    <div class="d-flex gap-3">
+        <input type="checkbox" class="form-check-input" name="send_sms" id="send_sms">
+        <label class="form-label fw-bold fs-6" for="send_sms">Send SMS to absent students mob no</label>
+        <div class="invalid-feedback">Checkbox are required.</div>
+    </div>
     <div class="table-responsive">
         <table class="table">
             <tr>

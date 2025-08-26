@@ -143,6 +143,12 @@
                 <div class="text-truncate">Exam Result</div>
                 </a>
             </li>
+            {% elif i.name == "read_exam_position" %}
+            <li class="menu-item">
+                <a href="{% url "read_exam_position" %}" class="menu-link">
+                <div class="text-truncate">Position</div>
+                </a>
+            </li>
             {% endif %}
             {% endfor %}
         </ul>
@@ -203,6 +209,15 @@
             class="menu-link active">
             <i class="fa-solid fa-users menu-icon"></i>
             <div class="text-truncate" data-i18n="Class">User</div>
+        </a>
+    </li>
+    {% elif i.name == "read_sms_counter" %}
+    <li class="menu-item">
+        <a
+            href="{% url "read_sms_counter" %}"
+            class="menu-link active">
+            <i class="fa-solid fa-gauge-high menu-icon"></i>
+            <div class="text-truncate" data-i18n="Class">SMS Counter</div>
         </a>
     </li>
     {% endif %}

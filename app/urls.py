@@ -87,6 +87,7 @@ urlpatterns = [
     path('create_message', create_message, name='create_message'),
     path('read_message', read_message, name='read_message'),
     path('reset_sms_counter', reset_sms_counter, name='reset_sms_counter'),
+    path('read_sms_counter', read_sms_counter, name='read_sms_counter'),
     
     
     # TODO: Payment
@@ -101,8 +102,10 @@ urlpatterns = [
     # TODO: Exam
     path('create_exam_result', create_exam_result, name='create_exam_result'),
     path('read_exam_result', read_exam_result, name='read_exam_result'),
-    
-    
+    path('read_exam_position', read_exam_position, name='read_exam_position'),
+    path('read_exam_position_pdf', read_exam_position_pdf, name='read_exam_position_pdf'),
+
+
     #TODO:User
     path('create_user', create_user, name='create_user'),
     path('read_user', read_user, name='read_user'),

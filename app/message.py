@@ -69,18 +69,26 @@ def create_message(request):
         messages.success(request, "✅ Message was created and sent successfully.")
         return redirect('read_message')  # or your view name
 
+    context = {
+        "student_classes": StudentClass.objects.filter(active=True).order_by('number'),
+    }
+    return render(request, 'messages/create_message.html', context)
+
+
+@role_required('read_sms_counter')
+def read_sms_counter(request):
     all_counters = SMSCounter.objects.all().order_by('-created_at')
     latest_counter = all_counters.first()
     # pagination for all_counters
     paginator = Paginator(all_counters, 50)  # 50 records per page
     page_number = request.GET.get('page')
     all_counters = paginator.get_page(page_number)
+
     context = {
-        "student_classes": StudentClass.objects.filter(active=True).order_by('number'),
         "latest_counter": latest_counter,
         "all_counters": all_counters
     }
-    return render(request, 'messages/create_message.html', context)
+    return render(request, 'messages/read_sms_counter.html', context)
 
 
 @role_required('reset_sms_counter')
@@ -89,4 +97,4 @@ def reset_sms_counter(request):
     SMSCounter.objects.get_or_create(total_sms_sent=0)
 
     messages.success(request, "✅ SMS counter reset — new counter started.")
-    return redirect('create_message')
+    return redirect('read_sms_counter')

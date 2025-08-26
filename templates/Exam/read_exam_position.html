@@ -1,0 +1,84 @@
+{% extends 'base/base_template.html' %}
+
+{% block title %}
+
+Exam Position
+
+{% endblock title %}
+
+{% block content %}
+
+<div>
+    <form method="get" class="d-flex mb-3">
+        <select name="year" id="year" class="form-select bg-white"  onchange="this.form.submit()">
+            {% for y in years %}
+                <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="month" id="month" class="form-select bg-white"  onchange="this.form.submit()">
+            {% for m, name in months %}
+                <option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="student_class" id="student_class" class="form-select bg-white" onchange="this.form.submit()">
+            <option value="">Class</option>
+            {% for c in classes %}
+                <option value="{{ c.id }}" {% if c.id == student_class %}selected{% endif %}>Class {{ c.number }}</option>
+            {% endfor %}
+        </select>
+        <a target="_blank" href="{% url 'read_exam_position_pdf' %}?student_class={{student_class}}&selected_month={{selected_month}}&selected_year={{selected_year}}" class="btn btn-secondary">
+            <i class="fa-solid fa-file-pdf"></i>
+        </a>
+    </form>
+</div>
+
+{% if positions %}
+
+<div class="card">
+    <div class="table-responsive text-nowrap">
+        <table class="table">
+            <thead class="table-dark">
+                <tr class="text-nowrap">
+                    <th>Action</th>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Roll</th>
+                    <th>Class</th>
+                    <th>Monthly Position</th>
+                    <th>Yearly Position</th>
+                    <th>Last Exam Position</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                {% for item in positions %}
+                <tr>
+                    <td>
+                        <a href="{% url "profile_student" item.student_id %}" class="btn rounded-pill btn-icon btn-primary btn-sm">
+                            <span class="icon-base fa-regular fa-user icon-sm text-white"></span>
+                        </a>
+                    </td>
+                    <td scope="row">{{forloop.counter}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.roll_no}}</td>
+                    <td>{{item.class}}</td>
+                    <td>{{item.monthly_rank}}</td>
+                    <td>{{item.yearly_rank}}</td>
+                    <td>{{item.last_exam_rank}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% include "components/pagination.html" with page_obj=positions %}
+
+{% else %}
+<div class="bg-black text-white fs-1 card oswald h-100 m-auto pt-5 text-center mt-5">
+  No Exam Position entries found. Select a class.
+</div>
+{% endif %}
+
+
+{% endblock content %}

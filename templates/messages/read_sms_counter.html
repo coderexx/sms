@@ -1,4 +1,8 @@
+{% extends "base/base_template.html" %}
 
+{% block pageName %}SMS Counter{% endblock pageName %}
+
+{% block content %}
     <h3 class="card-title text-center mt-3">📟 Current Counter: {{ latest_counter.total_sms_sent|default:0 }} SMS</h3>
     {% if 'reset_sms_counter' in module_names %}
     <a href="{% url 'reset_sms_counter' %}" class="btn btn-warning w-100">Reset Counter</a>
@@ -26,3 +30,5 @@
     </table>
 
 {% include "components/pagination.html" with page_obj=all_counters %}
+
+{% endblock content %}

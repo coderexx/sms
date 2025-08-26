@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import Student, Attendance, StudentClass
+from .models import *
 from datetime import date,datetime
 from django.shortcuts import render
 from django.contrib import messages
 from django.core.paginator import Paginator
 from .utils.decorators import role_required
-
+from .utils.send_sms import send_sms
 today = date.today()
 
 
@@ -23,8 +23,9 @@ def take_attendance(request):
             messages.error(request, "⚠️ Attendance has already been submitted for this class today.")
             return redirect('take_attendance')  # Or render the same page with error
 
-
     if request.method == 'POST':
+        send_sms = request.POST.get("send_sms") == "on"
+        total_sms_sent = 0
         # Submit attendance
         for student in students:
             is_present = request.POST.get(f"present_{student.id}") == 'on'
@@ -33,8 +34,22 @@ def take_attendance(request):
                 date=today,
                 is_present=is_present
             )
+            if not is_present and send_sms:
+                success, response = send_sms(student.mob_no, student.name, f"You are absent today - {today}.")
+                if success:
+                    total_sms_sent += 1
+                if not success:
+                    messages.error(request, f"❌ Failed to send SMS to {student.name}: {response}")
+        if send_sms:
+            # Always update the latest counter
+            latest_counter = SMSCounter.objects.order_by('-created_at').first()
+            if not latest_counter:
+                # If no counter exists, create the first one
+                latest_counter = SMSCounter.objects.create(total_sms_sent=0)
+            latest_counter.total_sms_sent += total_sms_sent
+            latest_counter.save()
 
-        messages.success(request, "✅ Attendance submitted successfully.")
+        messages.success(request, f"✅ Attendance submitted successfully. Total SMS sent: {total_sms_sent}")
         return redirect('take_attendance')
 
     return render(request, 'attendance/take.html', {

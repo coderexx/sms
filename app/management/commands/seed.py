@@ -23,9 +23,10 @@ class Command(BaseCommand):
             # Teaching Assignment
             'create_teaching_assignment', 'read_teaching_assignment', 'delete_teaching_assignment',
             # Exam Result
-            'create_exam_result','read_exam_result','delete_exam_result'
+            'create_exam_result','read_exam_result','delete_exam_result',
+            'read_exam_position',
             # Message
-            'create_message', 'read_message', 'reset_sms_counter',
+            'create_message', 'read_message', 'reset_sms_counter','read_sms_counter',
             # Payment
             'due_table', 'make_payment', 'read_credit',
             # Attendance
