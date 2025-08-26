@@ -193,7 +193,7 @@ def create_student(request):
 
         # Check if the roll_no is already in use
         if User.objects.filter(username=roll_no).exists():
-            messages.error(request, "Student already in use")
+            messages.error(request, "Roll number already in use")
             return redirect('create_student')
         
         try:
@@ -215,8 +215,7 @@ def create_student(request):
             messages.success(request, 'Student added successfully.')
             return redirect('create_student')
         except Exception as e:
-            print(e)
-            messages.error(request, "An error occurred")
+            messages.error(request, f"Error: {str(e)}")
         return redirect('create_student')
     
     context = {
@@ -270,10 +269,14 @@ def update_student(request,id):
         # ✅ Manual Required Validation
         if not all([name, school_id, student_class_id, mob_no, roll_no]):
             messages.error(request, 'Please fill in all required fields.')
-            return redirect('create_student')
+            return redirect('update_student', id=id)
         if len(mob_no) != 11 or not mob_no.startswith("01") or not mob_no.isdigit():
             messages.error(request, "Mobile number must be exactly 11 digits and start with 01")
-            return redirect('create_student')
+            return redirect('update_student', id=id)
+        # Check if new roll_no already exists
+        if User.objects.filter(username=roll_no).exclude(id=student.user.id).exists():
+            messages.error(request, "Roll number already in use")
+            return redirect('update_student', id=id)
 
         student.name = name
         student.school_id = school_id
