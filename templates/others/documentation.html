@@ -1,9 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Coaching Management System - Documentation</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'dist/assets/vendor/font-awesome/css/all.css' %}" />
+  <link rel="stylesheet" href="{% static 'dist/assets/vendor/font-awesome/css/fontawesome.css' %}" />
   <style>
     :root {
       --primary-color: #1e3a8a;
@@ -110,7 +114,7 @@
     <section>
       <h2>🧾 Overview</h2>
       <p>
-        This system helps manage all aspects of a coaching center efficiently including students, teachers, attendance, payment, SMS messaging, and teaching assignments. It also supports report generation in PDF format.
+        This system helps manage all aspects of a coaching center efficiently including students, teachers, attendance, payment, Exam, SMS messaging, and teaching assignments. It also supports report generation in PDF format.
       </p>
     </section>
 
@@ -138,6 +142,8 @@
           <ul>
             <li>Mark daily attendance</li>
             <li>Generate attendance reports</li>
+            <li>View student attendance history</li>
+            <li>Automatically send SMS to Absent Student</li>
           </ul>
         </div>
         <div class="card">
@@ -160,6 +166,37 @@
           <ul>
             <li>Assign subjects to teachers</li>
             <li>Manage class-subject combinations</li>
+          </ul>
+        </div>
+        <!-- ✅ Exam Results -->
+        <div class="card">
+          <h3>📝 Exam Results</h3>
+          <ul>
+            <li>Create and update exam results</li>
+            <li>View and manage exam records</li>
+            <li>Generate detailed performance reports</li>
+            <li>Send exam result through SMS</li>
+          </ul>
+        </div>
+
+        <!-- ✅ Exam Positions -->
+        <div class="card">
+          <h3>🏆 Exam Positions</h3>
+          <ul>
+            <li>Generate student rankings</li>
+            <li>Track yearly exam positions</li>
+            <li>Track monthly exam positions</li>
+            <li>View last exam position for each student</li>
+          </ul>
+        </div>
+
+        <!-- ✅ PDF Reports -->
+        <div class="card">
+          <h3>📑 PDF Reports</h3>
+          <ul>
+            <li>Generate PDF for all student list</li>
+            <li>Generate PDF for all teacher list</li>
+            <li>Export yearly and monthly performance reports As PDF</li>
           </ul>
         </div>
       </div>
@@ -189,9 +226,25 @@
     <section>
       <h2>📞 Contact & Support</h2>
       <ul>
-        <li><strong>Name:</strong> Maksud Hasan Bishal</li>
-        <li><strong>Email:</strong> 3xbishal@gmail.com</li>
-        <li><strong>GitHub:</strong> https://github.com/coderexx</li>
+        <li><i class="fa-solid fa-user"></i> <strong>Name:</strong> Maksud Hasan Bishal</li>
+        <li><i class="fa-solid fa-briefcase"></i> <strong>Role:</strong> Software Developer</li>
+        <li><i class="fa-solid fa-location-dot"></i> <strong>Location:</strong> Rajshahi</li>
+        <li><i class="fa-solid fa-phone"></i> <strong>Phone:</strong> 01703055918</li>
+        <li><i class="fa-solid fa-envelope"></i> <strong>Email:</strong> 
+            <a href="mailto:3xbishal@gmail.com">3xbishal@gmail.com</a>
+        </li>
+        <li><i class="fa-brands fa-github"></i> <strong>GitHub:</strong> 
+            <a href="https://github.com/coderexx">https://github.com/coderexx</a>
+        </li>
+        <li><i class="fa-brands fa-linkedin"></i> <strong>LinkedIn:</strong> 
+            <a href="https://www.linkedin.com/in/maksud-hasan">https://www.linkedin.com/in/maksud-hasan</a>
+        </li>
+        <li><i class="fa-brands fa-facebook"></i> <strong>Facebook:</strong> 
+            <a href="https://www.facebook.com/xlorex.bishal">https://www.facebook.com/xlorex.bishal</a>
+        </li>
+        <li><i class="fa-brands fa-instagram"></i> <strong>Instagram:</strong> 
+            <a href="https://www.instagram.com/3xbishal">https://www.instagram.com/3xbishal</a>
+        </li>
       </ul>
     </section>
   </main>
