@@ -113,9 +113,11 @@ User
                     <td>{{item.mobile_no|default:"N/A"}}</td>
                     <td>
                         {% if item.picture %}
-                        <img class="object-fit-cover rounded-circle" src="{{item.picture.url}}" alt="" width="30px" height="30px">
+                        <a href="{{item.picture.url}}" target="_blank">
+                            <img class="object-fit-cover rounded-circle" src="{{item.picture.url}}" alt="" width="50px" height="50px">
+                        </a>
                         {% else %}
-                        <img src="{% static 'dist/assets/img/avatars/5.png' %}" alt="" width="30px" height="30px" class="rounded-circle">
+                        <img src="{% static 'dist/assets/img/avatars/5.png' %}" alt="" width="50px" height="50px" class="rounded-circle">
                         {% endif %}
                     </td>
                 </tr>
