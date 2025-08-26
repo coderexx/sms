@@ -24,7 +24,7 @@ class Role(BaseModel):
     sn = models.IntegerField(null=True,blank=True)
 
     def __str__(self):
-        return self.h_name
+        return self.h_name if self.h_name else '-'
 
 class RoleModuleAccess(BaseModel):
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
