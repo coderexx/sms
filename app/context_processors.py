@@ -19,6 +19,7 @@ def role_modules(request):
     teachers = {'create_teacher', 'read_teacher'}
     attendance = {'take_attendance', 'attendance_report'}
     exam = {'create_exam_result', 'read_exam_result'}
+    teaching_assignment = {'create_teaching_assignment', 'read_teaching_assignment'}
     setting = {'read_location','read_school','read_subject','change_password','database',}
 
     return {
@@ -28,5 +29,6 @@ def role_modules(request):
         'has_teachers': any(module.name in teachers for module in modules),
         'has_attendance': any(module.name in attendance for module in modules),
         'has_exam': any(module.name in exam for module in modules),
-        'has_setting': any(module.name in setting for module in modules),        
+        'has_setting': any(module.name in setting for module in modules),
+        'has_teaching_assignment': any(module.name in teaching_assignment for module in modules),
     }

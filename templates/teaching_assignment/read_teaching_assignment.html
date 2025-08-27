@@ -8,13 +8,6 @@ Teaching Assignment
 
 {% block content %}
 
-<div class="py-3">
-    {% if 'create_teaching_assignment' in module_names %}
-    <a type="button" class="btn btn-icon btn-primary" href="{% url "create_teaching_assignment" %}">
-        <i class="fa-solid fa-plus"></i>
-    </a>
-    {% endif %}
-</div>
 <div>
     <form method="get" class="d-flex">
         <select name="year" id="year" class="form-select bg-white"  onchange="this.form.submit()">

@@ -155,17 +155,35 @@
     </li>
     {% endif %}
 
-    {% for i in user_modules %}
-    {% if i.name == "read_teaching_assignment" %}
+    {% if has_teaching_assignment %}
     <li class="menu-item">
-        <a
-            href="{% url "read_teaching_assignment" %}"
-            class="menu-link active">
-            <i class="fa-solid fa-flag menu-icon"></i>
-            <div class="text-truncate" data-i18n="Class">Teaching Assignment</div>
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="fa-solid fa-check-to-slot menu-icon"></i>
+        <div class="text-truncate" data-i18n="Vehicle">Teaching Assignment</div>
         </a>
+
+        <ul class="menu-sub">
+            {% for i in user_modules %}
+            {% if i.name == "create_teaching_assignment" %}
+            <li class="menu-item">
+                <a href="{% url "create_teaching_assignment" %}" class="menu-link">
+                <div class="text-truncate">Create Assignment</div>
+                </a>
+            </li>
+            {% elif i.name == "read_teaching_assignment" %}
+            <li class="menu-item">
+                <a href="{% url "read_teaching_assignment" %}" class="menu-link">
+                <div class="text-truncate">Read Assignment</div>
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
     </li>
-    {% elif i.name == "read_message" %}
+    {% endif %}
+
+    {% for i in user_modules %}
+    {% if i.name == "read_message" %}
     <li class="menu-item">
         <a
             href="{% url "read_message" %}"

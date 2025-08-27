@@ -119,13 +119,16 @@ def create_teaching_assignment(request):
         student_class_id = request.POST.get('student_class')
 
         try:
-            TeachingAssignment.objects.create(
+            teaching_assignment, created = TeachingAssignment.objects.get_or_create(
                 teacher_id=teacher_id,
                 subject_id=subject_id,
                 student_class_id=student_class_id,
                 date=today
             )
-            messages.success(request, 'Assignment created successfully.')
+            if created:
+                messages.success(request, f'{teaching_assignment.teacher.name} - {teaching_assignment.subject.name} - {teaching_assignment.student_class.number} Assignment created successfully.')
+            else:
+                messages.info(request, f'{teaching_assignment.teacher.name} - {teaching_assignment.subject.name} - {teaching_assignment.student_class.number} Assignment already exists.')
         except Exception as e:
             messages.error(request, f'Failed to create assignment: {str(e)}')
         
