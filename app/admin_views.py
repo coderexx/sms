@@ -117,14 +117,13 @@ def create_teaching_assignment(request):
         teacher_id = request.POST.get('teacher')
         subject_id = request.POST.get('subject')
         student_class_id = request.POST.get('student_class')
-        date = request.POST.get('date')
 
         try:
             TeachingAssignment.objects.create(
                 teacher_id=teacher_id,
                 subject_id=subject_id,
                 student_class_id=student_class_id,
-                date=date
+                date=today
             )
             messages.success(request, 'Assignment created successfully.')
         except Exception as e:
