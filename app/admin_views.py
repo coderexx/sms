@@ -128,11 +128,11 @@ def create_teaching_assignment(request):
             if created:
                 messages.success(request, f'{teaching_assignment.teacher.name} - {teaching_assignment.subject.name} - {teaching_assignment.student_class.number} Assignment created successfully.')
             else:
-                messages.info(request, f'{teaching_assignment.teacher.name} - {teaching_assignment.subject.name} - {teaching_assignment.student_class.number} Assignment already exists.')
+                messages.error(request, f'{teaching_assignment.teacher.name} - {teaching_assignment.subject.name} - {teaching_assignment.student_class.number} Assignment already exists.')
         except Exception as e:
             messages.error(request, f'Failed to create assignment: {str(e)}')
         
-        return redirect('read_teaching_assignment')
+        return redirect('create_teaching_assignment')
 
     context = {
         'teachers': Teacher.objects.all().order_by('name'),
