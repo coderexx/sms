@@ -6,6 +6,7 @@ from django.db.models.functions import ExtractYear
 from django.db.models import Sum, Max
 from django.contrib.auth.decorators import login_required
 from .utils.decorators import role_required
+from django.core.paginator import Paginator
 
 
 # global variables
@@ -162,6 +163,16 @@ def profile_student(request,id):
     last_score = (ExamResult.objects.filter(student=student,date=last_exam_date).aggregate(total=Sum('obtained_mark'))['total'] or 0)
 
 
+
+    # pagination for exam_results
+    paginator = Paginator(exam_results, 50)  # 50 records per page
+    page_number = request.GET.get('page')
+    exam_results = paginator.get_page(page_number)
+    # Handle query parameters for pagination
+    query_dict = request.GET.copy()
+    if 'page' in query_dict:
+        query_dict.pop('page')
+    query_string = query_dict.urlencode()
     context = {
         "student":student,
         "exam_results":exam_results,
@@ -181,6 +192,7 @@ def profile_student(request,id):
         "yearly_position": yearly_position,
         "last_score": last_score,
         "last_position": last_position,
+        'query_string': query_string,
     }
     return render(request,'profile/student_profile.html',context)
 

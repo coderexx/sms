@@ -67,6 +67,9 @@ def read_teaching_assignment(request):
     selected_teacher = request.GET.get('teacher')
     selected_subject = request.GET.get('subject')
     selected_class = request.GET.get('student_class')
+    role = request.user.role
+    if role and role.modules.filter(name='read_student_self').exists():
+        selected_class = Student.objects.filter(user=request.user).first().student_class.id
 
     queryset = TeachingAssignment.objects.filter(
         date__year=selected_year,
