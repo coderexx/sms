@@ -22,7 +22,7 @@ current_month = today.month
 @role_required('create_exam_result')
 def create_exam_result(request):
     student_class_id = request.GET.get('student_class')
-    students = Student.objects.filter(student_class_id=student_class_id)
+    students = Student.objects.filter(student_class_id=student_class_id).order_by('roll_no')
 
 
     if request.method == 'POST':
@@ -73,7 +73,7 @@ def create_exam_result(request):
 
 @role_required('read_exam_result')
 def read_exam_result(request):
-    results = ExamResult.objects.all().order_by('-date')
+    results = ExamResult.objects.all().order_by('-date','student__student_class__number','student__roll_no')
 
     selected_date = request.GET.get('date')
     selected_subject = request.GET.get('subject')
@@ -108,7 +108,7 @@ def read_exam_result(request):
 
 @role_required('read_exam_result')
 def read_exam_result_pdf(request):
-    results = ExamResult.objects.all().order_by('-date')
+    results = ExamResult.objects.all().order_by('-date','student__student_class__number','student__roll_no')
     selected_date = request.GET.get('date')
     selected_subject = request.GET.get('subject')
     selected_class = request.GET.get('student_class')
@@ -162,13 +162,13 @@ def read_exam_position(request):
     # ----------------------
     # 2. Monthly Ranking
     # ----------------------
-    monthly_totals = (Student.objects.filter(student_class_id=student_class_id).annotate(total_marks=Sum("examresult__obtained_mark",filter=Q(examresult__date__year=selected_year, examresult__date__month=selected_month))).order_by("-total_marks"))
+    monthly_totals = (Student.objects.filter(student_class_id=student_class_id).annotate(total_marks=Sum("examresult__obtained_mark",filter=Q(examresult__date__year=selected_year, examresult__date__month=selected_month)),full_marks=Sum("examresult__total_mark",filter=Q(examresult__date__year=selected_year,examresult__date__month=selected_month))).order_by("-total_marks"))
     monthly_ranks = {}
     rank, last_marks = 1, None
     for i, st in enumerate(monthly_totals, start=1):
         if last_marks is None or st.total_marks < last_marks:
             rank = i
-        monthly_ranks[st.id] = {"rank": rank, "marks": st.total_marks}
+        monthly_ranks[st.id] = {"rank": rank, "marks": st.total_marks,"full_marks": st.full_marks}
         last_marks = st.total_marks
 
     # ----------------------
@@ -185,7 +185,7 @@ def read_exam_position(request):
     # ----------------------
     # Final response (merge all ranks)
     # ----------------------
-    students = Student.objects.filter(student_class_id=student_class_id)
+    students = Student.objects.filter(student_class_id=student_class_id).order_by('roll_no')
     positions = []
     for st in students:
         positions.append({
@@ -195,6 +195,8 @@ def read_exam_position(request):
             "class": st.student_class.number,
             "last_exam_rank": last_exam_ranks.get(st.id, {}).get("rank"),
             "monthly_rank": monthly_ranks.get(st.id, {}).get("rank"),
+            "full_marks": monthly_ranks.get(st.id, {}).get("full_marks"),
+            "total_marks": monthly_ranks.get(st.id, {}).get("marks"),
             "yearly_rank": yearly_ranks.get(st.id, {}).get("rank"),
             "exam_date": str(last_exam_date) if last_exam_date else None,
         })
@@ -238,13 +240,13 @@ def read_exam_position_pdf(request):
     # ----------------------
     # 2. Monthly Ranking
     # ----------------------
-    monthly_totals = (Student.objects.filter(student_class_id=student_class_id).annotate(total_marks=Sum("examresult__obtained_mark",filter=Q(examresult__date__year=selected_year, examresult__date__month=selected_month))).order_by("-total_marks"))
+    monthly_totals = (Student.objects.filter(student_class_id=student_class_id).annotate(total_marks=Sum("examresult__obtained_mark",filter=Q(examresult__date__year=selected_year, examresult__date__month=selected_month)),full_marks=Sum("examresult__total_mark",filter=Q(examresult__date__year=selected_year,examresult__date__month=selected_month))).order_by("-total_marks"))
     monthly_ranks = {}
     rank, last_marks = 1, None
     for i, st in enumerate(monthly_totals, start=1):
         if last_marks is None or st.total_marks < last_marks:
             rank = i
-        monthly_ranks[st.id] = {"rank": rank, "marks": st.total_marks}
+        monthly_ranks[st.id] = {"rank": rank, "marks": st.total_marks,"full_marks": st.full_marks}
         last_marks = st.total_marks
 
     # ----------------------
@@ -261,7 +263,7 @@ def read_exam_position_pdf(request):
     # ----------------------
     # Final response (merge all ranks)
     # ----------------------
-    students = Student.objects.filter(student_class_id=student_class_id)
+    students = Student.objects.filter(student_class_id=student_class_id).order_by('roll_no')
     positions = []
     for st in students:
         positions.append({
@@ -271,13 +273,14 @@ def read_exam_position_pdf(request):
             "class": st.student_class.number,
             "last_exam_rank": last_exam_ranks.get(st.id, {}).get("rank"),
             "monthly_rank": monthly_ranks.get(st.id, {}).get("rank"),
+            "full_marks": monthly_ranks.get(st.id, {}).get("full_marks"),
+            "total_marks": monthly_ranks.get(st.id, {}).get("marks"),
             "yearly_rank": yearly_ranks.get(st.id, {}).get("rank"),
             "exam_date": str(last_exam_date) if last_exam_date else None,
         })
     # ✅ Order by monthly_rank (None values go last)
     positions.sort(key=lambda x: (x["monthly_rank"] is None, x["monthly_rank"]))
 
-    years = ExamResult.objects.annotate(year=ExtractYear('date')).values_list('year', flat=True).distinct().order_by('-year')
 
     student_class = StudentClass.objects.get(id=student_class_id)
     context = {

@@ -13,7 +13,7 @@ today = date.today()
 @role_required('take_attendance')
 def take_attendance(request):
     student_class_id = request.GET.get('student_class')
-    students = Student.objects.filter(student_class_id=student_class_id)
+    students = Student.objects.filter(student_class_id=student_class_id).order_by('roll_no')
     # Check if attendance already submitted for this class today
     already_taken = Attendance.objects.filter(
             student__student_class_id=student_class_id,

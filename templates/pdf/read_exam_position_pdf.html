@@ -21,12 +21,14 @@
     <thead>
         <tr>
             <th>#</th>
-            <th>Name</th>
+            <th width="20%">Name</th>
             <th>Roll</th>
             <th>Class</th>
-            <th>Monthly Position</th>
-            <th>Yearly Position</th>
-            <th>Last Exam Position</th>
+            <th>Total <br> Marks</th>
+            <th>Obtained <br> Marks</th>
+            <th>Monthly <br> Position</th>
+            <th>Yearly <br> Position</th>
+            <th>Last Exam <br> Position</th>
         </tr>
     </thead>
     <tbody>
@@ -36,6 +38,8 @@
             <td>{{item.name}}</td>
             <td>{{item.roll_no}}</td>
             <td>{{item.class}}</td>
+            <td>{{item.full_marks}}</td>
+            <td>{{item.total_marks}}</td>
             <td>{{item.monthly_rank}}</td>
             <td>{{item.yearly_rank}}</td>
             <td>{{item.last_exam_rank}}</td>

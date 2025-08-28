@@ -28,7 +28,7 @@ today = date.today()
 #read_student
 @role_required('read_student')
 def read_student(request):
-    students = Student.objects.filter(active=True,student_class__active=True).order_by('student_class__number','name')
+    students = Student.objects.filter(active=True,student_class__active=True).order_by('student_class__number','roll_no','name')
     
     
     #get query parameters
@@ -96,7 +96,7 @@ def read_student(request):
 
 @role_required('read_student')
 def read_inactive_student(request):
-    students = Student.objects.filter(Q(active=False) | Q(student_class__active=False)).order_by('student_class__number','name')
+    students = Student.objects.filter(Q(active=False) | Q(student_class__active=False)).order_by('student_class__number','roll_no','name')
     
     #get query parameters
     query = request.GET.get('query', '')
@@ -539,10 +539,10 @@ def activation_teacher(request,id):
 @role_required('read_student')
 def read_student_pdf(request,inactive=False):
     if inactive == "True":
-        students = Student.objects.filter(Q(active=False) | Q(student_class__active=False)).order_by('student_class__number','name')
+        students = Student.objects.filter(Q(active=False) | Q(student_class__active=False)).order_by('student_class__number','roll_no','name')
     else:
-        students = Student.objects.filter(active=True,student_class__active=True).order_by('student_class__number','name')
-    
+        students = Student.objects.filter(active=True,student_class__active=True).order_by('student_class__number','roll_no','name')
+
     #get query parameters
     query = request.GET.get('query', '')
     student_class_query = request.GET.get('student_class_query')
