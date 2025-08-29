@@ -186,7 +186,7 @@ def create_user(request):
 
 @role_required('read_user')
 def read_user(request):
-    users = User.objects.all().order_by('role__sn').exclude(role__h_name="student")
+    users = User.objects.all().order_by('role__sn','name').exclude(role__h_name="student")
     context = {
         'users': users
     }
