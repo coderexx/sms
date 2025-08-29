@@ -160,8 +160,8 @@ def delete_teaching_assignment(request, id):
 def create_user(request):
     role = request.user.role
     roles = Role.objects.all().order_by('sn', 'id').exclude(h_name="student")
-    if role.h_name != "super_admin":
-        roles = roles.exclude(h_name="super_admin")
+    if role.h_name != "super_user":
+        roles = roles.exclude(h_name="super_user")
     if request.method == 'POST':
         role_id = request.POST.get('role')
         username = request.POST.get('username')
@@ -171,7 +171,7 @@ def create_user(request):
         if not all([role_id, username, name, mobile_no]):
             messages.error(request, "All fields are required.")
             return redirect('create_user')
-        if Role.objects.get(id=role_id).h_name == "super_admin":
+        if Role.objects.get(id=role_id).h_name == "super_user":
             messages.error(request, "Cannot assign super admin role.")
             return redirect('create_user')
         User.objects.create_user(username=username,password=mobile_no, name=name, mobile_no=mobile_no, role_id=role_id, picture=picture)
@@ -196,8 +196,8 @@ def read_user(request):
 def update_user(request, id):
     roles = Role.objects.all().order_by('sn', 'id').exclude(h_name="student")
     role = request.user.role
-    if role.h_name != "super_admin":
-        roles = roles.exclude(h_name="super_admin")
+    if role.h_name != "super_user":
+        roles = roles.exclude(h_name="super_user")
     user = get_object_or_404(User, id=id)
     if request.method == 'POST':
         role_id = request.POST.get('role')
@@ -207,7 +207,7 @@ def update_user(request, id):
         if not all([role_id, name, mobile_no]):
             messages.error(request, "All fields are required.")
             return redirect('update_user', id=id)
-        if Role.objects.get(id=role_id).h_name == "super_admin":
+        if Role.objects.get(id=role_id).h_name == "super_user":
             messages.error(request, "Cannot assign super admin role.")
             return redirect('update_user', id=id)
 

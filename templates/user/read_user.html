@@ -93,16 +93,16 @@ User
                     <th>
                         {% for i in user_modules %}
                         {% if i.name == "update_user" %}
-                            {% if item.role.h_name == "super_admin" and request.user.role.h_name == "super_admin" %}
-                                {# case: only super_admin can edit super_admin #}
+                            {% if item.role.h_name == "super_user" and request.user.role.h_name == "super_user" %}
+                                {# case: only super_user can edit super_user #}
                                 <a href="{% url "update_user" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
                                     <span class="icon-base fa fa-edit icon-sm text-white"></span>
                                 </a>
                                 <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-reset-{{item.id}}">
                                     <span class="icon-base fa-solid fa-recycle icon-sm text-white"></span>
                                 </button>
-                            {% elif item.role.h_name != "super_admin" %}
-                                {# case: admin can edit non-super_admin users #}
+                            {% elif item.role.h_name != "super_user" %}
+                                {# case: admin can edit non-super_user users #}
                                 <a href="{% url "update_user" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
                                     <span class="icon-base fa fa-edit icon-sm text-white"></span>
                                 </a>

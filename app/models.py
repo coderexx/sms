@@ -40,12 +40,12 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
     def create_superuser(self, username, password=None, **extra_fields):
-        # Auto-assign default role 'Admin' if not given
+        # Auto-assign default role 'Super User' if not given
         if 'role' not in extra_fields or extra_fields['role'] is None:
             try:
-                admin_role, created = Role.objects.get_or_create(h_name='admin')
+                admin_role, created = Role.objects.get_or_create(h_name='super_user')
             except Role.DoesNotExist:
-                raise ValueError("❌ Role 'Admin' does not exist. Please create it first.")
+                raise ValueError("❌ Role 'Super User' does not exist. Please create it first.")
             extra_fields['role'] = admin_role
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
