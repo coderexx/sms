@@ -93,13 +93,22 @@ User
                     <th>
                         {% for i in user_modules %}
                         {% if i.name == "update_user" %}
-                            {% if (item.role.h_name == "super_admin" and request.user.role.h_name == "super_admin") or item.role.h_name != "super_admin" %}
-                            <a href="{% url "update_user" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
-                                <span class="icon-base fa fa-edit icon-sm text-white"></span>
-                            </a>
-                            <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-reset-{{item.id}}">
-                                <span class="icon-base fa-solid fa-recycle icon-sm text-white"></span>
-                            </button>
+                            {% if item.role.h_name == "super_admin" and request.user.role.h_name == "super_admin" %}
+                                {# case: only super_admin can edit super_admin #}
+                                <a href="{% url "update_user" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
+                                    <span class="icon-base fa fa-edit icon-sm text-white"></span>
+                                </a>
+                                <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-reset-{{item.id}}">
+                                    <span class="icon-base fa-solid fa-recycle icon-sm text-white"></span>
+                                </button>
+                            {% elif item.role.h_name != "super_admin" %}
+                                {# case: admin can edit non-super_admin users #}
+                                <a href="{% url "update_user" item.id %}" class="btn rounded-pill btn-icon btn-info btn-sm">
+                                    <span class="icon-base fa fa-edit icon-sm text-white"></span>
+                                </a>
+                                <button type="button" class="btn rounded-pill btn-icon btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-reset-{{item.id}}">
+                                    <span class="icon-base fa-solid fa-recycle icon-sm text-white"></span>
+                                </button>
                             {% endif %}
                         {% elif i.name == "delete_user" %}
                         <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{item.id}}">
