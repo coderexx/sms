@@ -158,7 +158,10 @@ def delete_teaching_assignment(request, id):
 
 @role_required('create_user')
 def create_user(request):
-    roles = Role.objects.all().order_by('sn', 'id').exclude(h_name__in=["student", "super_admin"])
+    role = request.user.role
+    roles = Role.objects.all().order_by('sn', 'id').exclude(h_name="student")
+    if role.h_name != "super_admin":
+        roles = roles.exclude(h_name="super_admin")
     if request.method == 'POST':
         role_id = request.POST.get('role')
         username = request.POST.get('username')
@@ -191,7 +194,10 @@ def read_user(request):
 
 @role_required('update_user')
 def update_user(request, id):
-    roles = Role.objects.all().order_by('sn', 'id').exclude(h_name__in=["student", "super_admin"])
+    roles = Role.objects.all().order_by('sn', 'id').exclude(h_name="student")
+    role = request.user.role
+    if role.h_name != "super_admin":
+        roles = roles.exclude(h_name="super_admin")
     user = get_object_or_404(User, id=id)
     if request.method == 'POST':
         role_id = request.POST.get('role')
