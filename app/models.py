@@ -241,8 +241,8 @@ class ExamResult(BaseModel):
     date = models.DateField(default=timezone.now)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    total_mark = models.IntegerField(null=True, blank=True, default=0)
-    obtained_mark = models.IntegerField(null=True, blank=True, default=0)
+    total_mark = models.FloatField(null=True, blank=True, default=0)
+    obtained_mark = models.FloatField(null=True, blank=True, default=0)
     remarks = models.CharField(max_length=25, null=True, blank=True)
 
     def __str__(self):

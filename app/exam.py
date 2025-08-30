@@ -26,6 +26,7 @@ def create_exam_result(request):
 
 
     if request.method == 'POST':
+        date = request.POST.get("date")
         subject_id = request.POST.get("subject")
         total_mark = request.POST.get("total_mark")
         remarks = request.POST.get("remarks")
@@ -39,7 +40,7 @@ def create_exam_result(request):
         for student in students:
             obtained_mark = request.POST.get(f"obtained_mark_{student.id}")
             ExamResult.objects.create(
-                date=today,
+                date=date,
                 student=student,
                 subject_id=subject_id,
                 total_mark=total_mark,
@@ -73,7 +74,7 @@ def create_exam_result(request):
 
 @role_required('read_exam_result')
 def read_exam_result(request):
-    results = ExamResult.objects.all().order_by('-date','student__student_class__number','student__roll_no')
+    results = ExamResult.objects.all().order_by('-date','student__student_class__number','remarks','student__roll_no')
 
     selected_date = request.GET.get('date')
     selected_subject = request.GET.get('subject')
@@ -101,14 +102,14 @@ def read_exam_result(request):
         'subjects': Subject.objects.all().order_by('name'),
         'classes': StudentClass.objects.all().order_by('number'),
         "query_string":query_string,
-        "selected_date": selected_date
+        "selected_date": selected_date if selected_date else '',
     }
     return render(request, 'exam/read_exam_result.html', context)
 
 
 @role_required('read_exam_result')
 def read_exam_result_pdf(request):
-    results = ExamResult.objects.all().order_by('-date','student__student_class__number','student__roll_no')
+    results = ExamResult.objects.all().order_by('-date','student__student_class__number','remarks','student__roll_no')
     selected_date = request.GET.get('date')
     selected_subject = request.GET.get('subject')
     selected_class = request.GET.get('student_class')
