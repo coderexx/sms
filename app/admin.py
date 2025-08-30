@@ -59,3 +59,20 @@ class MonthlyPaymentAdmin(admin.ModelAdmin):
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
     pass 
+
+@admin.register(ExamResult)
+class ExamResultAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(TeachingAssignment)
+class TeachingAssignmentAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(SMSCounter)
+class SMSCounterAdmin(admin.ModelAdmin):
+    pass

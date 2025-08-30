@@ -31,7 +31,7 @@ School
             <tbody class="table-border-bottom-0">
                 {% for item in schools %}
                 <!-- Start Delete Modal -->
-                <div class="modal fade" id="modal-delete-{{i.id}}" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="modal-delete-{{item.id}}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -63,7 +63,7 @@ School
                               <span class="icon-base fa fa-edit icon-sm text-white"></span>
                         </a>
                         {% elif i.name == "delete_school" %}
-                        <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{i.id}}">
+                        <button type="button" class="btn rounded-pill btn-icon btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{item.id}}">
                            <span class="icon-base fa-regular fa-trash-can icon-sm text-white"></span>
                         </button>
                         {% endif %}
