@@ -68,6 +68,7 @@ def update_location(request,id):
 @role_required('delete_location')
 def delete_location(request,id):
     location = Location.objects.get(id=id)
+    location.delete()
     messages.success(request,f"{location.name} was deleted successfully.")
     return redirect(read_location)
 
@@ -140,6 +141,7 @@ def update_school(request,id):
 @role_required('delete_school')
 def delete_school(request,id):
     school = School.objects.get(id=id)
+    school.delete()
     messages.success(request,f"{school.name} was deleted successfully.")
     return redirect(read_school)
 
@@ -204,5 +206,6 @@ def update_subject(request,id):
 @role_required('delete_subject')
 def delete_subject(request,id):
     subject = Subject.objects.get(id=id)
+    subject.delete()
     messages.success(request,f"{subject.name} was deleted successfully.")
     return redirect(read_subject)

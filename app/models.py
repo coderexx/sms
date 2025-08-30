@@ -80,21 +80,20 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Location(BaseModel):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
 
 class School(BaseModel):
     name = models.CharField(max_length=100)
-    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True, unique=True)
 
     def __str__(self):
         return self.name
     
 class Subject(BaseModel):
-    name = models.CharField(max_length=100)
-    
+    name = models.CharField(max_length=100, unique=True)
     def __str__(self):
         return self.name
 

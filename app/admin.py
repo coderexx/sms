@@ -41,6 +41,10 @@ class SchoolAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_filter = ('location',)
 
+@admin.register(Subject)
+class SubjectAdmin(admin.ModelAdmin):
+    pass
+
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
     pass
