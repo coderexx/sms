@@ -86,8 +86,8 @@ class Location(BaseModel):
         return self.name
 
 class School(BaseModel):
-    name = models.CharField(max_length=100)
-    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True, unique=True)
+    name = models.CharField(max_length=100, unique=True)
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
