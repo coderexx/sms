@@ -1,28 +1,31 @@
 # management/commands/seed_modules.py
 from django.core.management.base import BaseCommand
-from app.models import Student, Role
+from app.models import *
 from django.contrib.auth import get_user_model
+from django.db.models import Count
 
 User = get_user_model()
 
 class Command(BaseCommand):
+    help = "Delete duplicate locations based on name"
+
     def handle(self, *args, **kwargs):
-        students = Student.objects.all()
-        role, created = Role.objects.get_or_create(h_name="student")
-        count = 0
+        duplicates = (
+            Location.objects
+            .values("name")
+            .annotate(name_count=Count("id"))
+            .filter(name_count__gt=1)
+        )
 
-        for i in students:
-            if not i.user:  # only if student is not already linked to a user
-                user = User.objects.create_user(
-                    username=i.roll_no,         # Student roll no as username
-                    password=i.mob_no,          # Mobile no as password (hashed)
-                    name=i.name,
-                    mobile_no=i.mob_no,
-                    role=role,
-                    picture=i.picture
-                )
-                i.user = user
-                i.save()
-                count += 1
+        total_deleted = 0
 
-        self.stdout.write(self.style.SUCCESS(f"🎉 Done! {count} students have been linked to users"))
+        for dup in duplicates:
+            # Get all objects with this duplicate name
+            locations = Location.objects.filter(name=dup["name"]).order_by("id")
+            
+            # Keep the first, delete the rest
+            to_delete = locations[1:]
+            deleted_count, _ = to_delete.delete()
+            total_deleted += deleted_count
+
+        self.stdout.write(self.style.SUCCESS(f"✅ Done! {total_deleted} duplicate locations deleted."))
